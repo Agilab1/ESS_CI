@@ -1,47 +1,77 @@
-<table class="table table-bordered table-striped">
-      <a href="<?= base_url('Role/add'); ?>" class="btn btn-primary float-right">Add Staff</a>
-       <!-- Flash Messages -->
-            <?php include('assets/incld/messages.php') ?>
+<div class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-7">
+                <div class="card shadow">
+                    <div class="card-header">
+                        <h5><?= ucfirst($action) ?> Role</h5>
+                    </div>
 
-    <thead>
-        <tr>
-            <th>SR NO</th>
-            <th>Role ID</th>
-            <th>User Role</th>
-            <th>Status</th>
-            <th colspan="3" class="text-center">Action</th>
-        </tr>
-    </thead>
+                    <div class="card-body">
+                        
+                        <form action="<?= base_url('Role/save'); ?>" method="post">
 
-    <tbody>
-        <?php if (!empty($roles)): ?>
-            <?php foreach ($roles as $i => $role): ?>
-                <tr>
-                    <td><?= $i + 1 ?></td>
-                    <td><?= $role->role_id ?></td>
-                    <td><?= $role->usr_role ?></td>
-                    <td><?= $role->role_st ?></td>
+                            <input type="hidden" name="action" value="<?= $action ?>">
+                            <input type="hidden" name="old_role_id" value="<?= $role->role_id ?>">
 
-                    <td class="text-center">
-                        <a href="<?= base_url('Role/view/'.$role->role_id) ?>">
-                            <i class="fa fa-eye"></i>
-                        </a>
-                    </td>
+                            <table class="table table-bordered">
 
-                    <td class="text-center">
-                        <a href="<?= base_url('Role/edit/'.$role->role_id) ?>">
-                            <i class="fa fa-edit"></i>
-                        </a>
-                    </td>
+                                <tr>
+                                    <td colspan="2">
+                                        <label>Role ID</label>
+                                        <input type="text"
+                                            name="role_id"
+                                            class="form-control"
+                                            value="<?= $role->role_id ?>"
+                                            <?= ($action == 'edit' || $action == 'view') ? 'readonly' : '' ?>>
 
-                    <td class="text-center">
-                        <a href="<?= base_url('Role/delete/'.$role->role_id) ?>" 
-                           onclick="return confirm('Are you sure?')">
-                            <i class="fa fa-trash text-danger"></i>
-                        </a>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        <?php endif; ?>
-    </tbody>
-</table>
+                                        <small class="text-danger"><?= form_error('role_id'); ?></small>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <label>User Role</label>
+                                        <input type="text"
+                                            name="usr_role"
+                                            class="form-control"
+                                            value="<?= $role->usr_role ?>"
+                                            <?= ($action == 'view') ? 'readonly' : '' ?>>
+
+                                        <small class="text-danger"><?= form_error('usr_role'); ?></small>
+                                    </td>
+
+                                    <td>
+                                        <label>Status</label>
+
+                                        <!-- Hidden field will send Inactive if checkbox not checked -->
+                                        <input type="hidden" name="role_st" value="Inactive">
+
+                                        <input type="checkbox"
+                                            name="role_st"
+                                            value="Active"
+                                            class="form-control"
+                                            <?= ($role->role_st == "Active") ? 'checked' : '' ?>
+                                            <?= ($action == 'view') ? 'disabled' : '' ?>>
+
+                                        <small class="text-danger"><?= form_error('role_st'); ?></small>
+                                    </td>
+                                </tr>
+
+                                <?php if ($action != 'view'): ?>
+                                <tr>
+                                    <td colspan="2" class="text-center">
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </td>
+                                </tr>
+                                <?php endif; ?>
+
+                            </table>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
