@@ -55,5 +55,6 @@ $route['logout'] = 'login/logout';
 $route['admin'] = 'admin/dashboard';
 $route['admin/user_list'] = 'admin/userlist'; 
 
+
 // $route['404_override'] = '';
 // $route['translate_uri_dashes'] = FALSE;
