@@ -1,0 +1,16 @@
+    body {
+      font-size: 1rem; /* 1rem = 16px if html is 16px */
+    }
+    .select2-container .select2-selection--single {
+      height: 45px !important;
+      width: 100% !important; /* Forces it not to auto-resize */
+      padding: 8px 12px;
+      border: 1px solid #ced4da;
+      border-radius: 6px;
+      background-color: #fff;
+      font-size: 1rem;
+    }
+    table {
+      table-layout: fixed;
+      width: 100%;
+    }

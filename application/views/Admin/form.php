@@ -1,0 +1,125 @@
+<div class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-7">
+                <div class="card shadow">
+                    <div class="card-header">
+                        <h5><?= isset($action) ? ucfirst($action) : 'Add' ?> User</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" action="<?= base_url('admin/save') ?>" id="userform" autocomplete="off" required>
+                            <table class="table table-bordered">
+                                <tr>
+                                    <td colspan="2">
+                                        <input type="hidden" name="action" value="<?= isset($action) ? strtolower($action) : 'add' ?>" required>
+                                        <input type="hidden" name="user_id" value="<?= isset($user->user_id) ? $user->user_id : '' ?>">          
+
+                                        <label class="form-label" >Email ID</label>
+                                        <input class="form-control" type="email" name="mail_id"
+                                            value="<?= set_value('mail_id', isset($user->mail_id) ? $user->mail_id : '') ?>"
+                                            autocomplete="off" required>
+                                        <small class="text-danger"><?= form_error('mail_id'); ?></small>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <label class="form-label">User Name</label>
+                                        <input class="form-control" type="text" name="user_nm"
+                                            value="<?= set_value('user_nm', isset($user->user_nm) ? $user->user_nm : '') ?>" required>
+                                        <small class="text-danger"><?= form_error('user_nm'); ?></small>
+                                    </td>
+                                    <td>
+                                        <label class="form-label">Phone No</label>
+                                        <input class="form-control" type="text" name="user_ph"
+                                            value="<?= set_value('user_ph', isset($user->user_ph) ? $user->user_ph : '') ?>" required>
+                                        <small class="text-danger"><?= form_error('user_ph'); ?></small>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <label class="form-label">Password</label>
+                                        <input class="form-control" type="password" name="pass_wd"
+                                            value="<?= set_value('pass_wd', isset($user->pass_wd) ? $user->pass_wd : '') ?>"
+                                            autocomplete="new-password" required>
+                                        <small class="text-danger"><?= form_error('pass_wd'); ?></small>
+                                    </td>
+                                    <td>
+                                        <label class="form-label">Confirm Password</label>
+                                        <input class="form-control" type="password" name="cpas_wd"
+                                            value="<?= set_value('cpas_wd', isset($user->pass_wd) ? $user->pass_wd : '') ?>" required>
+                                        <small class="text-danger"><?= form_error('cpas_wd'); ?></small>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <label class="form-label">User Role</label>
+                                        <select class="form-control" name="role_id" required>
+                                            <option value="" required>Select Role</option>
+                                             <!-- < -->
+                                             <!-- ?= (isset($user->role_id) && $user->role_id == "") ? 'selected' : '' ?> -->
+                                            <option value="Admin" >Admin</option>
+                                            <!-- < -->
+                                            <!-- ?= (isset($user->role_id) && $user->role_id == "1") ? 'selected' : '' ?> -->
+                                            <option value="User" >User</option>
+                                            <!-- < -->
+                                            <!-- ?= (isset($user->role_id) && $user->role_id == "2") ? 'selected' : '' ?> -->
+                                        </select>
+                                        <small class="text-danger"><?= form_error('role_id'); ?></small>
+                                    </td>
+                                    <td>
+                                        <label class="form-label">User Status</label>
+                                        <select class="form-control" name="user_st" required>
+                                            <option value=""required >Select Status</option>
+                                            <!-- < -->
+                                            <!-- ?= (isset($user->user_st) && $user->user_st == "") ? 'selected' : '' ?>> -->
+                                            <option value="Active" >Active</option>
+                                            <!-- < -->
+                                            <!-- ?= (isset($user->user_st) && $user->user_st == "1") ? 'selected' : '' ?> -->
+                                            <option value="Inactive" >Inactive</option>
+                                            <!-- < -->
+                                            <!-- ?= (isset($user->user_st) && $user->user_st == "0") ? 'selected' : '' ?> -->
+                                        </select>
+                                        <small class="text-danger"><?= form_error('user_st'); ?></small>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <label class="form-label">User Type</label>
+                                        <select class="form-control" name="user_ty" required>
+                                            <option value="" required>Select Type</option>
+                                             <!-- < -->
+                                             <!-- ?= (isset($user->user_ty) && $user->user_ty == "") ? 'selected' : '' ?> -->
+                                            <option value="User" >User</option>
+                                            <!-- < -->
+                                            <!-- ?= (isset($user->user_ty) && $user->user_ty == "1") ? 'selected' : '' ?> -->
+                                            <option value="Manager">Manager</option>
+                                             <!-- < -->
+                                             <!-- ?= (isset($user->user_ty) && $user->user_ty == "2") ? 'selected' : '' ?> -->
+                                        </select>
+                                        <small class="text-danger"><?= form_error('user_ty'); ?></small>
+                                    </td>
+                                    <td>
+                                        <label class="form-label">Is Admin?</label>
+                                        <input type="checkbox" name="user_ad" value="1"
+                                            <?= (isset($user->user_ad) && $user->user_ad == "1") ? 'checked' : '' ?>>
+                                        <small class="text-danger"><?= form_error('user_ad'); ?></small>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td colspan="2" class="text-center">
+                                        <button class="btn btn-primary" type="submit">Save</button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
