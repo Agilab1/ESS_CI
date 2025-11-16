@@ -70,7 +70,7 @@ class User extends CI_Controller
 	}
     	public function add(){
 		$data['action'] = 'Add' or 'Edit';
-      	$this->load->view('incld/verify');
+      	// $this->load->view('incld/verify');
 		$this->load->view('incld/header');
 		$this->load->view('incld/top_menu');
 		$this->load->view('incld/side_menu');
