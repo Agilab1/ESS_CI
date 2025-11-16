@@ -18,7 +18,7 @@
                                 <?= $this->session->flashdata('success'); ?>
                             </div>
                         <?php endif; ?>
-                       <form action="<?= base_url('login/login') ?>" method="POST">
+                       <form action="<?= base_url('user/login') ?>" method="POST">
                        <div class="form-group">
                        <label for="mail_id">Email ID</label>
                       <input type="email" id="mail_id" name="mail_id" class="form-control" placeholder="Enter your email">

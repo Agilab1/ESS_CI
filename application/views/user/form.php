@@ -7,7 +7,7 @@
                         <h5><?= isset($action) ? ucfirst($action) : 'Add' ?> User</h5>
                     </div>
                     <div class="card-body">
-                        <form method="post" action="<?= base_url('admin/save') ?>" id="userform" autocomplete="off" required>
+                        <form method="post" action="<?= base_url('user/save') ?>" id="userform" autocomplete="off" required>
                             <table class="table table-bordered">
                                 <tr>
                                     <td colspan="2">
