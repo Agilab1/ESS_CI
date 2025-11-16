@@ -23,8 +23,8 @@ class User extends CI_Controller
             $mail_id = $this->input->post('mail_id');
             $pass_wd = $this->input->post('pass_wd');
             $user    = $this->User_model->read_user($mail_id);
-            echo '<pre>';
-            print_r($this->input->post());
+            // echo '<pre>';
+            // print_r($this->input->post());
             if($user) {
                 if (password_verify($password, $user->pass_wd)) {
                     $session_data = [
