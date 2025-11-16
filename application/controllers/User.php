@@ -54,7 +54,7 @@ class User extends CI_Controller
         $this->session->sess_destroy();
         redirect('user');
     }
-    public function userlist() {
+    public function list() {
 		$data['users'] = $this->Admin_model->get_user();
         $data['user_count'] = $this->Admin_model->get_user_count();
         $this->load->view('incld/verify');

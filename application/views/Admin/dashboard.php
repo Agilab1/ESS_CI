@@ -7,7 +7,7 @@
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <!-- <a href="<?=base_url('admin/user_list'); ?>"> <button class="btn btn-primary float-right"> UserList</button></a> -->
+              <!-- <a href="<?=base_url('user/list'); ?>"> <button class="btn btn-primary float-right"> UserList</button></a> -->
               <li class="breadcrumb-item"><a href="#">Home</a></li>
               <li class="breadcrumb-item active">Admin</li>
             </ol>
@@ -33,7 +33,7 @@
               <div class="icon">
                 <i class="ion ion-bag"></i>
               </div>
-              <a href="<?=base_url('admin/user_list') ?>"  class="small-box-footer">More Info <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="<?=base_url('user/list') ?>"  class="small-box-footer">More Info <i class="fas fa-arrow-circle-right"></i></a>
               <!-- <a href="list_users.php" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
             </div>
           </div>
