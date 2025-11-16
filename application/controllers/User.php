@@ -19,29 +19,31 @@ class User extends CI_Controller
         $this->form_validation->set_rules('mail_id', 'Email', 'required|valid_email');
         $this->form_validation->set_rules('pass_wd', 'Password', 'required');
 
-        if ($this->form_validation->run() == FALSE) {
-            $this->index();
+        if ($this->form_validation->run()) {
+            // $email = $this->input->post('mail_id');
+            // $password = $this->input->post('pass_wd');
+            // $user = $this->User_model->read_user($email);
+            echo '<pre>';
+            print_r($this->input->post());
+            // if (password_verify($password, $user->pass_wd)) {
+            //     $session_data = [
+            //         'user_id'   => $user->user_id,
+            //         'user_nm'   => $user->user_nm,
+            //         'role_id'   => isset($user->role_id) ? $user->role_id : 1,
+            //         'logged_in' => TRUE
+            //     ];
+
+            //     $this->session->set_userdata($session_data);
+
+            //     $this->session->set_flashdata('success', 'Login successful!');
+            //     redirect('admin/dashboard');
+            // } else {
+            //     $this->session->set_flashdata('error', 'Incorrect password');
+            //     redirect('user');
+            // }
+            
         } else {
-            $email = $this->input->post('mail_id');
-            $password = $this->input->post('pass_wd');
-            $user = $this->User_model->read_user($email);
-
-            if (password_verify($password, $user->pass_wd)) {
-                $session_data = [
-                    'user_id'   => $user->user_id,
-                    'user_nm'   => $user->user_nm,
-                    'role_id'   => isset($user->role_id) ? $user->role_id : 1,
-                    'logged_in' => TRUE
-                ];
-
-                    $this->session->set_userdata($session_data);
-
-                    $this->session->set_flashdata('success', 'Login successful!');
-                    redirect('admin/dashboard');
-                } else {
-                    $this->session->set_flashdata('error', 'Incorrect password');
-                    redirect('user');
-                }
+            $this->index(); 
         }
     }
 
