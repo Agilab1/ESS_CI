@@ -3,26 +3,18 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class User extends CI_Controller
 {
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
         $this->load->model('User_model');
-        
     }
 
-    public function index()
-    {
-        if ($this->session->userdata('logged_in')) {
-            redirect('admin/dashboard');
-        }
-
+    public function index() {
         $this->load->view('incld/header');
         $this->load->view('user/login');
         $this->load->view('incld/footer');
     }
 
-    public function login()
-    {
+    public function login() {
         // $this->form_validation->set_rules($config);
         $this->form_validation->set_rules('mail_id', 'Email', 'required|valid_email');
         $this->form_validation->set_rules('pass_wd', 'Password', 'required');
@@ -57,8 +49,7 @@ class User extends CI_Controller
         }
     }
 
-    public function logout()
-    {
+    public function logout() {
         $this->session->sess_destroy();
         redirect('login');
     }
