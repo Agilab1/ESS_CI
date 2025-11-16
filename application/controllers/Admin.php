@@ -9,7 +9,7 @@ class Admin extends CI_Controller {
 
         
         if (!$this->session->userdata('logged_in')) {
-            redirect('login');
+            redirect('user');
         }
     }
 
