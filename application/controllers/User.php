@@ -20,27 +20,30 @@ class User extends CI_Controller
         $this->form_validation->set_rules('pass_wd', 'Password', 'required');
 
         if ($this->form_validation->run()) {
-            // $email = $this->input->post('mail_id');
-            // $password = $this->input->post('pass_wd');
-            // $user = $this->User_model->read_user($email);
+            $mail_id = $this->input->post('mail_id');
+            $pass_wd = $this->input->post('pass_wd');
+            $user    = $this->User_model->read_user($mail_id);
             echo '<pre>';
             print_r($this->input->post());
-            // if (password_verify($password, $user->pass_wd)) {
-            //     $session_data = [
-            //         'user_id'   => $user->user_id,
-            //         'user_nm'   => $user->user_nm,
-            //         'role_id'   => isset($user->role_id) ? $user->role_id : 1,
-            //         'logged_in' => TRUE
-            //     ];
-
-            //     $this->session->set_userdata($session_data);
-
-            //     $this->session->set_flashdata('success', 'Login successful!');
-            //     redirect('admin/dashboard');
-            // } else {
-            //     $this->session->set_flashdata('error', 'Incorrect password');
-            //     redirect('user');
-            // }
+            if($user) {
+                if (password_verify($password, $user->pass_wd)) {
+                    $session_data = [
+                        'user_id'   => $user->user_id,
+                        'user_nm'   => $user->user_nm,
+                        'role_id'   => isset($user->role_id) ? $user->role_id : 1,
+                        'logged_in' => TRUE
+                    ];
+                    $this->session->set_userdata($session_data);
+                    $this->session->set_flashdata('success', 'Login successful!');
+                    redirect('admin/dashboard');
+                } else {
+                    $this->session->set_flashdata('error', 'Incorrect password');
+                    redirect('user');
+                }
+            } else {
+                $this->session->set_flashdata('error', 'Invalid User');
+                redirect('user');
+            }
             
         } else {
             $this->index(); 
