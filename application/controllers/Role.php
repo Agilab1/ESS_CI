@@ -14,7 +14,7 @@ class Role extends CI_Controller {
         $this->load->view('incld/header');
         $this->load->view('incld/top_menu');
         $this->load->view('incld/side_menu');
-        $this->load->view('Admin/dashboard');
+        $this->load->view('user/dashboard');
         $this->load->view('Role/role_list',$data);
         $this->load->view('incld/jslib');
         $this->load->view('incld/footer');
