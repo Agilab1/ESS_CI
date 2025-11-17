@@ -19,7 +19,7 @@ class Admin extends CI_Controller {
 		$this->load->view('incld/header');
 		$this->load->view('incld/top_menu');
 		$this->load->view('incld/side_menu');
-	//	$this->load->view('admin/dashboard');
+		$this->load->view('admin/dashboard');
 		$this->load->view('incld/jslib');
 		$this->load->view('incld/footer');
 		$this->load->view('incld/script');	
@@ -33,7 +33,7 @@ class Admin extends CI_Controller {
         $this->load->view('incld/header');
         $this->load->view('incld/top_menu');
         $this->load->view('incld/side_menu');
-    //    $this->load->view('admin/dashboard', $data);
+        $this->load->view('admin/dashboard', $data);
         $this->load->view('incld/jslib');
         $this->load->view('incld/footer');
         $this->load->view('incld/script');
