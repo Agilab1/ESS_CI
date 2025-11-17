@@ -29,7 +29,7 @@
               <div class="dropdown-menu">
                 <a class="dropdown-item" href="#">User Profile</a>
                 <a class="dropdown-item" href="#">Messages</a>
-                <form method="POST" action="<?= base_url('login/logout') ?>">
+                <form method="POST" action="<?= base_url('user/logout') ?>">
                     <button type="submit" name="logout" class="dropdown-item">Logout</button>
                 </form>
               </div>
