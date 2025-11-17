@@ -39,9 +39,9 @@
                         <td><?php echo $user->role_id; ?></td>
                         <td><?php echo $user->user_ty; ?></td>
                         <td><?php echo $user->user_st; ?></td>
-                        <td class="text-center"><a href="<?=base_url('admin/view').'/'.$user->user_id?>"><i class="fa fa-eye"></i></a></td>
-                        <td class="text-center"><a href="<?=base_url('admin/edit').'/'.$user->user_id?>"><i class="fa fa-edit"></i></a></td>
-                        <td class="text-center"><a href="<?= base_url('admin/delete_user/'.$user->user_id) ?>"onclick="return confirm('Delete this user?');"><i class="fa fa-trash text-danger"></i></a> </td>                 
+                        <td class="text-center"><a href="<?=base_url('user/view').'/'.$user->user_id?>"><i class="fa fa-eye"></i></a></td>
+                        <td class="text-center"><a href="<?=base_url('user/edit').'/'.$user->user_id?>"><i class="fa fa-edit"></i></a></td>
+                        <td class="text-center"><a href="<?= base_url('user/delete_user/'.$user->user_id) ?>"onclick="return confirm('Delete this user?');"><i class="fa fa-trash text-danger"></i></a> </td>                 
                         <?php
                  
                      }
@@ -51,8 +51,6 @@
                 
             </thead>
             <tbody>
-                   
-        
             </tbody> 
         </table>
     </div>

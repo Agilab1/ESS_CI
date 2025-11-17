@@ -59,7 +59,7 @@ class User extends CI_Controller
         $this->load->view('incld/header');
 		$this->load->view('incld/top_menu');
 		$this->load->view('incld/side_menu');
-		$this->load->view('admin/dashboard');
+		$this->load->view('user/dashboard');  //update here change admin to user
 		$this->load->view('user/list',$data);
 		$this->load->view('incld/jslib');
 		$this->load->view('incld/footer');
@@ -72,7 +72,7 @@ class User extends CI_Controller
 		$this->load->view('incld/header');
 		$this->load->view('incld/top_menu');
 		$this->load->view('incld/side_menu');
-	//	$this->load->view('admin/dashboard');
+		$this->load->view('user/dashboard');    //change here admin to user
 		$this->load->view('user/form' ,$data);
 		$this->load->view('incld/jslib');
 		$this->load->view('incld/footer');
@@ -95,7 +95,7 @@ class User extends CI_Controller
         $data['user'] = $this->User_model->get_user($user_id);
         $this->load->view('incld/verify');
         $this->load->view("incld/header");
-        $this->load->view("admin/form",$data);
+        $this->load->view("user/form",$data);       //change here admin to user
         $this->load->view("incld/jslib");
         $this->load->view("incld/script");
         $this->load->view("incld/footer");
@@ -105,7 +105,7 @@ class User extends CI_Controller
         $data['user'] = $this->User_model->get_user($user_id);
         	$this->load->view('incld/verify');
         $this->load->view("incld/header");
-        $this->load->view("admin/form",$data);
+        $this->load->view("user/form",$data);       //change here user
         $this->load->view("incld/jslib");
         $this->load->view("incld/script");
         $this->load->view("incld/footer");
@@ -114,16 +114,16 @@ class User extends CI_Controller
     public function delete_user($user_id){
         if (!$user_id) {
             $this->session->set_flashdata('error', 'Invalid user ID.');
-            return redirect('admin/user_list');
+            return redirect('user/list');
         }
 
-        $this->Admin_model->delete_user($user_id);
+        $this->User_model->delete_user($user_id);
         $this->session->set_flashdata('success', 'User deleted successfully!');
-        return redirect('admin/user_list');
+        return redirect('user/list');
     }
 
 	public function save_validate() {
-        $this->load->model('Admin_model');
+        $this->load->model('User_model');
         
         $user_id = $this->input->post('user_id');
         $data = [
@@ -144,7 +144,7 @@ class User extends CI_Controller
             $this->User_model->add_user($data);
         }
 
-        redirect('admin/user_list');
+        redirect('user/list');
     }
     public function save() {
         $action  = strtolower($this->input->post('action'));
@@ -155,17 +155,17 @@ class User extends CI_Controller
 
         switch ($action) {
             case 'add':
-                $this->Admin_model->add_user($data);
+                $this->User_model->add_user($data);
                 $this->session->set_flashdata('success', 'User added successfully!');
                 break;
 
             case 'edit':
-                $this->Admin_model->edit_user($user_id, $data);
+                $this->User_model->edit_user($user_id, $data);
                 $this->session->set_flashdata('success', 'User updated successfully!');
                 break;
 
             case 'delete':
-                $this->Admin_model->delete_user($user_id);
+                $this->User_model->delete_user($user_id);
                 $this->session->set_flashdata('success', 'User deleted successfully!');
                 break;
 
@@ -174,7 +174,7 @@ class User extends CI_Controller
                 break;
         }
 
-        redirect('admin/userlist');
+        redirect('user/list');
     }
 
 

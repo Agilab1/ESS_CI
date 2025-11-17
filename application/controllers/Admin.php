@@ -25,6 +25,7 @@ class Admin extends CI_Controller {
 		$this->load->view('incld/script');	
 
 	}
+    
 	
     public function dashboard() {
         $data['users'] = $this->User_model->get_user();
