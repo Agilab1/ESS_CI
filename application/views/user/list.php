@@ -1,7 +1,7 @@
 <div class="card">
     <div class="card-header">
 
-              <a href="<?=base_url('admin/add'); ?>"> <button class="btn btn-primary float-right"> Add Users</button></a>
+              <a href="<?=base_url('user/add'); ?>"> <button class="btn btn-primary float-right"> Add Users</button></a>
     </div>
     <!-- /.card-header------------------------------------------------------------------------------------------------- -->
     <div class="card-body">
