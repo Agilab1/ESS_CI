@@ -6,6 +6,8 @@ class User extends CI_Controller
     public function __construct() {
         parent::__construct();
         $this->load->model('User_model');
+        $this->load->model('dashboard_model');
+
     }
 
     public function index() {
@@ -53,13 +55,14 @@ class User extends CI_Controller
         redirect('user');
     }
     public function list() {
+        $this->load->model('dashboard_model');
 		$data['users'] = $this->User_model->get_user();
-        $data['user_count'] = $this->User_model->get_user_count();
+        $data['counts'] = $this->User_model->counts();
         $this->load->view('incld/verify');
         $this->load->view('incld/header');
 		$this->load->view('incld/top_menu');
 		$this->load->view('incld/side_menu');
-		$this->load->view('user/dashboard');  //update here change admin to user
+		$this->load->view('user/dashboard',$data);  //update here change admin to user
 		$this->load->view('user/list',$data);
 		$this->load->view('incld/jslib');
 		$this->load->view('incld/footer');
