@@ -9,7 +9,7 @@
 
                     <div class="card-body">
 
-                        <form method="post" action="<?= base_url('Staff/save'); ?>" autocomplete="off">
+                        <form method="post" action="<?=base_url('Staff/save'); ?>" autocomplete="off">
 
                             <table class="table table-bordered">
 

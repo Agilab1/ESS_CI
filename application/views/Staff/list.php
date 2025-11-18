@@ -1,7 +1,8 @@
 <div class="card">
     <div class="card-header">
         <!-- Optional Add Button -->
-        <a href="<?= base_url('Staff/add'); ?>" class="btn btn-primary float-right">Add Staff</a>
+        <a href="<?=base_url('Staff/add'); ?>" class="btn btn-primary float-right">Add Staff</a>
+
     </div>
 
     <div class="card-body">
@@ -49,7 +50,7 @@
 
                             <!-- VIEW -->
                             <td class="text-center">
-                                <a href="<?= base_url('Staff/view/'.$staff->staff_id); ?>">
+                                <a href="<?= base_url('Staff/view').'/'.$staff->staff_id; ?>">
                                     <i class="fa fa-eye"></i>
                                 </a>
                             </td>
