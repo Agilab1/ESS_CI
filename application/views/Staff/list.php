@@ -53,9 +53,8 @@
 
                             <!-- VIEW -->
                             <td class="text-center">
-                                <a href="<?=base_url('staff/view').'/'.$staff->staff_id ; ?>">
-                                    <i class="fa fa-eye"></i>
-                                </a>
+                               <a href="<?= base_url('staff/view/'.$staff->staff_id); ?>"> <i class="fa fa-view"></i> </a>
+
                             </td>
 
                             <!-- EDIT -->
