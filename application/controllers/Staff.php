@@ -6,17 +6,19 @@ class Staff extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('Staff_model');
+        $this->load->model('dashboard_model');
         
        
     }
     public function list() {
         $data['staffs'] = $this->Staff_model->get_user();
+        $data['counts'] = $this->dashboard_model->counts();
 
         $this->load->view('incld/verify');
         $this->load->view('incld/header');
         $this->load->view('incld/top_menu');
         $this->load->view('incld/side_menu');
-        $this->load->view('user/dashboard');
+        $this->load->view('user/dashboard',$data);
         $this->load->view('Staff/list', $data);
         // $this->load->view('staff/staff_list',  $data);
         $this->load->view('incld/jslib');
