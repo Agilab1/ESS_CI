@@ -1,10 +1,10 @@
 <div class="card">
     <div class="card-header">
         <!-- Optional Add Button -->
-        <!-- <a href="<?=base_url('Staff/add'); ?>" class="btn btn-primary float-right">Add Staff</a> -->
-        <a href="<?=base_url('Staff/add'); ?>"> <button class="btn btn-primary float-right"> Add Staff</button></a>
+        <!-- <a href="<?= base_url('Staff/add'); ?>" class="btn btn-primary float-right">Add Staff</a> -->
+        <a href="<?= base_url('Staff/add'); ?>"> <button class="btn btn-primary float-right"> Add Staff</button></a>
 
-        
+
 
     </div>
 
@@ -53,24 +53,26 @@
 
                             <!-- VIEW -->
                             <td class="text-center">
-                               <a href="<?= base_url('staff/view/'.$staff->staff_id); ?>"> <i class="fa fa-view"></i> </a>
-
+                                <a href="<?= base_url('Staff/view/' . $staff->staff_id); ?>">
+                                    <i class="fa fa-eye"></i>
+                                </a>
                             </td>
 
                             <!-- EDIT -->
                             <td class="text-center">
-                                <a href="<?= base_url('Staff/edit/'.$staff->staff_id); ?>">
+                                <a href="<?= base_url('Staff/edit/' . $staff->staff_id); ?>">
                                     <i class="fa fa-edit"></i>
                                 </a>
                             </td>
 
                             <!-- DELETE -->
                             <td class="text-center">
-                                <a href="<?= base_url('Staff/delete/'.$staff->staff_id); ?>"
-                                   onclick="return confirm('Delete this user?');">
+                                <a href="<?= base_url('Staff/delete/' . $staff->staff_id); ?>"
+                                    onclick="return confirm('Delete this user?');">
                                     <i class="fa fa-trash text-danger"></i>
                                 </a>
                             </td>
+
                         </tr>
                     <?php endforeach; ?>
                 <?php endif; ?>
