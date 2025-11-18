@@ -18,7 +18,7 @@ class Staff extends CI_Controller {
         $this->load->view('incld/header');
         $this->load->view('incld/top_menu');
         $this->load->view('incld/side_menu');
-        $this->load->view('admin/dashboard',$data);
+        $this->load->view('user/dashboard',$data);
         $this->load->view('Staff/list', $data);
         // $this->load->view('staff/staff_list',  $data);
         $this->load->view('incld/jslib');
