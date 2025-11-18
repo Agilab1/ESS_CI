@@ -36,7 +36,7 @@ $config['base_url'] = 'https://agilesaptech.com/ESS_CI/';
 | variable so that it is blank.
 |
 */
-$config['index_page'] = '';
+$config['index_page'] = ''; //test 
 
 /*
 |--------------------------------------------------------------------------
