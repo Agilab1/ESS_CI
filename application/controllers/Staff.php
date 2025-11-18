@@ -8,15 +8,15 @@ class Staff extends CI_Controller {
         $this->load->model('Staff_model');
        
     }
-    public function Staff_dash() {
+    public function list() {
         $data['staffs'] = $this->Staff_model->get_user();
 
         $this->load->view('incld/verify');
         $this->load->view('incld/header');
         $this->load->view('incld/top_menu');
         $this->load->view('incld/side_menu');
-        $this->load->view('admin/dashboard');
-        $this->load->view('staff/staff_list', $data);
+        $this->load->view('user/dashboard');
+        $this->load->view('staff/list', $data);
         $this->load->view('incld/jslib');
         $this->load->view('incld/footer');
         $this->load->view('incld/script');
@@ -109,7 +109,7 @@ class Staff extends CI_Controller {
                 if ($data) {
                     $this->Staff_model->add_user($data);
                     $this->session->set_flashdata('success', 'Staff added successfully!');
-                    redirect('Staff/Staff_dash');
+                    redirect('Staff/list');
                 } else {
                     $this->add();
                 }
@@ -120,7 +120,7 @@ class Staff extends CI_Controller {
                 if ($data) {
                     $this->Staff_model->edit_user($staff_id, $data);
                     $this->session->set_flashdata('success', 'Staff updated successfully!');
-                    redirect('Staff/Staff_dash');
+                    redirect('Staff/list');
                 } else {
                     $this->edit($staff_id);
                 }
@@ -129,7 +129,7 @@ class Staff extends CI_Controller {
             case 'delete':
                 $this->Staff_model->delete_user($staff_id);
                 $this->session->set_flashdata('success', 'Staff deleted successfully!');
-                redirect('Staff/Staff_dash');
+                redirect('Staff/list');
                 break;
 
             default:
