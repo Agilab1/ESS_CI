@@ -60,7 +60,8 @@
               <div class="icon">
                 <i class="ion ion-stats-bars"></i>
               </div>
-              <a href="<?=base_url('staff/list'); ?>"  class="small-box-footer"> More Info<i class="fas fa-arrow-circle-right"></i></a>
+              <a href="<?= base_url('staff/list'); ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+
 
               <!-- <a href="list_staff" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
             </div>
