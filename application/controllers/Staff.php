@@ -60,25 +60,29 @@ public function edit($staff_id) {
 }
 
     public function view($staff_id) {
-        $data = new stdClass();
-        $data->action = 'view';
-        $data->staff = $this->Staff_model->get_user($staff_id);
-        $data->staff->join_dt  = date('Y-m-d', strtotime($data->staff->join_dt));
-        $data->staff->birth_dt = date('Y-m-d', strtotime($data->staff->birth_dt));
-        $this->load->view('incld/header');
-        $this->load->view('staff/staff_form', $data);
-        $this->load->view('incld/footer');
-    }
+    $data = new stdClass();
+    $data->action = 'view';
+    $data->staff = $this->Staff_model->get_user($staff_id);
+    if (!$data->staff) { show_404(); }
+    $data->staff->join_dt  = date('Y-m-d', strtotime($data->staff->join_dt));
+    $data->staff->birth_dt = date('Y-m-d', strtotime($data->staff->birth_dt));
+    $this->load->view('incld/header');
+    $this->load->view('Staff/staff_form', $data);  // ✔ Correct
+    $this->load->view('incld/footer');
+}
+
     public function delete($staff_id) {
-        $data = new stdClass();
-        $data->action = 'delete';
-        $data->staff = $this->Staff_model->get_user($staff_id);
-        $data->staff->join_dt  = date('Y-m-d', strtotime($data->staff->join_dt));
-        $data->staff->birth_dt = date('Y-m-d', strtotime($data->staff->birth_dt));
-        $this->load->view('incld/header');
-        $this->load->view('staff/staff_form', $data);
-        $this->load->view('incld/footer');
-    }
+    $data = new stdClass();
+    $data->action = 'delete';
+    $data->staff = $this->Staff_model->get_user($staff_id);
+    if (!$data->staff) { show_404(); }
+    $data->staff->join_dt  = date('Y-m-d', strtotime($data->staff->join_dt));
+    $data->staff->birth_dt = date('Y-m-d', strtotime($data->staff->birth_dt));
+    $this->load->view('incld/header');
+    $this->load->view('Staff/staff_form', $data); // ✔ Correct
+    $this->load->view('incld/footer');
+}
+
     private function validate() {
 
         $this->form_validation->set_rules('staff_id', 'Staff ID', 'required|trim');
