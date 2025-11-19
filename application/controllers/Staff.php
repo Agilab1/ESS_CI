@@ -67,7 +67,7 @@ public function edit($staff_id) {
     $data->staff->join_dt  = date('Y-m-d', strtotime($data->staff->join_dt));
     $data->staff->birth_dt = date('Y-m-d', strtotime($data->staff->birth_dt));
     $this->load->view('incld/header');
-    $this->load->view('Staff/staff_form', $data);  // ✔ Correct
+    $this->load->view('Staff/staff_form', $data); 
     $this->load->view('incld/footer');
 }
 
@@ -79,7 +79,7 @@ public function edit($staff_id) {
     $data->staff->join_dt  = date('Y-m-d', strtotime($data->staff->join_dt));
     $data->staff->birth_dt = date('Y-m-d', strtotime($data->staff->birth_dt));
     $this->load->view('incld/header');
-    $this->load->view('Staff/staff_form', $data); // ✔ Correct
+    $this->load->view('Staff/staff_form', $data);
     $this->load->view('incld/footer');
 }
 
