@@ -118,6 +118,31 @@ class User extends CI_Controller {
         $this->session->set_flashdata('success', 'User deleted successfully');
         redirect('user/list');
     }
+    public function save() {
+
+        $action = $this->input->post('action');
+        $user_id = $this->input->post('user_id');
+
+        $data = [
+            'user_nm' => $this->input->post('user_nm'),
+            'mail_id' => $this->input->post('mail_id'),
+            'pass_wd' => password_hash($this->input->post('pass_wd'), PASSWORD_DEFAULT),
+            'role_id' => $this->input->post('role_id')
+        ];
+
+        if ($action == 'add') {
+            $this->User_model->insert_user($data);
+            $this->session->set_flashdata('success', 'User added successfully');
+        } 
+        else if ($action == 'edit') {
+            unset($data['pass_wd']); 
+            $this->User_model->update_user($user_id, $data);
+            $this->session->set_flashdata('success', 'User updated successfully');
+        }
+
+        redirect('user/list');
+    }
 
 }
+
 ?>
