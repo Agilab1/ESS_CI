@@ -1,6 +1,6 @@
 <div class="card">
      <div class="card-header d-flex justify-content-between align-items-center">
-        <h2 class="mb-0">Role Details</h2>
+        <h3 class="mb-0">Role Details</h3>
         <a style="margin-left: 80%;" href="<?= base_url('Role/add'); ?>" class="btn btn-primary">Add Role</a>
     </div>
     <div class="card-body">
@@ -20,9 +20,7 @@
                     <th>Role ID</th>
                     <th>User Role</th>
                     <th>Status</th>
-                    <th class="text-center">View</th>
-                    <th class="text-center">Edit</th>
-                    <th class="text-center">Delete</th>
+                   <th colspan="3" class="text-center" style="width: 6vw;">Action</th>
                 </tr>
             </thead>
             <tbody>

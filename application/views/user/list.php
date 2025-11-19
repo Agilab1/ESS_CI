@@ -1,8 +1,8 @@
 <div class="card">
     
     <div class="card-header d-flex justify-content-between align-items-center">
-    <h2 class="mb-0">Users Details</h2>
-    <a style="margin-left: 78%;" href="<?=base_url('admin/add'); ?>"> <button class="btn btn-primary float-right"> Add Users</button></a>
+    <h3 class="mb-0">Users Details</h3>
+    <a style="margin-left: 78%;" href="<?=base_url('User/add'); ?>"> <button class="btn btn-primary float-right"> Add Users</button></a>
     </div>
     <!-- /.card-header------------------------------------------------------------------------------------------------- -->
     <div class="card-body">

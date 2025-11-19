@@ -1,6 +1,6 @@
 <div class="card">
    <div class="card-header d-flex justify-content-between align-items-center">
-        <h2 class="mb-0">Staff Details</h2>
+        <h3 class="mb-0">Staff Details</h3>
         <a style="margin-left: 80%;" href="<?= base_url('Staff/add'); ?>" class="btn btn-primary">Add Staff</a>
     </div>
 
@@ -18,10 +18,10 @@
 
             <thead>
                 <tr>
-                    <th style="width:2.3vw">SrNO</th>
+                    <!-- <th style="width:2.3vw">SrNO</th> -->
                     <th style="width:4vw">Staff ID</th>
-                    <th style="width:6.6vw">Employee Name</th>
-                    <th style="width:4.8vw">NFC CardNo</th>
+                    <th style="width:6.6vw">Emp Name</th>
+                    <th style="width:4.8vw">NFC Card No</th>
                     <th style="width:4vw">Job Role</th>
                     <th style="width:4vw">Join Date</th>
                     <th style="width:5vw">Phone NO</th>
@@ -38,7 +38,7 @@
                     <?php foreach ($staffs as $count => $staff): ?>
                         <tr>
                             <td><?= ++$count ?></td>
-                            <td><?= $staff->staff_id ?></td>
+                            <!-- <td><?= $staff->staff_id ?></td> -->
                             <td><?= $staff->emp_name ?></td>
                             <td><?= $staff->nfc_card ?></td>
                             <td><?= $staff->desig ?></td>
