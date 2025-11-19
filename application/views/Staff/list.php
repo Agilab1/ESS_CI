@@ -1,11 +1,7 @@
 <div class="card">
-    <div class="card-header">
-        <!-- Optional Add Button -->
-        <!-- <a href="<?= base_url('Staff/add'); ?>" class="btn btn-primary float-right">Add Staff</a> -->
-        <a href="<?= base_url('Staff/add'); ?>"> <button class="btn btn-primary float-right"> Add Staff</button></a>
-
-
-
+   <div class="card-header d-flex justify-content-between align-items-center">
+        <h2 class="mb-0">Staff Details</h2>
+        <a style="margin-left: 80%;" href="<?= base_url('Staff/add'); ?>" class="btn btn-primary">Add Staff</a>
     </div>
 
     <div class="card-body">

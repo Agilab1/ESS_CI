@@ -1,8 +1,7 @@
 <div class="card">
-    <div class="card-header">
-        <a href="<?= base_url('Role/add'); ?>">
-            <button class="btn btn-primary float-right">Add User Role</button>
-        </a>
+     <div class="card-header d-flex justify-content-between align-items-center">
+        <h2 class="mb-0">Role Details</h2>
+        <a style="margin-left: 80%;" href="<?= base_url('Role/add'); ?>" class="btn btn-primary">Add Role</a>
     </div>
     <div class="card-body">
         <?php if ($this->session->flashdata('success')): ?>
