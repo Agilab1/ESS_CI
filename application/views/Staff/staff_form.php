@@ -6,16 +6,14 @@
                     <div class="card-header">
                         <h5><?= $action ?> Staff</h5>
                     </div>
-
                     <div class="card-body">
-
-                        <form method="post" action="<?=base_url('Staff/save'); ?>" autocomplete="off">
-
+                        <form method="post" action="<?= base_url('Staff/save'); ?>" autocomplete="off">
+                            <?php 
+                                $readonly = ($action == 'view') ? 'readonly disabled' : '';
+                            ?>
                             <table class="table table-bordered">
-
                                 <input type="hidden" name="action" value="<?= $action ?>">
                                 <input type="hidden" name="old_staff_id" value="<?= $staff->staff_id ?? '' ?>">
-
                                 <tr>
                                     <td colspan="2">
                                         <label class="form-label">Staff ID</label>
@@ -25,56 +23,54 @@
                                         <small class="text-danger"><?= form_error('staff_id'); ?></small>
                                     </td>
                                 </tr>
-
                                 <tr>
                                     <td>
                                         <label>Employee Name</label>
                                         <input class="form-control" type="text" name="emp_name"
-                                            value="<?= $staff->emp_name ?? '' ?>">
+                                            value="<?= $staff->emp_name ?? '' ?>"
+                                            <?= $readonly ?>>
                                         <small class="text-danger"><?= form_error('emp_name'); ?></small>
                                     </td>
-
                                     <td>
                                         <label>NFC Card</label>
                                         <input class="form-control" type="text" name="nfc_card"
-                                            value="<?= $staff->nfc_card ?? '' ?>">
+                                            value="<?= $staff->nfc_card ?? '' ?>"
+                                            <?= $readonly ?>>
                                         <small class="text-danger"><?= form_error('nfc_card'); ?></small>
                                     </td>
                                 </tr>
-
                                 <tr>
                                     <td>
                                         <label>Designation</label>
                                         <input class="form-control" type="text" name="desig"
-                                            value="<?= $staff->desig ?? '' ?>">
+                                            value="<?= $staff->desig ?? '' ?>"
+                                            <?= $readonly ?>>
                                     </td>
-
                                     <td>
                                         <label>Join Date</label>
                                         <input class="form-control" type="date" name="join_dt"
-                                            value="<?= $staff->join_dt ?? '' ?>">
+                                            value="<?= $staff->join_dt ?? '' ?>"
+                                            <?= $readonly ?>>
                                     </td>
                                 </tr>
-
                                 <tr>
                                     <td>
                                         <label>Phone No</label>
                                         <input class="form-control" type="text" name="phn_no"
-                                            value="<?= $staff->phn_no ?? '' ?>">
+                                            value="<?= $staff->phn_no ?? '' ?>"
+                                            <?= $readonly ?>>
                                     </td>
-
                                     <td>
                                         <label>Birth Date</label>
                                         <input class="form-control" type="date" name="birth_dt"
-                                            value="<?= $staff->birth_dt ?? '' ?>">
+                                            value="<?= $staff->birth_dt ?? '' ?>"
+                                            <?= $readonly ?>>
                                     </td>
-
-
                                 </tr>
                                 <tr>
                                     <td>
                                         <label>Status</label>
-                                        <select class="form-control" name="staff_st">
+                                        <select class="form-control" name="staff_st" <?= $readonly ?>>
                                             <option value="">Select Status</option>
                                             <option value="Inactive" <?= isset($staff->staff_st) && $staff->staff_st == 'Inactive' ? 'selected' : '' ?>>
                                                 Inactive
@@ -85,17 +81,15 @@
                                         </select>
                                     </td>
                                 </tr>
-
+                                <?php if ($action != 'view'): ?>
                                 <tr>
                                     <td colspan="2" class="text-center">
                                         <button class="btn btn-primary" type="submit">Save</button>
                                     </td>
                                 </tr>
-
+                                <?php endif; ?>
                             </table>
-
                         </form>
-
                     </div>
                 </div>
             </div>
