@@ -54,18 +54,20 @@ class User extends CI_Controller {
     }
 
     public function list() {
-        $data['users'] = $this->User_model->get_user();
+        $this->load->model('Dashboard_model');
+		$data['users'] = $this->User_model->get_user();
         $data['counts'] = $this->Dashboard_model->counts();
-
         $this->load->view('incld/verify');
         $this->load->view('incld/header');
-        $this->load->view('incld/top_menu');
-        $this->load->view('incld/side_menu');
-        $this->load->view('user/list', $data); 
-        $this->load->view('incld/jslib');
-        $this->load->view('incld/footer');
-        $this->load->view('incld/script');
-    }
+		$this->load->view('incld/top_menu');
+		$this->load->view('incld/side_menu');
+		$this->load->view('user/dashboard',$data);  
+		$this->load->view('user/list',$data);
+		$this->load->view('incld/jslib');
+		$this->load->view('incld/footer');
+		$this->load->view('incld/script');
+
+	}
 
     public function add() {
         $data['action'] = 'add';
