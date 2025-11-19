@@ -19,7 +19,7 @@
             <thead>
                 <tr>
                     <!-- <th style="width:2.3vw">SrNO</th> -->
-                    <th style="width:5px">Staff ID</th>
+                    <th style="width:3px">Staff ID</th>
                     <th style="width:4vw">Emp Name</th>
                     <th style="width:1vw">NFC Card No</th>
                     <th style="width:5vw">Job Role</th>
