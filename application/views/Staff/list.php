@@ -35,8 +35,8 @@
                 <?php if ($staffs): ?>
                     <?php foreach ($staffs as $count => $staff): ?>
                         <tr>
-                            <td><?= ++$count ?></td>
-                            <!-- <td><?= $staff->staff_id ?></td> -->
+                            <!-- <td><?= ++$count ?></td> -->
+                            <td><?= $staff->staff_id ?></td>
                             <td><?= $staff->emp_name ?></td>
                             <td><?= $staff->nfc_card ?></td>
                             <td><?= $staff->desig ?></td>
