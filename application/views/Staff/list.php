@@ -26,7 +26,7 @@
                     <th style="width:1vw">Join Date</th>
                     <th style="width:1vw">Phone NO</th>
                     <th style="width:1vw">Birth Date</th>
-                    <th>Status</th>
+                    <th style="width: 1px;">Status</th>
                     <th colspan="3" class="text-center" style="width: 1vw;">Action</th>
                 </tr>
             </thead>
