@@ -124,9 +124,16 @@
                                     </td>
 
                                     <td>
+<<<<<<< HEAD
+                                        <label class="form-label">Is Admin?</label>
+                                        <input type="checkbox" class="form-control" name="user_ad" value="1"
+                                            <?= (isset($user->user_ad) && $user->user_ad == "1") ? 'checked' : '' ?> class="form-control">   
+                                            <!-- add form class for checkbox -->
+=======
                                         <label class="form-label">Is Admin?</label><br>
                                         <input type="checkbox" name="user_ad" value="1"
                                             <?= (isset($user->user_ad) && $user->user_ad == "1") ? 'checked' : '' ?>>
+>>>>>>> c6ee96508dfe66b7e92506c613bd9d0a0a95f849
                                         <small class="text-danger"><?= form_error('user_ad'); ?></small>
                                     </td>
                                 </tr>
