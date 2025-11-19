@@ -26,7 +26,6 @@
 
                                     </td>
                                 </tr>
-
                                 <tr>
                                     <td>
                                         <label class="form-label">User Name</label>
@@ -131,7 +130,6 @@
                                         <small class="text-danger"><?= form_error('user_ad'); ?></small>
                                     </td>
                                 </tr>
-
                                 <tr>
                                     <td colspan="2" class="text-center">
                                         <button class="btn btn-primary" type="submit">Save</button>
