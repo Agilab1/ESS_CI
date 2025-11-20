@@ -43,21 +43,19 @@
                         <td><?php echo $user->user_ty; ?></td>
                         <!-- <td><?php echo $user->user_st; ?></td> -->
                          <!-- Status with Checkbox -->
-       <td class="text-center">
-    <input type="checkbox"
-        style="
-            width:18px;
-            height:10px;
-            margin-top:10px;
-            transform: scale(1.4);
-            
-            cursor:not-allowed;
-        "
-        <?= ($user->user_st == 'Active') ? 'checked' : '' ?>
-        >
-</td>
-
-        </td>
+                       <td class="text-center">
+                        <input type="checkbox"
+                        style="
+                            width:18px;
+                            height:10px;
+                            margin-top:10px;
+                            transform: scale(1.4);
+                            cursor:not-allowed;
+                            "
+                         <?= ($user->user_st == 'Active') ? 'checked' : '' ?>>
+                        </td>
+  
+                       <!-- </td> -->
                         <td class="text-center"><a href="<?=base_url('user/view').'/'.$user->user_id?>"><i class="fa fa-eye"></i></a></td>
                         <td class="text-center"><a href="<?=base_url('user/edit').'/'.$user->user_id?>"><i class="fa fa-edit"></i></a></td>
                         <td class="text-center"><a href="<?= base_url('user/delete_user/'.$user->user_id) ?>"onclick="return confirm('Delete this user?');"><i class="fa fa-trash text-danger"></i></a> </td>                 
