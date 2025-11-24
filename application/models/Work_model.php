@@ -1,35 +1,71 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Work_model extends CI_Model {
-  public function get_user($staff_id = '')
+class Work_model extends CI_Model
 {
-    $this->db->select('works.*, staffs.emp_name');
-    $this->db->from('works');
-    $this->db->join('staffs', 'staffs.staff_id = works.staff_id', 'left');
 
-    if ($staff_id != '') {
-        $this->db->where('works.staff_id', $staff_id);
+    // Get monthly attendance with complete dates even if no punch
+    public function get_monthly_attendance($staff_id, $year = null, $month = null)
+    {
+        if ($year === null) $year = date('Y');
+        if ($month === null) $month = date('m');
+
+        $start_date = date('Y-m-01', strtotime("$year-$month-01"));
+        $end_date   = date('Y-m-t', strtotime($start_date));
+
+        $this->db->select('
+            dates.date AS punch_date,
+            works.staff_id,
+            works.staff_st,
+            staffs.emp_name
+        ');
+        $this->db->from('dates');
+
+        $this->db->join(
+            'works',
+            'works.date = dates.date AND works.staff_id = ' . $this->db->escape($staff_id),
+            'left',
+            false
+        );
+
+        $this->db->join(
+            'staffs',
+            'staffs.staff_id = ' . $this->db->escape($staff_id),
+            'left',
+            false
+        );
+
+        $this->db->where('dates.date >=', $start_date);
+        $this->db->where('dates.date <=', $end_date);
+        $this->db->order_by('dates.date', 'ASC');
+
+        return $this->db->get()->result();
     }
 
-    return $this->db->get()->result();  
-}
+    // Insert / update avoiding duplicate
+    // Insert / Update avoid duplicate
+    public function upsert_status($data)
+    {
+        $this->db->where('staff_id', $data['staff_id']);
+        $this->db->where('date', $data['date']);
+        $query = $this->db->get('works');
 
-    public function add_user($data) {
-        return $this->db->insert('works', $data);
+        if ($query->num_rows() > 0) {
+            return $this->db->update('works', ['staff_st' => $data['staff_st']], [
+                'staff_id' => $data['staff_id'],
+                'date' => $data['date']
+            ]);
+        } else {
+            return $this->db->insert('works', $data);
+        }
     }
 
-    public function edit_user($staff_id, $data) {
-        $this->db->where('staff_id', $staff_id);
-        return $this->db->update('works', $data);
+    public function get_status($staff_id, $date)
+    {
+        $row = $this->db->get_where('works', [
+            'staff_id' => $staff_id,
+            'date' => $date
+        ])->row();
+        return $row ? $row->staff_st : null;
     }
-
-    public function delete_user($staff_id) {
-        return $this->db->delete('works', ['staff_id' => $staff_id]);
-    }
-    public function add_status($data)
-{
-    return $this->db->insert('works', $data);
-}
-
 }

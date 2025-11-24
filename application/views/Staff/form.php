@@ -10,10 +10,7 @@
                 <div class="card shadow">
                     <div class="card-body">
 
-                        <!-- FIXED FORM ACTION -->
                         <form method="post" action="<?= base_url('Staff/emp_list/' . $staff->staff_id); ?>" autocomplete="off">
-
-                            <input type="hidden" name="old_staff_id" value="<?= $staff->staff_id ?? '' ?>">
 
                             <table class="table table-bordered">
 
@@ -22,7 +19,7 @@
                                     <td colspan="2">
                                         <label class="form-label">Staff ID</label>
                                         <input class="form-control" type="text" name="staff_id"
-                                               value="<?= $staff->staff_id ?? '' ?>" readonly>
+                                            value="<?= $staff->staff_id ?>" readonly>
                                     </td>
                                 </tr>
 
@@ -31,18 +28,19 @@
                                     <td>
                                         <label>Employee Name</label>
                                         <input class="form-control" type="text" name="emp_name"
-                                               value="<?= $staff->emp_name ?? '' ?>" readonly>
+                                            value="<?= $staff->emp_name ?>" readonly>
                                     </td>
 
                                     <td>
                                         <label>Work Status</label>
                                         <select class="form-control" name="staff_st">
-                                            <option value="No Punch">No Punch</option>
-                                            <option value="WFH">WFH</option>
-                                            <option value="On Duty">On Duty</option>
-                                            <option value="Leave">Leave</option>
-                                            <option value="WFO">WFO</option>
+                                            <option value="No Punch" <?= ($todayStatus == 'No Punch') ? 'selected' : '' ?>>No Punch</option>
+                                            <option value="WFO" <?= ($todayStatus == 'WFO') ? 'selected' : '' ?>>WFO</option>
+                                            <option value="WFH" <?= ($todayStatus == 'WFH') ? 'selected' : '' ?>>WFH</option>
+                                            <option value="On Duty" <?= ($todayStatus == 'On Duty') ? 'selected' : '' ?>>On Duty</option>
+                                            <option value="Leave" <?= ($todayStatus == 'Leave') ? 'selected' : '' ?>>Leave</option>
                                         </select>
+
                                     </td>
                                 </tr>
 
@@ -50,8 +48,12 @@
                                 <tr>
                                     <td>
                                         <label>Date</label>
-                                        <input class="form-control" type="date" name="date"
-                                               value="<?= $today ?? date('Y-m-d') ?>">
+
+                                        <!-- IMPORTANT: original date for update -->
+                                        <input type="hidden" name="old_date" value="<?= $today ?>">
+
+                                        <!-- visible only -->
+                                        <input class="form-control" type="date" value="<?= $today ?>" readonly>
                                     </td>
                                 </tr>
 
@@ -65,6 +67,7 @@
                             </table>
 
                         </form>
+
                     </div>
                 </div>
 

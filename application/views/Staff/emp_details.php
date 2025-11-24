@@ -5,16 +5,11 @@
             <div class="card card-primary">
 
                 <div class="card-header">
-                    <div class="row">
-                        <div class="col-sm-8">
-                            <h3 class="card-title">Employee Details</h3>
-                        </div>
-                    </div>
+                    <h3 class="card-title">Punching Details</h3>
                 </div>
 
                 <div class="card-body">
 
-                    <!-- Responsive Wrapper -->
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped table-hover mb-0">
 
@@ -23,23 +18,60 @@
                                     <th>Punch Date</th>
                                     <th>Staff ID</th>
                                     <th>Employee Name</th>
-                                    <th>Work Status</th>
+                                    <th>Holiday</th>
+                                    <th>Status</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
+
                             <tbody>
 
-                                <?php foreach ($works as $item) { ?>
-                                    <tr>
-                                        <td><?= $item->date ?></td>
-                                        <td><?= $item->staff_id ?></td>
-                                        <td><?= $item->emp_name ?></td>
+                                <?php foreach ($works as $item): ?>
+                                    <?php
+                                    $formatDate = $item->punch_date;
+                                    $dbHoliday  = $holiday_model->getHolidayByDate($formatDate);
+                                    $dayName = date('l', strtotime($formatDate));
+                                    $isHoliday = (!empty($dbHoliday) || $dayName == 'Saturday' || $dayName == 'Sunday');
+                                    ?>
+                                    <tr class="<?= $isHoliday ? 'table-danger' : '' ?>">
+
+                                        <td><?= $item->punch_date ?></td>
+                                        <td><?= $staff->staff_id ?></td>
+                                        <td><?= $staff->emp_name ?></td>
+
+
+                                        <!-- Holiday Column -->
+                                        <td>
+                                            <?php
+                                            if (!empty($dbHoliday)) {
+                                                echo "<span class='text-danger font-weight-bold'>{$dbHoliday->day_txt}</span>";
+                                            } elseif ($dayName == 'Saturday') {
+                                                echo "<span class='text-danger font-weight-bold'>Saturday Off</span>";
+                                            } elseif ($dayName == 'Sunday') {
+                                                echo "<span class='text-danger font-weight-bold'>Sunday Off</span>";
+                                            } else {
+                                                echo "<span class='text-success font-weight-bold'>Working Day</span>";
+                                            }
+                                            ?>
+                                        </td>
+
+                                        <!-- Action Column (Right Side) -->
                                         <td><?= $item->staff_st ?></td>
                                         <td>
-                                            <a href="<?= base_url('Staff/status/' . $item->staff_id); ?>" class="btn btn-sm btn-primary">View</a>
+
+                                            <?php if ($isHoliday): ?>
+                                                <span class="text-danger font-weight-bold">
+                                                    <?= !empty($item->staff_st) ? $item->staff_st : ($dayName == 'Saturday' ? 'Saturday Off' : ($dayName == 'Sunday' ? 'Sunday Off' : 'Holiday')) ?>
+                                                </span>
+                                            <?php else: ?>
+                                                <a href="<?= base_url('Staff/status/' . $staff->staff_id . '?date=' . $item->punch_date) ?>"
+                                                    class="btn btn-sm btn-primary">Update</a>
+                                            <?php endif; ?>
                                         </td>
+
                                     </tr>
-                                <?php } ?>
+                                <?php endforeach; ?>
+
                             </tbody>
 
 
@@ -47,10 +79,7 @@
                     </div>
 
                 </div>
-
             </div>
         </div>
-
-
     </div>
 </div>
