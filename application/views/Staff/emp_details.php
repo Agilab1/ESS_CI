@@ -8,7 +8,7 @@
 
                     <div class="row">
                         <div class="col-sm-8">
-                            <h3 class="card-title">Punch Details</h3>
+                            <h3 class="card-title">Punching Details</h3>
                         </div>
                     </div>
                 </div>
