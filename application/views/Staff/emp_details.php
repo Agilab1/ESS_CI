@@ -5,7 +5,12 @@
             <div class="card card-primary">
 
                 <div class="card-header">
-                    <h3 class="card-title">Punching Details</h3>
+
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <h3 class="card-title">Punch Details</h3>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="card-body">
