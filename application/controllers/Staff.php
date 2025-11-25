@@ -215,7 +215,8 @@ class Staff extends CI_Controller
                 $data = $this->validate();
                 if ($data) {
                     $this->Staff_model->edit_user($staff_id, $data);
-                    $this->session->set_flashdata('success', 'Staff updated successfully!');
+                     $staff_id = $data['staff_id'];
+                    $this->session->set_flashdata('success', $staff_id.'Staff updated successfully!');
                     redirect('Staff/list');
                 } else {
                     $this->edit($staff_id);
@@ -224,7 +225,8 @@ class Staff extends CI_Controller
 
             case 'delete':
                 $this->Staff_model->delete_user($staff_id);
-                $this->session->set_flashdata('success', 'Staff deleted successfully!');
+                
+                $this->session->set_flashdata('success', $staff_id.'Staff deleted successfully!');
                 redirect('Staff/list');
                 break;
 
