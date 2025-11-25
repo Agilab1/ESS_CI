@@ -202,7 +202,9 @@ class Staff extends CI_Controller
                 $data = $this->validate();
                 if ($data) {
                     $this->Staff_model->add_user($data);
-                    $this->session->set_flashdata('success', 'Staff added successfully!');
+                     $staff_id = $data['staff_id'];
+                    $this->session->set_flashdata('success', $staff_id. 'Staff added successfully!');
+                   
                     redirect('Staff/list');
                 } else {
                     $this->add();
