@@ -201,22 +201,28 @@ class Staff extends CI_Controller
             case 'add':
                 $data = $this->validate();
                 if ($data) {
+
+                    // Check duplicate staff_id
+                    if ($this->Staff_model->exists($data['staff_id'])) {
+                        $this->session->set_flashdata('error', 'This Staff ID already exists!');
+                        redirect('Staff/add');
+                    }
+
                     $this->Staff_model->add_user($data);
-                     $staff_id = $data['staff_id'];
-                    $this->session->set_flashdata('success', $staff_id. 'Staff added successfully!');
-                   
+                    $this->session->set_flashdata('success', 'Staff added successfully!');
                     redirect('Staff/list');
                 } else {
                     $this->add();
                 }
                 break;
 
+
             case 'edit':
                 $data = $this->validate();
                 if ($data) {
                     $this->Staff_model->edit_user($staff_id, $data);
-                     $staff_id = $data['staff_id'];
-                    $this->session->set_flashdata('success', $staff_id.'Staff updated successfully!');
+                    $staff_id = $data['staff_id'];
+                    $this->session->set_flashdata('success', $staff_id . 'Staff updated successfully!');
                     redirect('Staff/list');
                 } else {
                     $this->edit($staff_id);
@@ -225,8 +231,8 @@ class Staff extends CI_Controller
 
             case 'delete':
                 $this->Staff_model->delete_user($staff_id);
-                
-                $this->session->set_flashdata('success', $staff_id.'Staff deleted successfully!');
+
+                $this->session->set_flashdata('success', $staff_id . 'Staff deleted successfully!');
                 redirect('Staff/list');
                 break;
 
