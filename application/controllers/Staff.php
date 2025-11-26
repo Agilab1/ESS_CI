@@ -24,7 +24,6 @@ class Staff extends CI_Controller
 
         $data['today'] = $this->input->get('date') ?? date('Y-m-d');
 
-        // 🔥 If no status → default No Punch
         $status = $this->Work_model->get_status($staff_id, $data['today']);
         $data['todayStatus'] = $status ? $status : "No Punch";
 
@@ -39,26 +38,30 @@ class Staff extends CI_Controller
         $this->load->view('incld/jslib');
         $this->load->view('incld/script');
     }
+
+
+
+    // 🔥 SHOW MONTHLY ATTENDANCE + SAVE STATUS + REMARK
     public function emp_list($staff_id = null)
     {
         if ($staff_id === null) {
-            $staff_id = $this->input->get('staff_id');   // pickup from query if exists
+            $staff_id = $this->input->get('staff_id');
         }
-        if (empty($staff_id)) {
-            redirect('Staff/list');  // safe redirect instead of error
-        }
-
-        if (empty($staff_id)) show_error("Staff ID missing.");
+        if (empty($staff_id)) redirect('Staff/list');
 
         $data['staff'] = $this->Staff_model->get_user($staff_id);
         if (!$data['staff']) show_error("Employee not found.");
 
+        // ⭐ SAVE STATUS + REMARK
         if ($this->input->method() === 'post') {
+
             $insert = [
                 'staff_id' => $staff_id,
                 'staff_st' => $this->input->post('staff_st'),
-                'date'     => $this->input->post('old_date') // always old date
+                'remark'   => $this->input->post('remark'),   // ⭐ NEW
+                'date'     => $this->input->post('old_date')
             ];
+
             $this->Work_model->upsert_status($insert);
             redirect('Staff/emp_list/' . $staff_id);
         }
@@ -77,17 +80,24 @@ class Staff extends CI_Controller
         $this->load->view('incld/script');
     }
 
-    // 🔥 AJAX: Inline Work Status Update
+
+
+    // 🔥 INLINE UPDATE (AJAX) — Added remark support
     public function update_status_inline()
     {
         $data = [
             'staff_id' => $this->input->post('staff_id'),
             'date'     => $this->input->post('date'),
-            'staff_st' => $this->input->post('staff_st')
+            'staff_st' => $this->input->post('staff_st'),
+            'remark'   => $this->input->post('remark'),  // ⭐ NEW
         ];
+
         $this->Work_model->upsert_status($data);
+
         echo json_encode(["status" => "success"]);
     }
+
+
 
     public function list()
     {
@@ -105,6 +115,8 @@ class Staff extends CI_Controller
         $this->load->view('incld/script');
     }
 
+
+
     public function add()
     {
         $data = new stdClass();
@@ -117,13 +129,16 @@ class Staff extends CI_Controller
             'join_dt'  => '',
             'phn_no'   => '',
             'birth_dt' => '',
-            'staff_st' => ''
+            'staff_st' => '',
+            'remark'   => ''  // keep field
         ];
 
         $this->load->view('incld/header');
         $this->load->view('Staff/staff_form', $data);
         $this->load->view('incld/footer');
     }
+
+
 
     public function edit($staff_id)
     {
@@ -140,6 +155,8 @@ class Staff extends CI_Controller
         $this->load->view('incld/footer');
     }
 
+
+
     public function view($staff_id)
     {
         $data = new stdClass();
@@ -155,6 +172,8 @@ class Staff extends CI_Controller
         $this->load->view('incld/footer');
     }
 
+
+
     public function delete($staff_id)
     {
         $data = new stdClass();
@@ -162,13 +181,13 @@ class Staff extends CI_Controller
         $data->staff = $this->Staff_model->get_user($staff_id);
         if (!$data->staff) show_404();
 
-        $data->staff->join_dt  = date('Y-m-d', strtotime($data->staff->join_dt));
-        $data->staff->birth_dt = date('Y-m-d', strtotime($data->staff->birth_dt));
+        $this->Staff_model->delete_user($staff_id);
 
-        $this->load->view('incld/header');
-        $this->load->view('Staff/staff_form', $data);
-        $this->load->view('incld/footer');
+        $this->session->set_flashdata('success', $staff_id . ' Staff deleted successfully!');
+        redirect('Staff/list');
     }
+
+
 
     private function validate()
     {
@@ -186,11 +205,14 @@ class Staff extends CI_Controller
                 'phn_no'   => $this->input->post('phn_no'),
                 'birth_dt' => $this->input->post('birth_dt'),
                 'staff_st' => $this->input->post('staff_st'),
+                'remark'   => $this->input->post('remark')
             ];
         } else {
             return false;
         }
     }
+
+
 
     public function save()
     {
@@ -198,11 +220,11 @@ class Staff extends CI_Controller
         $staff_id = $this->input->post('old_staff_id');
 
         switch ($action) {
+
             case 'add':
                 $data = $this->validate();
                 if ($data) {
 
-                    // Check duplicate staff_id
                     if ($this->Staff_model->exists($data['staff_id'])) {
                         $this->session->set_flashdata('error', 'This Staff ID already exists!');
                         redirect('Staff/add');
@@ -216,13 +238,12 @@ class Staff extends CI_Controller
                 }
                 break;
 
-
             case 'edit':
                 $data = $this->validate();
                 if ($data) {
                     $this->Staff_model->edit_user($staff_id, $data);
                     $staff_id = $data['staff_id'];
-                    $this->session->set_flashdata('success', $staff_id . 'Staff updated successfully!');
+                    $this->session->set_flashdata('success', $staff_id . ' Staff updated successfully!');
                     redirect('Staff/list');
                 } else {
                     $this->edit($staff_id);
@@ -231,8 +252,7 @@ class Staff extends CI_Controller
 
             case 'delete':
                 $this->Staff_model->delete_user($staff_id);
-
-                $this->session->set_flashdata('success', $staff_id . 'Staff deleted successfully!');
+                $this->session->set_flashdata('success', $staff_id . ' Staff deleted successfully!');
                 redirect('Staff/list');
                 break;
 

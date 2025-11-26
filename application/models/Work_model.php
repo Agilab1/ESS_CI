@@ -17,6 +17,7 @@ class Work_model extends CI_Model
             dates.date AS punch_date,
             works.staff_id,
             works.staff_st,
+            works.remark,
             staffs.emp_name
         ');
         $this->db->from('dates');
@@ -42,7 +43,7 @@ class Work_model extends CI_Model
         return $this->db->get()->result();
     }
 
-    // Insert / update avoiding duplicate
+
     // Insert / Update avoid duplicate
     public function upsert_status($data)
     {
@@ -51,14 +52,26 @@ class Work_model extends CI_Model
         $query = $this->db->get('works');
 
         if ($query->num_rows() > 0) {
-            return $this->db->update('works', ['staff_st' => $data['staff_st']], [
-                'staff_id' => $data['staff_id'],
-                'date' => $data['date']
-            ]);
+
+            // UPDATE with remark included
+            return $this->db->update(
+                'works',
+                [
+                    'staff_st' => $data['staff_st'],
+                    'remark'   => $data['remark']
+                ],
+                [
+                    'staff_id' => $data['staff_id'],
+                    'date'     => $data['date']
+                ]
+            );
+
         } else {
+            // INSERT new row with remark
             return $this->db->insert('works', $data);
         }
     }
+
 
     public function get_status($staff_id, $date)
     {

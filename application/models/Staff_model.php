@@ -16,11 +16,13 @@ class Staff_model extends CI_Model
 
     public function add_user($data)
     {
+        // remark is already inside $data from controller
         return $this->db->insert('staffs', $data);
     }
 
     public function edit_user($staff_id, $data)
     {
+        // remark will update properly here
         $this->db->where('staff_id', $staff_id);
         return $this->db->update('staffs', $data);
     }
@@ -29,15 +31,10 @@ class Staff_model extends CI_Model
     {
         return $this->db->delete('staffs', ['staff_id' => $staff_id]);
     }
+
     public function exists($staff_id)
     {
         $this->db->where('staff_id', $staff_id);
         return $this->db->get('staffs')->num_rows() > 0;
     }
-
-
-    // public function get_staff_count()
-    // {
-    //     return $this->db->count_all('staffs');
-    // }
 }

@@ -40,7 +40,6 @@
                                             <option value="On Duty" <?= ($todayStatus == 'On Duty') ? 'selected' : '' ?>>On Duty</option>
                                             <option value="Leave" <?= ($todayStatus == 'Leave') ? 'selected' : '' ?>>Leave</option>
                                         </select>
-
                                     </td>
                                 </tr>
 
@@ -54,6 +53,16 @@
 
                                         <!-- visible only -->
                                         <input class="form-control" type="date" value="<?= $today ?>" readonly>
+                                    </td>
+                                </tr>
+
+                                <!-- REMARK FIELD (NEW) -->
+                                <tr>
+                                    <td colspan="2">
+                                        <label>Remark</label>
+                                        <input class="form-control" type="text" name="remark"
+                                            value="<?= isset($todayRemark) ? $todayRemark : '' ?>"
+                                            placeholder="Enter remark (optional)">
                                     </td>
                                 </tr>
 
