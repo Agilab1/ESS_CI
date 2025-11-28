@@ -71,12 +71,12 @@
               <div class="inner">
                  <h3>0</h3>
 
-                <p>-</p>
+                <p>Holiday</p>
               </div>
               <div class="icon">
                 <i class="ion ion-person-add"></i>
               </div>
-              <a href="list_prgrp.php" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="<?= base_url('holiday/list'); ?>"class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           <div class="col-lg-2 col-6">
