@@ -24,7 +24,7 @@
     <div class="card-header d-flex flex-wrap justify-content-between align-items-center">
         <h4 class="mb-2 mb-md-0">Holiday Details</h4>
 
-        <a href="<?= base_url('holiday/add'); ?>" class="btn btn-primary mt-2 mt-md-0">
+        <a href="<?= base_url('Holiday/add'); ?>" class="btn btn-primary mt-2 mt-md-0">
             <i class="fa fa-plus"></i> Add Holiday
         </a>
     </div>
@@ -63,21 +63,21 @@
 
                                 <!-- VIEW -->
                                 <td class="text-center">
-                                    <a href="<?= base_url('holiday/view/' . $h->date_id); ?>">
+                                    <a href="<?= base_url('Holiday/view/' . $h->date_id); ?>">
                                         <i class="fa fa-eye"></i>
                                     </a>
                                 </td>
 
                                 <!-- EDIT -->
                                 <td class="text-center">
-                                    <a href="<?= base_url('holiday/edit/' . $h->date_id); ?>">
+                                    <a href="<?= base_url('Holiday/edit/' . $h->date_id); ?>">
                                         <i class="fa fa-edit"></i>
                                     </a>
                                 </td>
 
                                 <!-- DELETE -->
                                 <td class="text-center">
-                                    <a href="<?= base_url('holiday/delete/' . $h->date_id); ?>"
+                                    <a href="<?= base_url('Holiday/delete/' . $h->date_id); ?>"
                                         onclick="return confirm('Delete holiday on date: <?= $h->date_id ?> ?');">
                                         <i class="fa fa-trash text-danger"></i>
                                     </a>

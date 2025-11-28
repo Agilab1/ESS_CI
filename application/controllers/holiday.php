@@ -13,22 +13,25 @@ class Holiday extends CI_Controller {
     /* ---------------------------------------------------------
         LIST HOLIDAYS
     --------------------------------------------------------- */
-    public function list()
-    {
-        $data = new stdClass();
-        $data->holidays = $this->Holiday_model->getAll();
-        $data->counts   = $this->Dashboard_model->counts();
+public function list()
+{
+    // Use associative array instead of stdClass
+    $data = [
+        'holidays' => $this->Holiday_model->getAll(),
+        'counts'   => $this->Dashboard_model->counts()
+    ];
 
-        $this->load->view('incld/verify');
-        $this->load->view('incld/header');
-        $this->load->view('incld/top_menu');
-        $this->load->view('incld/side_menu');
-         $this->load->view('user/dashboard', $data);
-        $this->load->view('holiday/list', $data);
-        $this->load->view('incld/jslib');
-        $this->load->view('incld/footer');
-        $this->load->view('incld/script');
-    }
+    // Load all views in proper order
+    $this->load->view('incld/verify');
+    $this->load->view('incld/header');
+    $this->load->view('incld/top_menu');
+    $this->load->view('incld/side_menu');
+    $this->load->view('user/dashboard', $data); // Dashboard view
+    $this->load->view('Holiday/list', $data);   // Holiday list view
+    $this->load->view('incld/jslib');
+    $this->load->view('incld/footer');
+    $this->load->view('incld/script');
+}
 
    
     /* ---------------------------------------------------------
@@ -41,7 +44,7 @@ class Holiday extends CI_Controller {
         $data->holiday = null;
 
         $this->load->view('incld/header');
-        $this->load->view('holiday/add', $data);
+        $this->load->view('Holiday/add', $data);
         $this->load->view('incld/footer');
     }
 
@@ -57,7 +60,7 @@ class Holiday extends CI_Controller {
         if (!$data->holiday) show_404();
 
         $this->load->view('incld/header');
-        $this->load->view('holiday/add', $data);
+        $this->load->view('Holiday/add', $data);
         $this->load->view('incld/footer');
     }
 
@@ -73,7 +76,7 @@ class Holiday extends CI_Controller {
         if (!$data->holiday) show_404();
 
         $this->load->view('incld/header');
-        $this->load->view('holiday/add', $data);
+        $this->load->view('Holiday/add', $data);
         $this->load->view('incld/footer');
     }
 
@@ -93,7 +96,7 @@ class Holiday extends CI_Controller {
         'Holiday on ' . $holiday->date_id . ' deleted successfully!'
     );
 
-    redirect('holiday/list');
+    redirect('Holiday/list');
 }
 
     /* ---------------------------------------------------------
@@ -115,13 +118,13 @@ class Holiday extends CI_Controller {
                 // Prevent duplicate dates
                 if ($this->Holiday_model->get_by_id($data['date_id'])) {
                     $this->session->set_flashdata('error', 'This holiday date already exists!');
-                    return redirect('holiday/add');
+                    return redirect('Holiday/add');
                 }
 
                 $this->Holiday_model->insertHoliday($data);
                 $this->session->set_flashdata('success', 'Holiday on ' . $data['date_id'] . ' added successfully!');
 
-                return redirect('holiday/list');
+                return redirect('Holiday/list');
 
 
             /* ========== EDIT HOLIDAY ========== */
@@ -134,7 +137,7 @@ class Holiday extends CI_Controller {
 
                $this->session->set_flashdata('success', 'Holiday on ' . $old_date . ' updated successfully!');
 
-                return redirect('holiday/list');
+                return redirect('Holiday/list');
 
 
             /* ========== DELETE HOLIDAY ========== */
@@ -147,7 +150,7 @@ class Holiday extends CI_Controller {
                //$this->session->set_flashdata('success', 'Holiday on ' . $date_id . ' deleted successfully!');
 
 
-                return redirect('holiday/list');
+                return redirect('Holiday/list');
 
 
             /* ========== INVALID ACTION ========== */
@@ -168,7 +171,7 @@ class Holiday extends CI_Controller {
         if ($this->form_validation->run() === FALSE) {
             return false;
         }
-
+          
         return [
             'date_id' => $this->input->post('date_id'),
             'day_cat' => $this->input->post('day_cat'),
