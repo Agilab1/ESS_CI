@@ -24,7 +24,7 @@ class Holiday extends CI_Controller {
         $this->load->view('incld/top_menu');
         $this->load->view('incld/side_menu');
          $this->load->view('user/dashboard', $data);
-        $this->load->view('Holiday/list', $data);
+        $this->load->view('holiday/list', $data);
         $this->load->view('incld/jslib');
         $this->load->view('incld/footer');
         $this->load->view('incld/script');
