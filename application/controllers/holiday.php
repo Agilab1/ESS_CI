@@ -26,8 +26,8 @@ public function list()
     $this->load->view('incld/header');
     $this->load->view('incld/top_menu');
     $this->load->view('incld/side_menu');
-    $this->load->view('user/dashboard', $data); // Dashboard view
-    $this->load->view('Holiday/list', $data);   // Holiday list view
+    //$this->load->view('user/dashboard', $data); // Dashboard view
+    //$this->load->view('Holiday/list', $data);   // Holiday list view
     $this->load->view('incld/jslib');
     $this->load->view('incld/footer');
     $this->load->view('incld/script');
