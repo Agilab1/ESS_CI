@@ -23,7 +23,7 @@
                                     <th>Staff ID</th>
                                     <th>Employee Name</th>
                                     <th>Status</th>
-                                    <th>Remark</th> <!-- ⭐ Added Remark column -->
+                                    <th>Remark</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -32,7 +32,7 @@
                                 <?php foreach ($works as $item): ?>
                                     <?php
                                     $formatDate = $item->punch_date;
-                                    $dbHoliday  = $holiday_model->getHolidayByDate($formatDate);
+                                    $dbHoliday = $holiday_model->getHolidayByDate($formatDate);
                                     $dayName = date('l', strtotime($formatDate));
 
                                     $isHoliday = (!empty($dbHoliday) || $dayName == 'Saturday' || $dayName == 'Sunday');
@@ -55,11 +55,13 @@
                                     }
                                     ?>
 
-                                    <tr class="<?= $isHoliday ? 'table-danger' : '' ?>">
+                                  <tr class="<?= $isHoliday ? 'table-danger' : '' ?>">
 
                                         <td><?= $item->punch_date ?></td>
-                                        <td><?= $staff->staff_id ?></td>
-                                        <td><?= $staff->emp_name ?></td>
+                                        <td><?= $item->staff_id ?></td>
+                                        <td><?= $item->emp_name ?></td>
+
+
 
                                         <td class="<?= $statusClass ?>"><?= $status ?></td>
 

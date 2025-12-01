@@ -3,6 +3,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 // ============== updated code new code 
 class Holiday_model extends CI_Model {
+     public function getHolidayByDate($date) {
+        return $this->db->get_where('holiday', ['date_id' => $date])->row();
+    }
 
     public function get_by_id($date_id)
     {
