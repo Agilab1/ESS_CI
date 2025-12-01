@@ -1,65 +1,67 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title><?= ucfirst($action) ?> Holiday</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-</head>
-<body class="p-4">
+<body class="p-4" style="background:#f5f7fa ; ">
+    <div class="d-flex justify-content-center align-items-center" style="height:100vh;">
 
-<div class="container">
-    <div class="card shadow">
-        <div class="card-header bg-primary text-white">
-            <h4><?= ucfirst($action) ?> Holiday</h4>
+        <div class="container " style="width:75%; max-width:900px;">
+            <div class="card shadow-lg border-0 rounded-4 overflow-hidden"
+                style="box-shadow: 0 12px 50px rgba(0,0,0,0.22); min-height:350px;">
+
+                <div class="card-header   border-5  py-3">
+                    <h4 class="m-0"><?= ucfirst($action) ?> Holiday</h4>
+                </div>
+
+                <div class="card-body p-4">
+
+                    <?php if ($this->session->flashdata('error')): ?>
+                        <div class="alert alert-danger"><?= $this->session->flashdata('error'); ?></div>
+                    <?php endif; ?>
+
+                    <form method="post" action="<?= base_url('Holiday/save'); ?>" autocomplete="off">
+
+                        <input type="hidden" name="action" value="<?= $action ?>">
+                        <input type="hidden" name="old_date_id" value="<?= $holiday->date_id ?? '' ?>">
+
+                        <table class="table table-bordered">
+
+                            <tr>
+                                <td class="p-3 w-50">
+                                    <label class="form-label">Holiday Date</label>
+                                    <input type="date" name="date_id" class="form-control" required>
+                                </td>
+
+                                <td class="p-3 w-50">
+                                    <label class="form-label">Day Category</label>
+                                    <input type="text" name="day_cat" class="form-control" required
+                                        placeholder="Public, Festival, Optional">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="p-3">
+                                    <label class="form-label">Description</label>
+                                    <textarea class="form-control" rows="4" name="day_txt" required
+                                        placeholder="Enter holiday description..."></textarea>
+                                </td>
+
+                                <td class="p-3">
+                                    <label class="form-label">Remark</label>
+                                    <textarea class="form-control" rows="4" name="remark"
+                                        placeholder="Enter remark (optional)..."></textarea>
+                                </td>
+                            </tr>
+                            <?php if ($action != 'view'): ?>
+                                <tr>
+                                    <td colspan="2" class="text-center pt-4 pb-3">
+                                        <button class="btn btn-primary px-5 py-2 rounded-3">Save</button>
+                                        <a href="<?= base_url('Holiday/list'); ?>" class="btn btn-secondary px-4 py-2 rounded-3 ms-3">Back</a>
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
+
+                        </table>
+
+                    </form>
+                </div>
+            </div>
         </div>
 
-        <div class="card-body">
-
-            <!-- Flash Messages -->
-            <?php if ($this->session->flashdata('success')): ?>
-                <div class="alert alert-success"><?= $this->session->flashdata('success'); ?></div>
-            <?php elseif ($this->session->flashdata('error')): ?>
-                <div class="alert alert-danger"><?= $this->session->flashdata('error'); ?></div>
-            <?php endif; ?>
-
-            <form action="<?= base_url('holiday/save'); ?>" method="post">
-
-                <!-- Hidden old_date_id for edit -->
-                <?php if ($action === 'edit'): ?>
-                    <input type="hidden" name="old_date_id" value="<?= $holiday->date_id ?>">
-                <?php endif; ?>
-
-                <input type="hidden" name="action" value="<?= $action ?>">
-
-                <div class="mb-3">
-                    <label for="date_id">Holiday Date</label>
-                    <input type="date" id="date_id" name="date_id" class="form-control"
-                           value="<?= isset($holiday) ? $holiday->date_id : set_value('date_id'); ?>"
-                           <?= ($action === 'view') ? 'readonly' : 'required'; ?>>
-                </div>
-
-                <div class="mb-3">
-                    <label for="day_cat">Day Category</label>
-                    <input type="text" id="day_cat" name="day_cat" class="form-control"
-                           value="<?= isset($holiday) ? $holiday->day_cat : set_value('day_cat'); ?>"
-                           <?= ($action === 'view') ? 'readonly' : 'required'; ?>
-                           placeholder="Public, Festival, Optional...">
-                </div>
-
-                <div class="mb-3">
-                    <label for="day_txt">Description</label>
-                    <textarea id="day_txt" name="day_txt" class="form-control" rows="3"
-                              <?= ($action === 'view') ? 'readonly' : 'required'; ?>><?= isset($holiday) ? $holiday->day_txt : set_value('day_txt'); ?></textarea>
-                </div>
-
-                <?php if ($action !== 'view'): ?>
-                    <button type="submit" class="btn btn-success"><?= ucfirst($action) ?> Holiday</button>
-                <?php endif; ?>
-                <a href="<?= base_url('holiday/list'); ?>" class="btn btn-secondary">Back</a>
-
-            </form>
-        </div>
     </div>
-</div>
-
 </body>
-</html>
