@@ -25,7 +25,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 */
 // $config['base_url'] = 'http://localhost/ESS_TEST/';
 $config['base_url'] = 'https://agilesaptech.com/ESS_CI/';
-//$config['base_url'] ='http://localhost/ESS_CI/';
 
 /*
 |--------------------------------------------------------------------------
