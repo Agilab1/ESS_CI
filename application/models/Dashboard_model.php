@@ -13,7 +13,8 @@ class Dashboard_model extends CI_Model { //test
         $dash = (object) [
             'cnt1' => '',  // Users
             'cnt2' => '',  // Roles
-            'cnt3' => ''   // Staffs
+            'cnt3' => '',   // Staffs
+            'cnt4' => ''    //holidays
         ];
 
         // USERS
@@ -32,6 +33,12 @@ class Dashboard_model extends CI_Model { //test
         if ($this->db->table_exists('staffs')) {
             $count = $this->db->count_all('staffs');
             $dash->cnt3 = $count > 0 ? $count : '';
+        }
+
+        // Holiday
+        if ($this->db->table_exists('holiday')) {
+            $count = $this->db->count_all('holiday');
+            $dash->cnt4 = $count > 0 ? $count : '';
         }
 
         return $dash;
