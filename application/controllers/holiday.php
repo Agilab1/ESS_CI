@@ -10,47 +10,49 @@ class Holiday extends CI_Controller {
         $this->load->library('form_validation');
     }
 
-    /* ---------------------------------------------------------
-        LIST HOLIDAYS
-    --------------------------------------------------------- */
-public function list()
-{
-    // Use associative array instead of stdClass
-    $data = [
-        'holidays' => $this->Holiday_model->getAll(),
-        'counts'   => $this->Dashboard_model->counts()
-    ];
-
-    // Load all views in proper order
-    $this->load->view('incld/verify');
-    $this->load->view('incld/header');
-    $this->load->view('incld/top_menu');
-    $this->load->view('incld/side_menu');
-    $this->load->view('user/dashboard', $data); // Dashboard view
-    $this->load->view('Holiday/list', $data);   // Holiday list view
-    $this->load->view('incld/jslib');
-    $this->load->view('incld/footer');
-    $this->load->view('incld/script');
-}
-
    
-    /* ---------------------------------------------------------
-        ADD HOLIDAY
-    --------------------------------------------------------- */
+        // LIST HOLIDAYS
+
+    public function list()
+    {
+        $data = [
+            'holidays' => $this->Holiday_model->getAll(),
+            'counts'   => $this->Dashboard_model->counts()
+        ];
+
+        $this->load->view('incld/verify');
+        $this->load->view('incld/header');
+        $this->load->view('incld/top_menu');
+        $this->load->view('incld/side_menu');
+        $this->load->view('user/dashboard', $data);
+        $this->load->view('Holiday/list', $data);
+        $this->load->view('incld/jslib');
+        $this->load->view('incld/footer');
+        $this->load->view('incld/script');
+    }
+
+    
+        // ADD HOLIDAY
+   
     public function add()
     {
         $data = new stdClass();
         $data->action  = 'add';
-        $data->holiday = null;
+        $data->holiday = (object)[
+            'date_id' => '',
+            'day_cat' => '',
+            'day_txt' => '',
+            // 'remark'  => ''
+        ];
 
         $this->load->view('incld/header');
         $this->load->view('Holiday/add', $data);
         $this->load->view('incld/footer');
     }
 
-    /* ---------------------------------------------------------
-        EDIT HOLIDAY
-    --------------------------------------------------------- */
+    
+        // EDIT HOLIDAY
+   
     public function edit($date_id)
     {
         $data = new stdClass();
@@ -64,9 +66,9 @@ public function list()
         $this->load->view('incld/footer');
     }
 
-    /* ---------------------------------------------------------
-        VIEW HOLIDAY
-    --------------------------------------------------------- */
+   
+        // VIEW HOLIDAY
+   
     public function view($date_id)
     {
         $data = new stdClass();
@@ -80,102 +82,73 @@ public function list()
         $this->load->view('incld/footer');
     }
 
-    /* ---------------------------------------------------------
-        DELETE HOLIDAY (DIRECT CALL)
-    --------------------------------------------------------- */
-  public function delete($date_id)
-{
-    $holiday = $this->Holiday_model->get_by_id($date_id);
-    if (!$holiday) show_404();
+    //  ---------------------------------------------------------
+        // DELETE HOLIDAY
+    public function delete($date_id)
+    {
+        $holiday = $this->Holiday_model->get_by_id($date_id);
 
-    $this->Holiday_model->deleteHoliday($date_id);
+        if (!$holiday) show_404();
 
-    // Flash message with actual date
-    $this->session->set_flashdata(
-        'success',
-        'Holiday on ' . $holiday->date_id . ' deleted successfully!'
-    );
+        $this->Holiday_model->deleteHoliday($date_id);
 
-    redirect('Holiday/list');
-}
+        $this->session->set_flashdata('success', "Holiday on {$date_id} deleted successfully!");
+        redirect('Holiday/list');
+    }
 
-    /* ---------------------------------------------------------
-        SAVE (ADD, EDIT, DELETE)
-    --------------------------------------------------------- */
+        // SAVE (ADD / EDIT)
     public function save()
     {
         $action   = strtolower($this->input->post('action'));
-        $old_date = $this->input->post('old_date_id'); // old PK
+        $old_date = $this->input->post('old_date_id');
+
+        $data = $this->validate();
+        if (!$data) {
+            return $action == 'add'
+                ? $this->add()
+                : $this->edit($old_date);
+        }
 
         switch ($action) {
 
-            /* ========== ADD HOLIDAY ========== */
             case 'add':
-
-                $data = $this->validate();
-                if (!$data) return $this->add();
-
-                // Prevent duplicate dates
-                if ($this->Holiday_model->get_by_id($data['date_id'])) {
-                    $this->session->set_flashdata('error', 'This holiday date already exists!');
+                if ($this->Holiday_model->exists($data['date_id'])) {
+                    $this->session->set_flashdata('error', 'This holiday already exists!');
                     return redirect('Holiday/add');
                 }
 
                 $this->Holiday_model->insertHoliday($data);
-                $this->session->set_flashdata('success', 'Holiday on ' . $data['date_id'] . ' added successfully!');
-
+                $this->session->set_flashdata('success', "Holiday on {$data['date_id']} added successfully!");
                 return redirect('Holiday/list');
 
-
-            /* ========== EDIT HOLIDAY ========== */
             case 'edit':
-
-                $data = $this->validate();
-                if (!$data) return $this->edit($old_date);
-
                 $this->Holiday_model->updateHoliday($old_date, $data);
-
-               $this->session->set_flashdata('success', 'Holiday on ' . $old_date . ' updated successfully!');
-
+                $this->session->set_flashdata('success', "Holiday updated successfully!");
                 return redirect('Holiday/list');
 
-
-            /* ========== DELETE HOLIDAY ========== */
-            case 'delete':
-
-                if ($old_date) {
-                    $this->Holiday_model->deleteHoliday($old_date);
-                }
-
-               //$this->session->set_flashdata('success', 'Holiday on ' . $date_id . ' deleted successfully!');
-
-
-                return redirect('Holiday/list');
-
-
-            /* ========== INVALID ACTION ========== */
             default:
                 show_error("Invalid Action!");
         }
     }
 
-    /* ---------------------------------------------------------
-        VALIDATION
-    --------------------------------------------------------- */
+    
+        // VALIDATION
+  
     private function validate()
     {
         $this->form_validation->set_rules('date_id', 'Holiday Date', 'required');
         $this->form_validation->set_rules('day_cat', 'Day Category', 'required');
         $this->form_validation->set_rules('day_txt', 'Description', 'required');
 
-        if ($this->form_validation->run() === FALSE) {
+        if (!$this->form_validation->run()) {
             return false;
         }
-          
+
         return [
             'date_id' => $this->input->post('date_id'),
             'day_cat' => $this->input->post('day_cat'),
-            'day_txt' => $this->input->post('day_txt')
+            'day_txt' => $this->input->post('day_txt'),
+            // 'remark'  => $this->input->post('remark')
         ];
     }
 }
