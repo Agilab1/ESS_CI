@@ -7,7 +7,7 @@
                 <div class="card-header">
                     <div class="row">
                         <div class="col-sm-8">
-                            <h3>Punching Details</h3>
+                            <h4 class="mb-2 mb-md-0">Punching Details</h4>
                         </div>
                     </div>
                 </div>
