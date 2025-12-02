@@ -37,6 +37,7 @@
       <div class="alert alert-danger"><?= $this->session->flashdata('error'); ?></div>
     <?php endif; ?>
 
+
     <?php
     $curMonth = $month ?? date('m');
     $curYear  = $year ?? date('Y');
@@ -58,6 +59,7 @@
     }
     ?>
 
+
     <!-- FILTER + NAVIGATION -->
     <div class="d-flex justify-content-between mb-3">
 
@@ -74,28 +76,25 @@
 
         <select name="year" class="form-control" style="max-width:120px;">
           <?php for ($y = date('Y') - 2; $y <= date('Y') + 2; $y++): ?>
-            <option value="<?= $y ?>" <?= ($y == $curYear) ? 'selected' : '' ?>>
-              <?= $y ?>
-            </option>
+            <option value="<?= $y ?>" <?= ($y == $curYear) ? 'selected' : '' ?>><?= $y ?></option>
           <?php endfor; ?>
         </select>
 
         <button class="btn btn-outline-primary">Filter</button>
-
       </form>
+
 
       <!-- MONTH NAVIGATION -->
       <div>
-        <a class="btn btn-outline-primary" href="<?= base_url('Holiday/list/' . $prevM . '/' . $prevY) ?>">
-          ⬅ Previous Month
-        </a>
+        <a class="btn btn-outline-primary"
+          href="<?= base_url('Holiday/list/' . $prevM . '/' . $prevY) ?>">⬅ Previous Month</a>
 
-        <a class="btn btn-outline-primary" href="<?= base_url('Holiday/list/' . $nextM . '/' . $nextY) ?>">
-          Next Month ➜
-        </a>
+        <a class="btn btn-outline-primary"
+          href="<?= base_url('Holiday/list/' . $nextM . '/' . $nextY) ?>">Next Month ➜</a>
       </div>
 
     </div>
+
 
 
     <!-- HOLIDAY TABLE -->
@@ -113,6 +112,7 @@
         </thead>
 
         <tbody>
+
           <?php if (!empty($holidays)): ?>
             <?php foreach ($holidays as $i => $h): ?>
               <tr>
@@ -121,7 +121,6 @@
                 <td><?= $h->day_cat ?></td>
                 <td><?= $h->day_txt ?></td>
 
-                <!-- ACTIONS (combined in one column like Users table) -->
                 <td class="text-center" style="white-space:nowrap;">
 
                   <a href="<?= base_url('Holiday/view/' . $h->date_id); ?>" class="mx-1">
@@ -145,9 +144,12 @@
 
           <?php else: ?>
             <tr>
-              <td colspan="5" class="text-center text-muted">No holidays found for this month.</td>
+              <td colspan="5" class="text-center text-muted">
+                No holidays found for this month.
+              </td>
             </tr>
           <?php endif; ?>
+
         </tbody>
 
       </table>
