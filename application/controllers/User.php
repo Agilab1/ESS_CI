@@ -122,7 +122,7 @@ class User extends CI_Controller
         }
 
         $this->User_model->delete_user($user_id);
-        $this->session->set_flashdata('success', 'User deleted successfully!');
+        $this->session->set_flashdata('success', $user_id .'User deleted successfully!');
         return redirect('user/list');
     }
 
