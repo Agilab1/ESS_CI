@@ -194,6 +194,12 @@ class Staff extends CI_Controller
         $this->form_validation->set_rules('staff_id', 'Staff ID', 'required|trim');
         $this->form_validation->set_rules('emp_name', 'Employee Name', 'required|trim');
         $this->form_validation->set_rules('nfc_card', 'NFC Card No', 'required|trim');
+        $this->form_validation->set_rules('desig', 'Designation', 'required|trim');
+        $this->form_validation->set_rules('join_dt', 'Join Date', 'required|trim');
+        $this->form_validation->set_rules('phn_no', 'Phone Number', 'required|trim|numeric|min_length[10]|max_length[10]');
+        $this->form_validation->set_rules('birth_dt', 'Birth Date', 'required|trim');
+        $this->form_validation->set_rules('staff_st', 'Status', 'required|trim');
+        $this->form_validation->set_rules('remark', 'Remark', 'trim');
 
         if ($this->form_validation->run()) {
             return [

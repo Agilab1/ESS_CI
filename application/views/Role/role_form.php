@@ -22,8 +22,13 @@
                                         <input type="text"
                                             name="role_id"
                                             class="form-control"
-                                            value="<?= $role->role_id ?>"
+                                            value="<?= set_value('role_id',$role->role_id) ?>"
                                             <?= ($action == 'edit' || $action == 'view') ? 'readonly' : '' ?>>
+
+
+
+
+                                            
 
                                         <small class="text-danger"><?= form_error('role_id'); ?></small>
                                     </td>
@@ -54,8 +59,9 @@
                                             <?= ($role->role_st == "Active") ? 'checked' : '' ?>
                                             <?= ($action == 'view') ? 'disabled' : '' ?>>
 
-                                        <small class="text-danger"><?= form_error('role_st'); ?></small>
+                                       
                                     </td>
+                                    
                                 </tr>
 
                                 <?php if ($action != 'view'): ?>
