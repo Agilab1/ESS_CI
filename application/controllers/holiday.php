@@ -13,23 +13,46 @@ class Holiday extends CI_Controller {
    
         // LIST HOLIDAYS
 
-    public function list()
-    {
-        $data = [
-            'holidays' => $this->Holiday_model->getAll(),
-            'counts'   => $this->Dashboard_model->counts()
-        ];
+   
+public function list($month = null, $year = null)
+{
+    // 1️⃣ Read GET filter input
+    $get_month = $this->input->get('month');
+    $get_year  = $this->input->get('year');
 
-        $this->load->view('incld/verify');
-        $this->load->view('incld/header');
-        $this->load->view('incld/top_menu');
-        $this->load->view('incld/side_menu');
-        $this->load->view('user/dashboard', $data);
-        $this->load->view('Holiday/list', $data);
-        $this->load->view('incld/jslib');
-        $this->load->view('incld/footer');
-        $this->load->view('incld/script');
+    // 2️⃣ If user used filter button → override values
+    if (!empty($get_month) && !empty($get_year)) {
+        $month = $get_month;
+        $year  = $get_year;
     }
+
+    // 3️⃣ If no month/year passed → use current
+    $month = $month ?? date('m');
+    $year  = $year ?? date('Y');
+
+    // 4️⃣ Prepare data for view
+    $data = new stdClass();
+    $data->month = $month;
+    $data->year  = $year;
+
+    // 5️⃣ Load model data
+    $data->holidays = $this->Holiday_model->getByMonth($month, $year);
+    $data->counts   = $this->Dashboard_model->counts();
+
+    // 6️⃣ Load views
+    $this->load->view('incld/verify');
+    $this->load->view('incld/header');
+    $this->load->view('incld/top_menu');
+    $this->load->view('incld/side_menu');
+    $this->load->view('user/dashboard', $data);
+    $this->load->view('Holiday/list', $data);
+    $this->load->view('incld/jslib');
+    $this->load->view('incld/footer');
+    $this->load->view('incld/script');
+}
+
+
+
 
     
         // ADD HOLIDAY
