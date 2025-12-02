@@ -1,8 +1,6 @@
 <style>
-    /* FIX HEADER TEXT ROTATION / VERTICAL STACKING */
     th {
         white-space: nowrap !important;
-        /* keep text in one line */
         writing-mode: horizontal-tb !important;
         transform: rotate(0deg) !important;
         text-orientation: mixed !important;
@@ -14,7 +12,6 @@
 
     table {
         table-layout: auto !important;
-        /* allow natural width */
     }
 </style>
 
@@ -36,10 +33,8 @@
             <div class="alert alert-danger"><?= $this->session->flashdata('error'); ?></div>
         <?php endif; ?>
 
-        <!-- RESPONSIVE WRAPPER -->
         <div class="table-responsive">
             <table id="dtbl" class="table table-bordered table-striped align-middle" style="font-size: 14px;">
-
                 <thead class="btn-primary">
                     <tr>
                         <th>Q</th>
@@ -51,23 +46,20 @@
                         <th>Phone NO</th>
                         <th>Birth Date</th>
                         <th>Status</th>
-                        <th class="text-center" colspan="3">Action</th>
+                        <th class="text-center">Action</th>
                     </tr>
                 </thead>
 
                 <tbody>
                     <?php if ($staffs): ?>
-                        <?php foreach ($staffs as $count => $staff): ?>
+                        <?php foreach ($staffs as $staff): ?>
                             <tr>
 
-                                <!-- QR -->
+                                <!-- QR Code Button -->
                                 <td class="text-center">
-                                   <a href="<?= base_url('Staff/emp_list/' . $staff->staff_id) ?>">
-    <i class="fas fa-qrcode"></i>
-</a>
-
+                                    <a href="<?= base_url('Staff/emp_list/' . $staff->staff_id . '?date=' . date('Y-m-d')) ?>">
+                                        <i class="fas fa-qrcode"></i>
                                     </a>
-
                                 </td>
 
                                 <td><?= $staff->staff_id ?></td>
@@ -79,24 +71,17 @@
                                 <td><?= $staff->birth_dt ?></td>
                                 <td><?= $staff->staff_st ?></td>
 
-                                <!-- VIEW -->
                                 <td class="text-center">
                                     <a href="<?= base_url('Staff/view/' . $staff->staff_id); ?>">
                                         <i class="fa fa-eye"></i>
                                     </a>
-                                </td>
-
-                                <!-- EDIT -->
-                                <td class="text-center">
+                                    &nbsp;&nbsp;
                                     <a href="<?= base_url('Staff/edit/' . $staff->staff_id); ?>">
                                         <i class="fa fa-edit"></i>
                                     </a>
-                                </td>
-
-                                <!-- DELETE -->
-                                <td class="text-center">
+                                    &nbsp;&nbsp;
                                     <a href="<?= base_url('Staff/delete/' . $staff->staff_id); ?>"
-                                        onclick="return confirm('Delete this user?');">
+                                       onclick="return confirm('Delete this user?');">
                                         <i class="fa fa-trash text-danger"></i>
                                     </a>
                                 </td>

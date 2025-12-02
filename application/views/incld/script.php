@@ -1,6 +1,6 @@
 <script>
     $(document).ready(function() {
-        var action = "<?=$action ?>";
+        var action = "<?php echo $action ?>";
         switch(action) {
             case 'view' :
                  $('#userform').find('input, select, textarea,button').prop('readonly', true).prop('disabled', true);

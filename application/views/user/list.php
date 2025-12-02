@@ -1,7 +1,7 @@
 <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
         <h4 class="mb-0">Users Details</h4>
-        <a  style="margin-left: 80%;" href="<?= base_url('User/add'); ?>" class="btn btn-primary">Add Users</a>
+        <a style="margin-left: 80%;" href="<?= base_url('User/add'); ?>" class="btn btn-primary">Add Users</a>
     </div>
 
     <div class="card-body">
@@ -25,7 +25,7 @@
                         <th>Role</th>
                         <th>Type</th>
                         <th>Status</th>
-                        <th style="width: 5vw;" colspan="3" class="text-center">Action</th>
+                        <th style="width: 5vw;" class="text-center">Action</th>
                     </tr>
                 </thead>
 
@@ -34,47 +34,36 @@
                         <?php foreach ($users as $count => $user): ?>
                             <tr>
 
-                                <!-- Auto increment count -->
                                 <td><?= ++$count ?></td>
-
-                                <!-- SAFE ACCESS TO FIELDS -->
-                                <td><?= isset($user->user_nm) ? $user->user_nm : '' ?></td>
-                                <td><?= isset($user->mail_id) ? $user->mail_id : '' ?></td>
-                                <td><?= isset($user->user_ph) ? $user->user_ph : '' ?></td>
-                                <td><?= isset($user->role_id) ? $user->role_id : '' ?></td>
-                                <td><?= isset($user->user_ty) ? $user->user_ty : '' ?></td>
+                                <td><?= $user->user_nm ?? '' ?></td>
+                                <td><?= $user->mail_id ?? '' ?></td>
+                                <td><?= $user->user_ph ?? '' ?></td>
+                                <td><?= $user->role_id ?? '' ?></td>
+                                <td><?= $user->user_ty ?? '' ?></td>
 
                                 <!-- Checkbox Status -->
                                 <td class="text-center">
                                     <input type="checkbox"
-                                        <?= (isset($user->user_st) && $user->user_st == 'Active') ? 'checked' : '' ?>
-                                        style="
-                                            width:18px;
-                                            height:10px;
-                                            margin-top:10px;
-                                            transform: scale(1.4);
-                                            cursor: not-allowed;
-                                        ">
+                                        <?= ($user->user_st ?? '') == 'Active' ? 'checked' : '' ?>
+                                        style="width:18px;height:10px;margin-top:10px;transform: scale(1.4);cursor: not-allowed;">
                                 </td>
 
-                                <!-- ACTIONS -->
-                                <td class="text-center">
-                                    <a href="<?= base_url('user/view/' . $user->user_id) ?>">
+                                <!-- ACTION BUTTONS COMBINED IN ONE TD -->
+                                <td class="text-center" style="white-space: nowrap;">
+
+                                    <a href="<?= base_url('user/view/' . $user->user_id) ?>" class="mx-1">
                                         <i class="fa fa-eye"></i>
                                     </a>
-                                </td>
 
-                                <td class="text-center">
-                                    <a href="<?= base_url('user/edit/' . $user->user_id) ?>">
+                                    <a href="<?= base_url('user/edit/' . $user->user_id) ?>" class="mx-1">
                                         <i class="fa fa-edit"></i>
                                     </a>
-                                </td>
 
-                                <td class="text-center">
                                     <a href="<?= base_url('user/delete_user/' . $user->user_id) ?>"
-                                       onclick="return confirm('Delete this user?');">
+                                       onclick="return confirm('Delete this user?');" class="mx-1">
                                         <i class="fa fa-trash text-danger"></i>
                                     </a>
+
                                 </td>
 
                             </tr>
