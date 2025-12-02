@@ -57,7 +57,7 @@
     <div class="d-flex justify-content-between mb-3">
 
       <!-- FILTER -->
-      <form method="get" action="<?= base_url('Holiday/list'); ?>" class="d-flex gap-2">
+      <form method="get" action="" class="d-flex gap-2">
 
         <select name="month" class="form-control" style="max-width:140px;">
           <?php for ($m = 1; $m <= 12; $m++): ?>
