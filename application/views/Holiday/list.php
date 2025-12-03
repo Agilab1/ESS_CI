@@ -1,5 +1,6 @@
 <style>
-  th, td {
+  th,
+  td {
     white-space: nowrap;
   }
 
@@ -38,18 +39,24 @@
 
 
     <?php
-      $curMonth = $month ?? date('m');
-      $curYear  = $year ?? date('Y');
+    $curMonth = $month ?? date('m');
+    $curYear  = $year ?? date('Y');
 
-      // prev month
-      $prevM = $curMonth - 1;
-      $prevY = $curYear;
-      if ($prevM < 1) { $prevM = 12; $prevY--; }
+    // prev month
+    $prevM = $curMonth - 1;
+    $prevY = $curYear;
+    if ($prevM < 1) {
+      $prevM = 12;
+      $prevY--;
+    }
 
-      // next month
-      $nextM = $curMonth + 1;
-      $nextY = $curYear;
-      if ($nextM > 12) { $nextM = 1; $nextY++; }
+    // next month
+    $nextM = $curMonth + 1;
+    $nextY = $curYear;
+    if ($nextM > 12) {
+      $nextM = 1;
+      $nextY++;
+    }
     ?>
 
 
@@ -59,33 +66,33 @@
       <!-- FILTER -->
       <form method="get" action="<?= base_url('Holiday/list'); ?>" class="d-flex gap-2">
 
-    <select name="month" class="form-control" style="max-width:140px;">
-        <?php for ($m = 1; $m <= 12; $m++): ?>
+        <select name="month" class="form-control" style="max-width:140px;">
+          <?php for ($m = 1; $m <= 12; $m++): ?>
             <option value="<?= $m ?>" <?= ($m == $curMonth) ? 'selected' : '' ?>>
-                <?= date('F', mktime(0, 0, 0, $m, 1)) ?>
+              <?= date('F', mktime(0, 0, 0, $m, 1)) ?>
             </option>
-        <?php endfor; ?>
-    </select>
+          <?php endfor; ?>
+        </select>
 
-    <select name="year" class="form-control" style="max-width:120px;">
-        <?php for ($y = date('Y') - 2; $y <= date('Y') + 2; $y++): ?>
+        <select name="year" class="form-control" style="max-width:120px;">
+          <?php for ($y = date('Y') - 2; $y <= date('Y') + 2; $y++): ?>
             <option value="<?= $y ?>" <?= ($y == $curYear) ? 'selected' : '' ?>><?= $y ?></option>
-        <?php endfor; ?>
-    </select>
+          <?php endfor; ?>
+        </select>
 
-    <button class="btn btn-outline-primary">Filter</button>
+        <button class="btn btn-outline-primary">Filter</button>
 
-</form>
+      </form>
 
 
 
       <!-- MONTH NAVIGATION -->
       <div>
-        <a class="btn btn-outline-primary" 
-           href="<?= base_url('Holiday/list/' . $prevM . '/' . $prevY) ?>">⬅ Previous Month</a>
+        <a class="btn btn-outline-primary"
+          href="<?= base_url('Holiday/list/' . $prevM . '/' . $prevY) ?>">⬅ Previous Month</a>
 
         <a class="btn btn-outline-primary"
-           href="<?= base_url('Holiday/list/' . $nextM . '/' . $nextY) ?>">Next Month ➜</a>
+          href="<?= base_url('Holiday/list/' . $nextM . '/' . $nextY) ?>">Next Month ➜</a>
       </div>
 
     </div>
@@ -110,31 +117,31 @@
 
           <?php if (!empty($holidays)): ?>
             <?php foreach ($holidays as $i => $h): ?>
-            <tr>
-              <td><?= $i + 1 ?></td>
-              <td><?= $h->date_id ?></td>
-              <td><?= $h->day_cat ?></td>
-              <td><?= $h->day_txt ?></td>
+              <tr>
+                <td><?= $i + 1 ?></td>
+                <td><?= $h->date_id ?></td>
+                <td><?= $h->day_cat ?></td>
+                <td><?= $h->day_txt ?></td>
 
-              <td class="text-center" style="white-space:nowrap;">
+                <td class="text-center" style="white-space:nowrap;">
 
-                <a href="<?= base_url('Holiday/view/' . $h->date_id); ?>" class="mx-1">
-                  <i class="fa fa-eye"></i>
-                </a>
+                  <a href="<?= base_url('Holiday/view/' . $h->date_id); ?>" class="mx-1">
+                    <i class="fa fa-eye"></i>
+                  </a>
 
-                <a href="<?= base_url('Holiday/edit/' . $h->date_id); ?>" class="mx-1">
-                  <i class="fa fa-edit"></i>
-                </a>
+                  <a href="<?= base_url('Holiday/edit/' . $h->date_id); ?>" class="mx-1">
+                    <i class="fa fa-edit"></i>
+                  </a>
 
-                <a href="<?= base_url('Holiday/delete/' . $h->date_id); ?>"
-                   onclick="return confirm('Delete holiday on <?= $h->date_id ?> ?');"
-                   class="mx-1">
-                  <i class="fa fa-trash text-danger"></i>
-                </a>
+                  <a href="<?= base_url('Holiday/delete/' . $h->date_id); ?>"
+                    onclick="return confirm('Delete holiday on <?= $h->date_id ?> ?');"
+                    class="mx-1">
+                    <i class="fa fa-trash text-danger"></i>
+                  </a>
 
-              </td>
+                </td>
 
-            </tr>
+              </tr>
             <?php endforeach; ?>
 
           <?php else: ?>

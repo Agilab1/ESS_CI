@@ -60,7 +60,7 @@
                                     </a>
 
                                     <a href="<?= base_url('user/delete_user/' . $user->user_id) ?>"
-                                       onclick="return confirm('Delete this user?');" class="mx-1">
+                                        onclick="return confirm('Delete this user?');" class="mx-1">
                                         <i class="fa fa-trash text-danger"></i>
                                     </a>
 

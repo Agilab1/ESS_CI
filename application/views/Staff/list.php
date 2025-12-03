@@ -81,7 +81,7 @@
                                     </a>
                                     &nbsp;&nbsp;
                                     <a href="<?= base_url('Staff/delete/' . $staff->staff_id); ?>"
-                                       onclick="return confirm('Delete this user?');">
+                                        onclick="return confirm('Delete this user?');">
                                         <i class="fa fa-trash text-danger"></i>
                                     </a>
                                 </td>

@@ -65,7 +65,6 @@ class Work_model extends CI_Model
                     'date'     => $data['date']
                 ]
             );
-
         } else {
             // INSERT new row with remark
             return $this->db->insert('works', $data);
@@ -80,5 +79,11 @@ class Work_model extends CI_Model
             'date' => $date
         ])->row();
         return $row ? $row->staff_st : null;
+    }
+    public function delete_status($staff_id, $date)
+    {
+        $this->db->where('staff_id', $staff_id);
+        $this->db->where('date', $date);
+        return $this->db->delete('works');
     }
 }

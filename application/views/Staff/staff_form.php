@@ -30,7 +30,7 @@
                                     <td colspan="2">
                                         <label class="form-label">Staff ID<span class="text-danger">*</label>
                                         <input class="form-control" type="text" name="staff_id"
-                                               value="<?= set_value('staff_id', $staff->staff_id ?? '') ?>"
+                                            value="<?= set_value('staff_id', $staff->staff_id ?? '') ?>"
                                             <?= ($action == 'edit' || $action == 'view') ? 'readonly' : '' ?>>
                                         <small class="text-danger"><?= form_error('staff_id'); ?></small>
                                     </td>
@@ -62,7 +62,7 @@
                                         <input class="form-control" type="text" name="desig"
                                             value="<?= set_value('desig', $staff->desig ?? '') ?>"
                                             <?= $readonly ?>>
-                                             <small class="text-danger"><?= form_error('desig'); ?></small>
+                                        <small class="text-danger"><?= form_error('desig'); ?></small>
                                     </td>
 
                                     <td>
@@ -70,7 +70,7 @@
                                         <input class="form-control" type="date" name="join_dt"
                                             value="<?= set_value('join_dt', $staff->join_dt ?? '') ?>"
                                             <?= $readonly ?>>
-                                             <small class="text-danger"><?= form_error('join_dt'); ?></small>
+                                        <small class="text-danger"><?= form_error('join_dt'); ?></small>
                                     </td>
                                 </tr>
 
@@ -81,7 +81,7 @@
                                         <input class="form-control" type="text" name="phn_no"
                                             value="<?= set_value('phn_no', $staff->phn_no ?? '') ?>"
                                             <?= $readonly ?>>
-                                             <small class="text-danger"><?= form_error('phn_no'); ?></small>
+                                        <small class="text-danger"><?= form_error('phn_no'); ?></small>
                                     </td>
 
                                     <td>
@@ -89,32 +89,32 @@
                                         <input class="form-control" type="date" name="birth_dt"
                                             value="<?= set_value('birth_dt', $staff->birth_dt ?? '') ?>"
                                             <?= $readonly ?>>
-                                             <small class="text-danger"><?= form_error('birth_dt'); ?></small>
+                                        <small class="text-danger"><?= form_error('birth_dt'); ?></small>
                                     </td>
                                 </tr>
 
                                 <!-- Status -->
                                 <tr>
-                                <td colspan="2">
-                                    <label>Status <span class="text-danger">*</span></label>
+                                    <td colspan="2">
+                                        <label>Status <span class="text-danger">*</span></label>
 
-                                    <select class="form-control" name="staff_st" <?= $readonly ?>>
-                                        <option value="">Select Status</option>
+                                        <select class="form-control" name="staff_st" <?= $readonly ?>>
+                                            <option value="">Select Status</option>
 
-                                        <option value="Inactive" 
-                                            <?= set_select('staff_st', 'Inactive', ($staff->staff_st ?? '') == 'Inactive') ?>>
-                                            Inactive
-                                        </option>
+                                            <option value="Inactive"
+                                                <?= set_select('staff_st', 'Inactive', ($staff->staff_st ?? '') == 'Inactive') ?>>
+                                                Inactive
+                                            </option>
 
-                                        <option value="Active" 
-                                            <?= set_select('staff_st', 'Active', ($staff->staff_st ?? '') == 'Active') ?>>
-                                            Active
-                                        </option>
-                                    </select>
+                                            <option value="Active"
+                                                <?= set_select('staff_st', 'Active', ($staff->staff_st ?? '') == 'Active') ?>>
+                                                Active
+                                            </option>
+                                        </select>
 
-                                    <small class="text-danger"><?= form_error('staff_st'); ?></small>
-                                </td>
-                            </tr>
+                                        <small class="text-danger"><?= form_error('staff_st'); ?></small>
+                                    </td>
+                                </tr>
 
 
                                 <!-- Save Button -->

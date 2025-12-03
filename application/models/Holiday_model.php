@@ -1,9 +1,11 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Holiday_model extends CI_Model {
+class Holiday_model extends CI_Model
+{
 
-    public function getHolidayByDate($date) {
+    public function getHolidayByDate($date)
+    {
         return $this->db->get_where('holiday', ['date_id' => $date])->row();
     }
 
@@ -42,10 +44,10 @@ class Holiday_model extends CI_Model {
     // GET HOLIDAYS BY MONTH - Works on MySQL & SQLite
     // ============================================================
     public function getByMonth($month, $year)
-{
-    $month = str_pad($month, 2, '0', STR_PAD_LEFT); // 1 → 01
+    {
+        $month = str_pad($month, 2, '0', STR_PAD_LEFT); // 1 → 01
 
-    $query = $this->db->query("
+        $query = $this->db->query("
         SELECT *
         FROM holiday
         WHERE strftime('%m', date_id) = ?
@@ -53,8 +55,8 @@ class Holiday_model extends CI_Model {
         ORDER BY date_id ASC
     ", [$month, $year]);
 
-    return $query->result();
-}
+        return $query->result();
+    }
 
 
     // ============================================================
@@ -97,5 +99,4 @@ class Holiday_model extends CI_Model {
 
         return $this->db->count_all_results('holiday');
     }
-
 }

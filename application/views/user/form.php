@@ -70,7 +70,7 @@
                                         <select class="form-control" name="role_id" required>
                                             <option value="">Select Role</option>
 
-                                            <option value="Admin" 
+                                            <option value="Admin"
                                                 <?= (isset($user->role_id) && $user->role_id == "Admin") ? 'selected' : '' ?>>
                                                 Admin
                                             </option>
@@ -126,7 +126,7 @@
 
                                         <label class="form-label">Is Admin?</label>
                                         <input type="checkbox" class="form-control" name="user_ad" value="1"
-                                            <?= (isset($user->user_ad) && $user->user_ad == "1") ? 'checked' : '' ?> class="form-control">   
+                                            <?= (isset($user->user_ad) && $user->user_ad == "1") ? 'checked' : '' ?> class="form-control">
                                         <small class="text-danger"><?= form_error('user_ad'); ?></small>
                                     </td>
                                 </tr>

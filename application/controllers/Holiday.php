@@ -1,68 +1,69 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Holiday extends CI_Controller {
+class Holiday extends CI_Controller
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->load->model('Holiday_model');
         $this->load->model('Dashboard_model');
         $this->load->library('form_validation');
     }
 
-   
-        // LIST HOLIDAYS
 
-   
-public function list($month = null, $year = null)
-{
-    // 1️⃣ Read GET filter input
-    $get_month = $this->input->get('month');
-    $get_year  = $this->input->get('year');
+    // LIST HOLIDAY
 
-    // 2️⃣ If user used filter button → override values
-    if (!empty($get_month) && !empty($get_year)) {
-    // User clicked FILTER button
-    $month = $get_month;
-    $year  = $get_year;
-} else {
-    // User clicked PREVIOUS or NEXT month
-    if ($month === null) $month = date('m');
-    if ($year === null)  $year  = date('Y');
-}
+    public function list($month = null, $year = null)
+    {
+        // 1️⃣ Read GET filter input
+        $get_month = $this->input->get('month');
+        $get_year  = $this->input->get('year');
+
+        // 2️⃣ If user used filter button → override values
+        if (!empty($get_month) && !empty($get_year)) {
+            // User clicked FILTER button
+            $month = $get_month;
+            $year  = $get_year;
+        } else {
+            // User clicked PREVIOUS or NEXT month
+            if ($month === null) $month = date('m');
+            if ($year === null)  $year  = date('Y');
+        }
 
 
-    // 3️⃣ If no month/year passed → use current
-    $month = $month ?? date('m');
-    $year  = $year ?? date('Y');
+        // 3️⃣ If no month/year passed → use current
+        $month = $month ?? date('m');
+        $year  = $year ?? date('Y');
 
-    // 4️⃣ Prepare data for view
-    $data = new stdClass();
-    $data->month = $month;
-    $data->year  = $year;
-    $data->action = ""; //dummy
-    // 5️⃣ Load model data
-    $data->holidays = $this->Holiday_model->getByMonth($month, $year);
-    $data->counts   = $this->Dashboard_model->counts();
+        // 4️⃣ Prepare data for view
+        $data = new stdClass();
+        $data->month = $month;
+        $data->year  = $year;
+        $data->action = ""; //dummy
+        // 5️⃣ Load model data
+        $data->holidays = $this->Holiday_model->getByMonth($month, $year);
+        $data->counts   = $this->Dashboard_model->counts();
 
-    // 6️⃣ Load views
-    $this->load->view('incld/verify');
-    $this->load->view('incld/header');
-    $this->load->view('incld/top_menu');
-    $this->load->view('incld/side_menu');
-    $this->load->view('user/dashboard', $data);
-    $this->load->view('Holiday/list', $data);
-    $this->load->view('incld/jslib');
-    $this->load->view('incld/footer');
-    $this->load->view('incld/script');
-}
-
+        // 6️⃣ Load views
+        $this->load->view('incld/verify');
+        $this->load->view('incld/header');
+        $this->load->view('incld/top_menu');
+        $this->load->view('incld/side_menu');
+        $this->load->view('user/dashboard', $data);
+        $this->load->view('Holiday/list', $data);
+        $this->load->view('incld/jslib');
+        $this->load->view('incld/footer');
+        $this->load->view('incld/script');
+    }
 
 
 
-    
-        // ADD HOLIDAY
-   
+
+
+    // ADD HOLIDAY
+
     public function add()
     {
         $data = new stdClass();
@@ -79,9 +80,9 @@ public function list($month = null, $year = null)
         $this->load->view('incld/footer');
     }
 
-    
-        // EDIT HOLIDAY
-   
+
+    // EDIT HOLIDAY
+
     public function edit($date_id)
     {
         $data = new stdClass();
@@ -95,9 +96,9 @@ public function list($month = null, $year = null)
         $this->load->view('incld/footer');
     }
 
-   
-        // VIEW HOLIDAY
-   
+
+    // VIEW HOLIDAY
+
     public function view($date_id)
     {
         $data = new stdClass();
@@ -112,7 +113,7 @@ public function list($month = null, $year = null)
     }
 
     //  ---------------------------------------------------------
-        // DELETE HOLIDAY
+    // DELETE HOLIDAY
     public function delete($date_id)
     {
         $holiday = $this->Holiday_model->get_by_id($date_id);
@@ -125,7 +126,7 @@ public function list($month = null, $year = null)
         redirect('Holiday/list');
     }
 
-        // SAVE (ADD / EDIT)
+    // SAVE (ADD / EDIT)
     public function save()
     {
         $action   = strtolower($this->input->post('action'));
@@ -160,9 +161,9 @@ public function list($month = null, $year = null)
         }
     }
 
-    
-        // VALIDATION
-  
+
+    // VALIDATION
+
     private function validate()
     {
         $this->form_validation->set_rules('date_id', 'Holiday Date', 'required');

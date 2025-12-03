@@ -28,6 +28,10 @@ class Staff extends CI_Controller
         $data['todayStatus'] = $status ? $status : "No Punch";
 
         $data['counts'] = $this->Dashboard_model->counts();
+        $mode = $this->input->get('mode') ?? 'edit';
+        $data['mode'] = $mode;
+
+        $data['is_view_only'] = ($mode === 'view');
 
         $this->load->view('incld/verify');
         $this->load->view('incld/header');
@@ -39,7 +43,12 @@ class Staff extends CI_Controller
         $this->load->view('incld/script');
     }
 
-
+    public function delete_status($staff_id, $date)
+    {
+        $this->Work_model->delete_status($staff_id, $date);
+        $this->session->set_flashdata('success', 'Record deleted!');
+        redirect('Staff/emp_list/' . $staff_id);
+    }
 
     // 🔥 SHOW MONTHLY ATTENDANCE + SAVE STATUS + REMARK
     public function emp_list($staff_id = null)

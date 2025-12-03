@@ -8,7 +8,7 @@
                     </div>
 
                     <div class="card-body">
-                        
+
                         <form action="<?= base_url('Role/save'); ?>" method="post">
 
                             <input type="hidden" name="action" value="<?= $action ?>">
@@ -22,13 +22,13 @@
                                         <input type="text"
                                             name="role_id"
                                             class="form-control"
-                                            value="<?= set_value('role_id',$role->role_id) ?>"
+                                            value="<?= set_value('role_id', $role->role_id) ?>"
                                             <?= ($action == 'edit' || $action == 'view') ? 'readonly' : '' ?>>
 
 
 
 
-                                            
+
 
                                         <small class="text-danger"><?= form_error('role_id'); ?></small>
                                     </td>
@@ -59,17 +59,17 @@
                                             <?= ($role->role_st == "Active") ? 'checked' : '' ?>
                                             <?= ($action == 'view') ? 'disabled' : '' ?>>
 
-                                       
+
                                     </td>
-                                    
+
                                 </tr>
 
                                 <?php if ($action != 'view'): ?>
-                                <tr>
-                                    <td colspan="2" class="text-center">
-                                        <button type="submit" class="btn btn-primary">Submit</button>
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <td colspan="2" class="text-center">
+                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                        </td>
+                                    </tr>
                                 <?php endif; ?>
 
                             </table>

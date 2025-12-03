@@ -1,3 +1,8 @@
+<?php
+// mode : view/edit
+$is_view_only = isset($mode) && $mode === 'view';
+?>
+
 <div class="py-5">
     <div class="container">
         <div class="row justify-content-center">
@@ -18,8 +23,11 @@
                                 <tr>
                                     <td colspan="2">
                                         <label class="form-label">Staff ID</label>
-                                        <input class="form-control" type="text" name="staff_id"
-                                            value="<?= $staff->staff_id ?>" readonly>
+                                        <input class="form-control"
+                                               type="text"
+                                               name="staff_id"
+                                               value="<?= $staff->staff_id ?>"
+                                               readonly>
                                     </td>
                                 </tr>
 
@@ -27,18 +35,25 @@
                                 <tr>
                                     <td>
                                         <label>Employee Name</label>
-                                        <input class="form-control" type="text" name="emp_name"
-                                            value="<?= $staff->emp_name ?>" readonly>
+                                        <input class="form-control"
+                                               type="text"
+                                               name="emp_name"
+                                               value="<?= $staff->emp_name ?>"
+                                               readonly>
                                     </td>
 
                                     <td>
                                         <label>Work Status</label>
-                                        <select class="form-control" name="staff_st">
+                                        <select class="form-control"
+                                                name="staff_st"
+                                                <?= $is_view_only ? 'disabled' : '' ?>>
+
                                             <option value="No Punch" <?= ($todayStatus == 'No Punch') ? 'selected' : '' ?>>No Punch</option>
                                             <option value="WFO" <?= ($todayStatus == 'WFO') ? 'selected' : '' ?>>WFO</option>
                                             <option value="WFH" <?= ($todayStatus == 'WFH') ? 'selected' : '' ?>>WFH</option>
                                             <option value="On Duty" <?= ($todayStatus == 'On Duty') ? 'selected' : '' ?>>On Duty</option>
                                             <option value="Leave" <?= ($todayStatus == 'Leave') ? 'selected' : '' ?>>Leave</option>
+
                                         </select>
                                     </td>
                                 </tr>
@@ -48,30 +63,37 @@
                                     <td>
                                         <label>Date</label>
 
-                                        <!-- IMPORTANT: original date for update -->
+                                        <!-- Hidden original date -->
                                         <input type="hidden" name="old_date" value="<?= $today ?>">
 
-                                        <!-- visible only -->
-                                        <input class="form-control" type="date" value="<?= $today ?>" readonly>
+                                        <input class="form-control"
+                                               type="date"
+                                               value="<?= $today ?>"
+                                               readonly>
                                     </td>
                                 </tr>
 
-                                <!-- REMARK FIELD (NEW) -->
+                                <!-- REMARK FIELD -->
                                 <tr>
                                     <td colspan="2">
                                         <label>Remark</label>
-                                        <input class="form-control" type="text" name="remark"
-                                            value="<?= isset($todayRemark) ? $todayRemark : '' ?>"
-                                            placeholder="Enter remark (optional)">
+                                        <input class="form-control"
+                                               type="text"
+                                               name="remark"
+                                               value="<?= isset($todayRemark) ? $todayRemark : '' ?>"
+                                               placeholder="Enter remark (optional)"
+                                               <?= $is_view_only ? 'disabled' : '' ?>>
                                     </td>
                                 </tr>
 
-                                <!-- SUBMIT -->
+                                <!-- SUBMIT BUTTON (Hide in view mode) -->
+                                <?php if (!$is_view_only): ?>
                                 <tr>
                                     <td colspan="2" class="text-center">
                                         <button class="btn btn-primary" type="submit">Save</button>
                                     </td>
                                 </tr>
+                                <?php endif; ?>
 
                             </table>
 
