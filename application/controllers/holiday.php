@@ -22,9 +22,15 @@ public function list($month = null, $year = null)
 
     // 2️⃣ If user used filter button → override values
     if (!empty($get_month) && !empty($get_year)) {
-        $month = $get_month;
-        $year  = $get_year;
-    }
+    // User clicked FILTER button
+    $month = $get_month;
+    $year  = $get_year;
+} else {
+    // User clicked PREVIOUS or NEXT month
+    if ($month === null) $month = date('m');
+    if ($year === null)  $year  = date('Y');
+}
+
 
     // 3️⃣ If no month/year passed → use current
     $month = $month ?? date('m');
