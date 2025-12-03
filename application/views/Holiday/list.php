@@ -57,24 +57,26 @@
     <div class="d-flex justify-content-between mb-3">
 
       <!-- FILTER -->
-      <form method="get" action="" class="d-flex gap-2">
+      <form method="get" action="<?= base_url('Holiday/list'); ?>" class="d-flex gap-2">
 
-        <select name="month" class="form-control" style="max-width:140px;">
-          <?php for ($m = 1; $m <= 12; $m++): ?>
+    <select name="month" class="form-control" style="max-width:140px;">
+        <?php for ($m = 1; $m <= 12; $m++): ?>
             <option value="<?= $m ?>" <?= ($m == $curMonth) ? 'selected' : '' ?>>
-              <?= date('F', mktime(0, 0, 0, $m, 1)) ?>
+                <?= date('F', mktime(0, 0, 0, $m, 1)) ?>
             </option>
-          <?php endfor; ?>
-        </select>
+        <?php endfor; ?>
+    </select>
 
-        <select name="year" class="form-control" style="max-width:120px;">
-          <?php for ($y = date('Y') - 2; $y <= date('Y') + 2; $y++): ?>
+    <select name="year" class="form-control" style="max-width:120px;">
+        <?php for ($y = date('Y') - 2; $y <= date('Y') + 2; $y++): ?>
             <option value="<?= $y ?>" <?= ($y == $curYear) ? 'selected' : '' ?>><?= $y ?></option>
-          <?php endfor; ?>
-        </select>
+        <?php endfor; ?>
+    </select>
 
-        <button class="btn btn-outline-primary">Filter</button>
-      </form>
+    <button class="btn btn-outline-primary">Filter</button>
+
+</form>
+
 
 
       <!-- MONTH NAVIGATION -->
