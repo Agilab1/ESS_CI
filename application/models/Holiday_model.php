@@ -42,20 +42,20 @@ class Holiday_model extends CI_Model {
     // GET HOLIDAYS BY MONTH - Works on MySQL & SQLite
     // ============================================================
     public function getByMonth($month, $year)
-    {
-        $driver = $this->db->platform();
+{
+    $month = str_pad($month, 2, '0', STR_PAD_LEFT); // 1 → 01
 
-        if ($driver == "sqlite3") {
-            $this->db->where("strftime('%m', date_id) =", sprintf("%02d", $month));
-            $this->db->where("strftime('%Y', date_id) =", $year);
-        } else {
-            $this->db->where("MONTH(date_id)", $month);
-            $this->db->where("YEAR(date_id)", $year);
-        }
+    $query = $this->db->query("
+        SELECT *
+        FROM holiday
+        WHERE strftime('%m', date_id) = ?
+          AND strftime('%Y', date_id) = ?
+        ORDER BY date_id ASC
+    ", [$month, $year]);
 
-        $this->db->order_by('date_id', 'ASC');
-        return $this->db->get('holiday')->result();
-    }
+    return $query->result();
+}
+
 
     // ============================================================
     // PAGINATION LIST (Monthly) - Works on MySQL & SQLite
