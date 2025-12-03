@@ -40,7 +40,7 @@ public function list($month = null, $year = null)
     $data = new stdClass();
     $data->month = $month;
     $data->year  = $year;
-
+    $data->action = "";
     // 5️⃣ Load model data
     $data->holidays = $this->Holiday_model->getByMonth($month, $year);
     $data->counts   = $this->Dashboard_model->counts();
