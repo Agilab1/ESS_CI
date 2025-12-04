@@ -61,21 +61,40 @@ class Staff extends CI_Controller
         $data['staff'] = $this->Staff_model->get_user($staff_id);
         if (!$data['staff']) show_error("Employee not found.");
 
-        // ⭐ SAVE STATUS + REMARK
-        if ($this->input->method() === 'post') {
+        // ⭐ Month + Year
+        $month = $this->input->get('month') ?? date('m');
+        $year  = $this->input->get('year') ?? date('Y');
 
-            $insert = [
-                'staff_id' => $staff_id,
-                'staff_st' => $this->input->post('staff_st'),
-                'remark'   => $this->input->post('remark'),   // ⭐ NEW
-                'date'     => $this->input->post('old_date')
-            ];
-
-            $this->Work_model->upsert_status($insert);
-            redirect('Staff/emp_list/' . $staff_id);
+        // ⭐ Prev Month
+        $prevM = $month - 1;
+        $prevY = $year;
+        if ($prevM < 1) {
+            $prevM = 12;
+            $prevY--;
         }
 
-        $data['works'] = $this->Work_model->get_monthly_attendance($staff_id);
+        // ⭐ Next Month
+        $nextM = $month + 1;
+        $nextY = $year;
+        if ($nextM > 12) {
+            $nextM = 1;
+            $nextY++;
+        }
+
+        $data['month'] = $month;
+        $data['year']  = $year;
+        $data['prevM'] = $prevM;
+        $data['prevY'] = $prevY;
+        $data['nextM'] = $nextM;
+        $data['nextY'] = $nextY;
+
+        // ⭐ Monthly Attendance
+        $data['works'] = $this->Work_model->get_monthly_attendance(
+            $staff_id,
+            str_pad($month, 2, '0', STR_PAD_LEFT),
+            $year
+        );
+
         $data['holiday_model'] = $this->Holiday_model;
         $data['counts'] = $this->Dashboard_model->counts();
 
@@ -88,6 +107,7 @@ class Staff extends CI_Controller
         $this->load->view('incld/jslib');
         $this->load->view('incld/script');
     }
+
 
 
 

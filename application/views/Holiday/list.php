@@ -88,8 +88,9 @@
 
       <!-- MONTH NAVIGATION -->
       <div>
-        <a class="btn btn-outline-primary"
-          href="<?= base_url('Holiday/list/' . $prevM . '/' . $prevY) ?>">⬅ Previous Month</a>
+        <a class="btn btn-outline-primary" href="<?= base_url('Holiday/list/' . $prevM . '/' . $prevY) ?>">⬅ Previous Month</a>
+
+        <a class="btn btn-outline-primary" href="<?= base_url('Holiday/list/' .  '?month=' . date('m') . '&year=' . date('Y')) ?>">📅 Current Month</a>
 
         <a class="btn btn-outline-primary"
           href="<?= base_url('Holiday/list/' . $nextM . '/' . $nextY) ?>">Next Month ➜</a>

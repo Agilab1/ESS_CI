@@ -4,11 +4,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Work_model extends CI_Model
 {
 
-    // Get monthly attendance with complete dates even if no punch
-    public function get_monthly_attendance($staff_id, $year = null, $month = null)
+    // Fixed: month first, then year
+    public function get_monthly_attendance($staff_id, $month = null, $year = null)
     {
-        if ($year === null) $year = date('Y');
         if ($month === null) $month = date('m');
+        if ($year  === null) $year  = date('Y');
 
         $start_date = date('Y-m-01', strtotime("$year-$month-01"));
         $end_date   = date('Y-m-t', strtotime($start_date));
@@ -43,21 +43,28 @@ class Work_model extends CI_Model
 
         return $this->db->get()->result();
     }
+
+
     public function get_status($staff_id, $date)
     {
         $row = $this->db->get_where('works', [
             'staff_id' => $staff_id,
-            'date' => $date
+            'date'     => $date
         ])->row();
+
         return $row ? $row->staff_st : null;
     }
+
+
     public function delete_status($staff_id, $date)
     {
         $this->db->where('staff_id', $staff_id);
         $this->db->where('date', $date);
         return $this->db->delete('works');
     }
-     public function upsert_status($data)
+
+
+    public function upsert_status($data)
     {
         $this->db->where('staff_id', $data['staff_id']);
         $this->db->where('date', $data['date']);
@@ -65,7 +72,6 @@ class Work_model extends CI_Model
 
         if ($query->num_rows() > 0) {
 
-            // UPDATE with remark included
             return $this->db->update(
                 'works',
                 [
@@ -78,7 +84,7 @@ class Work_model extends CI_Model
                 ]
             );
         } else {
-            // INSERT new row with remark
+
             return $this->db->insert('works', $data);
         }
     }
