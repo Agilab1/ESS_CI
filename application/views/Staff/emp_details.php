@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            <div class="card">
+            
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">Punching Details</h4>
                     <!-- <a href="<?= base_url('Staff/status/' . $staff->staff_id . '?date=' . date('Y-m-d') . '&mode=edit') ?>"
@@ -10,7 +10,7 @@
                         <i class="fa fa-plus"></i> Add Status
                     </a> -->
                 </div>
-            </div>
+            
         </div>
         <div class="card-body">
             <div class="table-responsive">
