@@ -3,9 +3,7 @@
         <h4 class="mb-0">Users Details</h4>
         <a style="margin-left: 80%;" href="<?= base_url('User/add'); ?>" class="btn btn-primary">Add Users</a>
     </div>
-
     <div class="card-body">
-
         <!-- Flash Messages -->
         <?php if ($this->session->flashdata('success')): ?>
             <div class="alert alert-success"><?= $this->session->flashdata('success'); ?></div>
@@ -15,7 +13,6 @@
 
         <div class="table-responsive">
             <table id="dtbl" class="table table-bordered table-striped">
-
                 <thead class="btn-primary">
                     <tr>
                         <th style="width: 4vw;">UserID</th>
@@ -58,7 +55,6 @@
                                     <a href="<?= base_url('user/edit/' . $user->user_id) ?>" class="mx-1">
                                         <i class="fa fa-edit"></i>
                                     </a>
-
                                     <a href="<?= base_url('user/delete_user/' . $user->user_id) ?>"
                                         onclick="return confirm('Delete this user?');" class="mx-1">
                                         <i class="fa fa-trash text-danger"></i>
