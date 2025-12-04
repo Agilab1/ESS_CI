@@ -22,17 +22,26 @@ class Staff extends CI_Controller
         $data['staff'] = $this->Staff_model->get_user($staff_id);
         if (!$data['staff']) show_404();
 
+        // Get date from URL or today
         $data['today'] = $this->input->get('date') ?? date('Y-m-d');
 
-        $status = $this->Work_model->get_status($staff_id, $data['today']);
-        $data['todayStatus'] = $status ? $status : "No Punch";
+        // ⭐ GET FULL ROW FROM WORKS TABLE (Status + Remark)
+        $row = $this->db->get_where('works', [
+            'staff_id' => $staff_id,
+            'date'     => $data['today']
+        ])->row();
+
+        // Pass data to view
+        $data['todayStatus'] = $row ? $row->staff_st : "No Punch";
+        $data['todayRemark'] = $row ? $row->remark : "";
 
         $data['counts'] = $this->Dashboard_model->counts();
+
         $mode = $this->input->get('mode') ?? 'edit';
         $data['mode'] = $mode;
-
         $data['is_view_only'] = ($mode === 'view');
 
+        // Load views
         $this->load->view('incld/verify');
         $this->load->view('incld/header');
         $this->load->view('incld/top_menu');
@@ -61,11 +70,24 @@ class Staff extends CI_Controller
         $data['staff'] = $this->Staff_model->get_user($staff_id);
         if (!$data['staff']) show_error("Employee not found.");
 
-        // ⭐ Month + Year
+        if ($this->input->method() === 'post') {
+
+            $insert = [
+                'staff_id' => $staff_id,
+                'staff_st' => $this->input->post('staff_st'),
+                'remark'   => $this->input->post('remark'),   // ⭐ NEW
+                'date'     => $this->input->post('old_date')
+            ];
+
+            $this->Work_model->upsert_status($insert);
+            redirect('Staff/emp_list/' . $staff_id);
+        }
+
+        // ⭐ Month + Year (GET params)
         $month = $this->input->get('month') ?? date('m');
         $year  = $this->input->get('year') ?? date('Y');
 
-        // ⭐ Prev Month
+        // ⭐ Prev/Next Month
         $prevM = $month - 1;
         $prevY = $year;
         if ($prevM < 1) {
@@ -73,7 +95,6 @@ class Staff extends CI_Controller
             $prevY--;
         }
 
-        // ⭐ Next Month
         $nextM = $month + 1;
         $nextY = $year;
         if ($nextM > 12) {
@@ -81,6 +102,7 @@ class Staff extends CI_Controller
             $nextY++;
         }
 
+        // ⭐ Pass to View (THIS IS IMPORTANT)
         $data['month'] = $month;
         $data['year']  = $year;
         $data['prevM'] = $prevM;
@@ -91,7 +113,7 @@ class Staff extends CI_Controller
         // ⭐ Monthly Attendance
         $data['works'] = $this->Work_model->get_monthly_attendance(
             $staff_id,
-            str_pad($month, 2, '0', STR_PAD_LEFT),
+            $month,
             $year
         );
 
@@ -103,11 +125,10 @@ class Staff extends CI_Controller
         $this->load->view('incld/top_menu');
         $this->load->view('incld/side_menu');
         $this->load->view('user/dashboard', $data);
-        $this->load->view('Staff/emp_details', $data);
+        $this->load->view('Staff/emp_details', $data); // MUST RECEIVE month/year
         $this->load->view('incld/jslib');
         $this->load->view('incld/script');
     }
-
 
 
 

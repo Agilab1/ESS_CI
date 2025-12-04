@@ -22,12 +22,13 @@
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h4 class="mb-0">Punching Details</h4>
             </div>
+
             <!-- ⭐ MONTH FILTER + NAVIGATION -->
             <?php
             $curMonth = $month;
             $curYear  = $year;
             ?>
-            <div class="d-flex justify-content-between  mt-3">
+            <div class="d-flex justify-content-between mt-3">
 
                 <!-- FILTER -->
                 <form method="get"
@@ -57,10 +58,14 @@
 
                 <!-- MONTH NAVIGATION -->
                 <div class="d-flex gap-2">
+
+                    <!-- PREVIOUS -->
                     <a class="btn btn-outline-primary"
                         href="<?= base_url('Staff/emp_list/' . $staff->staff_id . '?month=' . $prevM . '&year=' . $prevY) ?>">
                         ⬅ Previous Month
                     </a>
+
+                    <!-- CURRENT MONTH -->
                     <a class="btn btn-outline-primary"
                         href="<?= base_url('Staff/emp_list/' . $staff->staff_id . '?month=' . date('m') . '&year=' . date('Y')) ?>">
                         📅 Current Month
@@ -99,8 +104,8 @@
 
                             <?php
                             $formatDate = $item->punch_date;
-                            $dbHoliday = $holiday_model->getHolidayByDate($formatDate);
-                            $dayName = date('l', strtotime($formatDate));
+                            $dbHoliday  = $holiday_model->getHolidayByDate($formatDate);
+                            $dayName    = date('l', strtotime($formatDate));
 
                             $isHoliday = (!empty($dbHoliday) || $dayName == 'Saturday' || $dayName == 'Sunday');
 
@@ -134,7 +139,7 @@
                                     <?php if (!$isHoliday): ?>
 
                                         <!-- ADD -->
-                                        <a href="<?= base_url('Staff/status/' . $staff->staff_id . '?date=' . $item->punch_date . '&mode=edit') ?>"
+                                        <a href="<?= base_url('Staff/status/' . $item->staff_id . '?date=' . $item->punch_date . '&mode=edit') ?>"
                                             style="color:#007bff; font-size:16px; margin-right:8px;">
                                             <i class="fa fa-plus"></i>
                                         </a>

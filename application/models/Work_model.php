@@ -14,15 +14,16 @@ class Work_model extends CI_Model
         $end_date   = date('Y-m-t', strtotime($start_date));
 
         $this->db->select('
-            dates.date AS punch_date,
-            staffs.staff_id, 
-            works.staff_st,
-            works.remark,
-            staffs.emp_name
-        ');
+        dates.date AS punch_date,
+        staffs.staff_id, 
+        works.staff_st,
+        works.remark,
+        staffs.emp_name
+    ');
 
         $this->db->from('dates');
 
+        // ⭐ CORRECT — join with alias date AS punch_date
         $this->db->join(
             'works',
             'works.date = dates.date AND works.staff_id = ' . $this->db->escape($staff_id),
