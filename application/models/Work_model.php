@@ -15,11 +15,12 @@ class Work_model extends CI_Model
 
         $this->db->select('
             dates.date AS punch_date,
-            works.staff_id,
+            staffs.staff_id, 
             works.staff_st,
             works.remark,
             staffs.emp_name
         ');
+
         $this->db->from('dates');
 
         $this->db->join(
@@ -42,10 +43,21 @@ class Work_model extends CI_Model
 
         return $this->db->get()->result();
     }
-
-
-    // Insert / Update avoid duplicate
-    public function upsert_status($data)
+    public function get_status($staff_id, $date)
+    {
+        $row = $this->db->get_where('works', [
+            'staff_id' => $staff_id,
+            'date' => $date
+        ])->row();
+        return $row ? $row->staff_st : null;
+    }
+    public function delete_status($staff_id, $date)
+    {
+        $this->db->where('staff_id', $staff_id);
+        $this->db->where('date', $date);
+        return $this->db->delete('works');
+    }
+     public function upsert_status($data)
     {
         $this->db->where('staff_id', $data['staff_id']);
         $this->db->where('date', $data['date']);
@@ -69,21 +81,5 @@ class Work_model extends CI_Model
             // INSERT new row with remark
             return $this->db->insert('works', $data);
         }
-    }
-
-
-    public function get_status($staff_id, $date)
-    {
-        $row = $this->db->get_where('works', [
-            'staff_id' => $staff_id,
-            'date' => $date
-        ])->row();
-        return $row ? $row->staff_st : null;
-    }
-    public function delete_status($staff_id, $date)
-    {
-        $this->db->where('staff_id', $staff_id);
-        $this->db->where('date', $date);
-        return $this->db->delete('works');
     }
 }
