@@ -84,7 +84,7 @@
             <div class="inner">
               <h3>0</h3>
 
-              <p>Plants</p>
+              <p>Assets</p>
             </div>
             <div class="icon">
               <i class="ion ion-pie-graph"></i>
