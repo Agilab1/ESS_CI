@@ -7,9 +7,9 @@
     <div class="card-body">
 
         <?php if ($this->session->flashdata('success')): ?>
-            <div class="alert alert-success"><?= $this->session->flashdata('success'); ?></div>
+            <div class="alert alert-success flash-msg"><?= $this->session->flashdata('success'); ?></div>
         <?php elseif ($this->session->flashdata('error')): ?>
-            <div class="alert alert-danger"><?= $this->session->flashdata('error'); ?></div>
+            <div class="alert alert-danger flash-msg"><?= $this->session->flashdata('error'); ?></div>
         <?php endif; ?>
 
         <table id="dtbl" class="table table-bordered table-striped">
@@ -31,7 +31,6 @@
                             <td><?= $role->usr_role ?></td>
                             <td><?= $role->role_st ?></td>
 
-                            <!-- ALL ACTION ICONS IN ONE TD (Datatable safe) -->
                             <td class="text-center" style="white-space: nowrap;">
 
                                 <a href="<?= base_url('Role/view/' . $role->role_id); ?>" class="mx-1">
@@ -58,3 +57,18 @@
 
     </div>
 </div>
+
+<script>
+    // Flash message auto hide after 6 seconds
+    setTimeout(function() {
+        const flash = document.querySelector('.flash-msg');
+        if (flash) {
+            flash.style.transition = "opacity 0.5s ease";
+            flash.style.opacity = "0";
+
+            setTimeout(() => {
+                if (flash) flash.remove();
+            }, 500);
+        }
+    }, 6000);
+</script>
