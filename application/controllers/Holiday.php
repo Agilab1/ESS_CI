@@ -17,11 +17,11 @@ class Holiday extends CI_Controller
 
     public function list($month = null, $year = null)
     {
-        // 1️⃣ Read GET filter input
+        // Read GET filter input
         $get_month = $this->input->get('month');
         $get_year  = $this->input->get('year');
 
-        // 2️⃣ If user used filter button → override values
+        //  If user used filter button → override values
         if (!empty($get_month) && !empty($get_year)) {
             // User clicked FILTER button
             $month = $get_month;
@@ -33,20 +33,20 @@ class Holiday extends CI_Controller
         }
 
 
-        // 3️⃣ If no month/year passed → use current
+        //  If no month/year passed → use current
         $month = $month ?? date('m');
         $year  = $year ?? date('Y');
 
-        // 4️⃣ Prepare data for view
+        //  Prepare data for view
         $data = new stdClass();
         $data->month = $month;
         $data->year  = $year;
         $data->action = ""; //dummy
-        // 5️⃣ Load model data
+        //  Load model data
         $data->holidays = $this->Holiday_model->getByMonth($month, $year);
         $data->counts   = $this->Dashboard_model->counts();
 
-        // 6️⃣ Load views
+        //  Load views
         $this->load->view('incld/verify');
         $this->load->view('incld/header');
         $this->load->view('incld/top_menu');

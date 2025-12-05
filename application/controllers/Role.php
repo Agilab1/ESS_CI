@@ -111,17 +111,34 @@ class Role extends CI_Controller
         $role_id = $this->input->post('old_role_id');
 
         switch ($action) {
-            case 'add':
+          case 'add':
                 $data = $this->validate();
                 if ($data) {
+
+                    // Check if exists (role_id OR usr_role)
+                    if ($this->Role_model->exists($data['role_id'], $data['usr_role'])) {
+
+                        $this->session->set_flashdata('error', 
+                            'Role ID already exists!'
+                        ); 
+
+                        redirect('Role/role_dash');
+                        return;
+                    }
+
+                    // Insert when not exists
                     $this->Role_model->add_user($data);
-                    // $this->session->set_flashdata('success', '.$data['role_id'].', 'Role addedd successfully!');
-                    $this->session->set_flashdata('success', $data['role_id'] . ', User Role: ' . $data['usr_role'] . ' added successfully!');
+                    $this->session->set_flashdata('success', 
+                        $data['role_id'] . ', User Role: ' . $data['usr_role'] . ' added successfully!'
+                    );
                     redirect('Role/role_dash');
+
                 } else {
                     $this->add();
                 }
-                break;
+          break;
+
+                
             case 'edit':
                 $data = $this->validate();
                 if ($data) {
