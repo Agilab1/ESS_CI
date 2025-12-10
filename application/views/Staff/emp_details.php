@@ -23,7 +23,6 @@
                 <h4 class="mb-0">Punching Details</h4>
             </div>
 
-            <!-- ⭐ MONTH FILTER + NAVIGATION -->
             <?php
             $curMonth = $month;
             $curYear  = $year;
@@ -59,19 +58,16 @@
                 <!-- MONTH NAVIGATION -->
                 <div class="d-flex gap-2">
 
-                    <!-- PREVIOUS -->
                     <a class="btn btn-outline-primary"
                         href="<?= base_url('Staff/emp_list/' . $staff->staff_id . '?month=' . $prevM . '&year=' . $prevY) ?>">
                         ⬅ Previous Month
                     </a>
 
-                    <!-- CURRENT MONTH -->
                     <a class="btn btn-outline-primary"
                         href="<?= base_url('Staff/emp_list/' . $staff->staff_id . '?month=' . date('m') . '&year=' . date('Y')) ?>">
                         📅 Current Month
                     </a>
 
-                    <!-- NEXT -->
                     <a class="btn btn-outline-primary"
                         href="<?= base_url('Staff/emp_list/' . $staff->staff_id . '?month=' . $nextM . '&year=' . $nextY) ?>">
                         Next Month ➜
@@ -80,8 +76,6 @@
                 </div>
 
             </div>
-            <!-- ⭐ END FILTER -->
-
         </div>
 
         <div class="card-body">
@@ -107,8 +101,8 @@
                             $dbHoliday  = $holiday_model->getHolidayByDate($formatDate);
                             $dayName    = date('l', strtotime($formatDate));
 
-                            // Check holiday
-                            $isHoliday = (!empty($dbHoliday) || $dayName == 'Saturday' || $dayName == 'Sunday');
+                            // HOLIDAY only if in database (NO weekend)
+                            $isHoliday = !empty($dbHoliday);
 
                             // Status logic
                             $status = !empty($item->staff_st) ? $item->staff_st : "No Punch";
@@ -121,7 +115,7 @@
                                 $status = "Sunday Off";
                             }
 
-                            // CSS for status
+                            // CSS class
                             $statusClass = '';
                             if ($status == "Saturday Off" || $status == "Sunday Off") {
                                 $statusClass = 'text-danger font-weight-bold';
@@ -130,7 +124,7 @@
                             }
                             ?>
 
-                            <tr class="<?= $isHoliday ? 'table-danger' : '' ?>">
+                            <tr class="<?= (!empty($dbHoliday) ? 'table-danger' : '') ?>">
 
                                 <td><?= $item->punch_date ?></td>
                                 <td><?= $item->staff_id ?></td>
@@ -146,48 +140,52 @@
 
                                 <td class="text-center">
 
-                                    <!-- ALWAYS SHOW VIEW -->
-                                    <a href="<?= base_url('Staff/status/' . $item->staff_id . '?date=' . $item->punch_date . '&mode=view') ?>"
-                                        style="color:#007bff; font-size:16px; margin-right:8px;">
-                                        <i class="fa fa-eye"></i>
-                                    </a>
+                                    <?php if (!in_array(strtolower($status), ['saturday off', 'sunday off'])): ?>
 
-                                    <?php if (!$isHoliday): ?>
+                                        <!-- VIEW -->
+                                        <a href="<?= base_url('Staff/status/' . $item->staff_id . '?date=' . $item->punch_date . '&mode=view') ?>"
+                                            style="color:#007bff; font-size:16px; margin-right:8px;">
+                                            <i class="fa fa-eye"></i>
+                                        </a>
 
-                                        <?php if ($status == "No Punch"): ?>
+                                        <?php if (!$isHoliday): ?>
 
-                                            <!-- CREATE -->
-                                            <a href="<?= base_url('Staff/status/' . $item->staff_id . '?date=' . $item->punch_date . '&mode=create') ?>"
-                                                style="color:#007bff; font-size:16px; margin-right:8px;">
-                                                <i class="fa fa-plus"></i>
-                                            </a>
+                                            <?php if ($status == "No Punch"): ?>
 
-                                        <?php else: ?>
+                                                <!-- CREATE -->
+                                                <a href="<?= base_url('Staff/status/' . $item->staff_id . '?date=' . $item->punch_date . '&mode=create') ?>"
+                                                    style="color:#007bff; font-size:16px; margin-right:8px;">
+                                                    <i class="fa fa-plus"></i>
+                                                </a>
 
-                                            <!-- EDIT -->
-                                            <a href="<?= base_url('Staff/status/' . $item->staff_id . '?date=' . $item->punch_date . '&mode=edit') ?>"
-                                                style="color:#007bff; font-size:16px; margin-right:8px;">
-                                                <i class="fa fa-edit"></i>
-                                            </a>
+                                            <?php else: ?>
+
+                                                <!-- EDIT -->
+                                                <a href="<?= base_url('Staff/status/' . $item->staff_id . '?date=' . $item->punch_date . '&mode=edit') ?>"
+                                                    style="color:#007bff; font-size:16px; margin-right:8px;">
+                                                    <i class="fa fa-edit"></i>
+                                                </a>
+
+                                            <?php endif; ?>
 
                                         <?php endif; ?>
 
+                                        <!-- DELETE -->
+                                        <a href="<?= base_url('Staff/delete_status/' . $item->staff_id . '/' . $item->punch_date) ?>"
+                                            onclick="return confirm('Delete this record?');"
+                                            style="color:#dc3545; font-size:16px;">
+                                            <i class="fa fa-trash"></i>
+                                        </a>
+
                                     <?php endif; ?>
 
-                                    <!-- ALWAYS SHOW DELETE -->
-                                    <a href="<?= base_url('Staff/delete_status/' . $item->staff_id . '/' . $item->punch_date) ?>"
-                                        onclick="return confirm('Delete this record?');"
-                                        style="color:#dc3545; font-size:16px;">
-                                        <i class="fa fa-trash"></i>
-                                    </a>
-
                                 </td>
+
 
                             </tr>
 
                         <?php endforeach; ?>
                     </tbody>
-
 
                 </table>
             </div>
