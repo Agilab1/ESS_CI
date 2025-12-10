@@ -13,36 +13,50 @@ class Staff extends CI_Controller
         $this->load->model('Holiday_model');
     }
 
-    public function status($staff_id = null)
-    {
-        if ($staff_id === null) {
-            show_error("Staff ID missing in URL");
-        }
+    public function status($staff_id)
+{
+   
+    $date = $this->input->get('date');
+    $mode = $this->input->get('mode');
 
-        $data['staff'] = $this->Staff_model->get_user($staff_id);
-        if (!$data['staff']) show_404();
+    if (!$date) {
+        $date = date('Y-m-d');
+    }
 
-        // Get date from URL or today
-        $data['today'] = $this->input->get('date') ?? date('Y-m-d');
+    $data['staff'] = $this->db->get_where('staffs', [
+        'staff_id' => $staff_id
+    ])->row();
 
-        // ⭐ GET FULL ROW FROM WORKS TABLE (Status + Remark)
-        $row = $this->db->get_where('works', [
-            'staff_id' => $staff_id,
-            'date'     => $data['today']
-        ])->row();
+   
+    $data['todayStatus'] = $this->Work_model->get_status($staff_id, $date);
 
-        // Pass data to view
-        $data['todayStatus'] = $row ? $row->staff_st : "No Punch";
-        $data['todayRemark'] = $row ? $row->remark : "";
+    
+    $data['today'] = $date;
 
-        $data['counts'] = $this->Dashboard_model->counts();
+    
+    $month = $this->input->get('month');
+    $year  = $this->input->get('year');
 
-        $mode = $this->input->get('mode') ?? 'edit';
-        $data['mode'] = $mode;
-        $data['is_view_only'] = ($mode === 'view');
+    if (!$month) $month = date('m', strtotime($date));
+    if (!$year)  $year  = date('Y', strtotime($date));
 
-        // Load views
-        $this->load->view('incld/verify');
+    $data['month'] = $month;
+    $data['year']  = $year;
+
+    // FETCH MONTHLY ATTENDANCE
+    $data['attendance'] = $this->Work_model->get_monthly_attendance(
+        $staff_id,
+        $month,
+        $year
+    );
+
+    // PASS BASIC VALUES
+    $data['staff_id'] = $staff_id;
+    $data['selected_date'] = $date;
+    $data['mode'] = $mode;
+    $data['counts'] = $this->Dashboard_model->counts();
+    // LOAD VIEW
+     $this->load->view('incld/verify');
         $this->load->view('incld/header');
         $this->load->view('incld/top_menu');
         $this->load->view('incld/side_menu');
@@ -50,7 +64,38 @@ class Staff extends CI_Controller
         $this->load->view('Staff/form', $data);
         $this->load->view('incld/jslib');
         $this->load->view('incld/script');
+}
+
+public function save_status()
+{
+    $staff_id = $this->input->post('staff_id');
+    $date     = $this->input->post('date');
+    $status   = $this->input->post('staff_st');
+    $remark   = $this->input->post('remark');
+
+    if (!$staff_id || !$date) {
+        show_error("Missing Staff ID or Date");
     }
+
+    // Prepare data
+    $data = [
+        'staff_id' => $staff_id,
+        'date'     => $date,
+        'staff_st' => $status,
+        'remark'   => $remark,
+    ];
+
+    // Insert/Update work status
+    $this->Work_model->upsert_status($data);
+
+    $this->session->set_flashdata("success", "Status saved!");
+
+    // Redirect back to attendance page
+    redirect('Staff/emp_list/' . $staff_id . '?date=' . $date);
+}
+
+
+
 
     public function delete_status($staff_id, $date)
     {
@@ -59,35 +104,53 @@ class Staff extends CI_Controller
         redirect('Staff/emp_list/' . $staff_id);
     }
 
-    // 🔥 SHOW MONTHLY ATTENDANCE + SAVE STATUS + REMARK
+
+    //  SHOW MONTHLY ATTENDANCE + SAVE STATUS + REMARK
     public function emp_list($staff_id = null)
     {
+        // Get staff id
         if ($staff_id === null) {
             $staff_id = $this->input->get('staff_id');
         }
         if (empty($staff_id)) redirect('Staff/list');
 
+        // Get staff details
         $data['staff'] = $this->Staff_model->get_user($staff_id);
         if (!$data['staff']) show_error("Employee not found.");
 
-        if ($this->input->method() === 'post') {
+        // ⭐ NFC AUTO-PUNCH ------------------------------------------------------------
+        if ($this->input->get('auto')) {
 
-            $insert = [
+            $today = date('Y-m-d');
+
+            // CHECK → If already saved for this staff on today's date
+            $exists = $this->db->get_where('works', [
                 'staff_id' => $staff_id,
-                'staff_st' => $this->input->post('staff_st'),
-                'remark'   => $this->input->post('remark'),   // ⭐ NEW
-                'date'     => $this->input->post('old_date')
-            ];
+                'date'     => $today
+            ])->row();
 
-            $this->Work_model->upsert_status($insert);
-            redirect('Staff/emp_list/' . $staff_id);
+            // ONLY INSERT FOR THIS STAFF — not for others
+            if (!$exists) {
+                $insert = [
+                    'staff_id' => $staff_id,
+                    'staff_st' => $this->input->get('auto'),
+                    'remark'   => '',
+                    'date'     => $today
+                ];
+
+                $this->Work_model->upsert_status($insert);
+            }
+
+            redirect('Staff/emp_list/' . $staff_id . '?date=' . $today);
+            return;
         }
 
-        // ⭐ Month + Year (GET params)
+        // ---------------------------------------------------------------------------
+
+        // Month navigation
         $month = $this->input->get('month') ?? date('m');
         $year  = $this->input->get('year') ?? date('Y');
 
-        // ⭐ Prev/Next Month
         $prevM = $month - 1;
         $prevY = $year;
         if ($prevM < 1) {
@@ -102,7 +165,6 @@ class Staff extends CI_Controller
             $nextY++;
         }
 
-        // ⭐ Pass to View (THIS IS IMPORTANT)
         $data['month'] = $month;
         $data['year']  = $year;
         $data['prevM'] = $prevM;
@@ -110,40 +172,35 @@ class Staff extends CI_Controller
         $data['nextM'] = $nextM;
         $data['nextY'] = $nextY;
 
-        // ⭐ Monthly Attendance
-        $data['works'] = $this->Work_model->get_monthly_attendance(
-            $staff_id,
-            $month,
-            $year
-        );
+        // Attendance data
+        $data['works'] = $this->Work_model->get_monthly_attendance($staff_id, $month, $year);
 
         $data['holiday_model'] = $this->Holiday_model;
         $data['counts'] = $this->Dashboard_model->counts();
 
+        // Load UI
         $this->load->view('incld/verify');
         $this->load->view('incld/header');
         $this->load->view('incld/top_menu');
         $this->load->view('incld/side_menu');
         $this->load->view('user/dashboard', $data);
-        $this->load->view('Staff/emp_details', $data); // MUST RECEIVE month/year
+        $this->load->view('Staff/emp_details', $data);
         $this->load->view('incld/jslib');
         $this->load->view('incld/script');
     }
 
 
-
-    // 🔥 INLINE UPDATE (AJAX) — Added remark support
+    // 🔥 INLINE UPDATE AJAX
     public function update_status_inline()
     {
         $data = [
             'staff_id' => $this->input->post('staff_id'),
             'date'     => $this->input->post('date'),
             'staff_st' => $this->input->post('staff_st'),
-            'remark'   => $this->input->post('remark'),  // ⭐ NEW
+            'remark'   => $this->input->post('remark'),
         ];
 
         $this->Work_model->upsert_status($data);
-
         echo json_encode(["status" => "success"]);
     }
 
@@ -153,7 +210,6 @@ class Staff extends CI_Controller
     {
         $data['staffs'] = $this->Staff_model->get_user();
         $data['counts'] = $this->Dashboard_model->counts();
-
         $this->load->view('incld/verify');
         $this->load->view('incld/header');
         $this->load->view('incld/top_menu');
@@ -180,7 +236,7 @@ class Staff extends CI_Controller
             'phn_no'   => '',
             'birth_dt' => '',
             'staff_st' => '',
-            'remark'   => ''  // keep field
+            'remark'   => ''
         ];
 
         $this->load->view('incld/header');
@@ -222,8 +278,6 @@ class Staff extends CI_Controller
         $this->load->view('incld/footer');
     }
 
-
-
     public function delete($staff_id)
     {
         $data = new stdClass();
@@ -236,9 +290,6 @@ class Staff extends CI_Controller
         $this->session->set_flashdata('success', $staff_id . ' Staff deleted successfully!');
         redirect('Staff/list');
     }
-
-
-
     private function validate()
     {
         $this->form_validation->set_rules('staff_id', 'Staff ID', 'required|trim');

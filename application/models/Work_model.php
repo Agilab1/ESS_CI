@@ -14,12 +14,14 @@ class Work_model extends CI_Model
         $end_date   = date('Y-m-t', strtotime($start_date));
 
         $this->db->select('
-        dates.date AS punch_date,
-        staffs.staff_id, 
-        works.staff_st,
-        works.remark,
-        staffs.emp_name
-    ');
+            dates.date AS punch_date,
+            works.date AS work_date,
+            staffs.staff_id, 
+            works.staff_st,
+            works.remark,
+            staffs.emp_name
+        ');
+
 
         $this->db->from('dates');
 

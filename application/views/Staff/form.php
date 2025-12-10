@@ -15,7 +15,11 @@ $is_view_only = isset($mode) && $mode === 'view';
                 <div class="card shadow">
                     <div class="card-body">
 
-                        <form method="post" action="<?= base_url('Staff/emp_list/' . $staff->staff_id); ?>" autocomplete="off">
+                        <!-- <form method="post" action="<?= base_url('Staff/emp_list/' . $staff->staff_id); ?>" autocomplete="off"> -->
+                            <form method="post" action="<?= base_url('Staff/save_status') ?>">
+                            <input type="hidden" name="staff_id" value="<?= $staff->staff_id ?>">
+                            <input type="hidden" name="date" value="<?= $today ?>">
+
 
                             <table class="table table-bordered">
 
@@ -89,9 +93,13 @@ $is_view_only = isset($mode) && $mode === 'view';
                                 <!-- SUBMIT BUTTON (Hide in view mode) -->
                                 <?php if (!$is_view_only): ?>
                                 <tr>
+                                    <!-- <td></td> -->
                                     <td colspan="2" class="text-center">
+                                        <a href="<?= base_url('/Staff/emp_list/'). $staff->staff_id . '?date=' . date('Y-m-d') ?>"  class="btn btn-secondary">Back</a>
                                         <button class="btn btn-primary" type="submit">Save</button>
+                                        
                                     </td>
+
                                 </tr>
                                 <?php endif; ?>
 
