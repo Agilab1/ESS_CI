@@ -41,7 +41,7 @@
 
                 <thead class="btn-primary text-white">
                     <tr>
-                        <th>#</th>
+                        <th>Asset ID</th>
                         <th>Asset No</th>
                         <th>Asset Name</th>
                         <th>Site</th>
@@ -58,7 +58,7 @@
                     <?php if (!empty($assets)): ?>
                         <?php $i = 1; foreach ($assets as $a): ?>
                             <tr>
-                                <td><?= $i++ ?></td>
+                                <td><?= $a->asset_id ?></td>
 
                                 <td><?= $a->asset_no ?></td>
                                 <td><?= $a->asset_name ?></td>

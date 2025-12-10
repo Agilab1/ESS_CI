@@ -93,10 +93,11 @@ class Asset extends CI_Controller
     public function save()
 {
     $action = $this->input->post('action');
-    $asset_id_old = $this->input->post('asset_id_old');
+    $asset_id = $this->input->post('asset_id');
 
     // Gather form data
     $data = [
+        'asset_id'   => $this->input->post('asset_id'),
         'asset_no'   => $this->input->post('asset_no'),
         'asset_name' => $this->input->post('asset_name'),
         'net_value'  => $this->input->post('net_value'),
@@ -122,7 +123,7 @@ class Asset extends CI_Controller
         $this->Asset_model->insertAsset($data);
         $this->session->set_flashdata('success', 'Asset added successfully!');
     } elseif ($action == 'edit') {
-        $this->Asset_model->updateAsset($asset_id_old, $data);
+        $this->Asset_model->updateAsset($asset_id, $data);
         $this->session->set_flashdata('success', 'Asset updated successfully!');
     } else {
         show_404();
