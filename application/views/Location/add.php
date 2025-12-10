@@ -1,5 +1,4 @@
-body class="p-4" style="background:#f5f7fa;">
-    <div class="d-flex justify-content-center align-items-center" style="height:100vh;">
+ <div class="d-flex justify-content-center align-items-center" style="height:100vh;">
 
         <div class="container" style="width:75%; max-width:900px;">
             <div class="card shadow-lg border-0 rounded-4 overflow-hidden"
