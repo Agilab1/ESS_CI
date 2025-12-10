@@ -123,7 +123,7 @@ class Location extends CI_Controller
     public function save()
     {
         $action  = strtolower($this->input->post('action'));
-        $site_id = $this->input->post('old_site_id');
+        $site_id = $this->input->post('site_id');
 
         $data = $this->validate();
 
@@ -158,6 +158,7 @@ class Location extends CI_Controller
         }
 
         return [
+            'site_id'      => $this->input->post('site_id'),
             'site_no'      => $this->input->post('site_no'),
             'site_name'    => $this->input->post('site_name'),
             'last_visit'   => $this->input->post('last_visit'),
