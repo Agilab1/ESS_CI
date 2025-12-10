@@ -41,9 +41,15 @@ class Dashboard_model extends CI_Model { //test
             $count = $this->db->count_all('holiday');
             $dash->cnt4 = $count > 0 ? $count : '';
         }
-           if ($this->db->table_exists('assets')) {
+        //aseset
+        if ($this->db->table_exists('assets')) {
             $count = $this->db->count_all('assets');
             $dash->cnt5 = $count > 0 ? $count : '';
+        }
+        //Location
+        if ($this->db->table_exists('sites')) {
+            $count = $this->db->count_all('sites');
+            $dash->cnt6 = $count > 0 ? $count : '';
         }
 
         return $dash;
