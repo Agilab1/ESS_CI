@@ -81,15 +81,21 @@
         <div class="card-body">
 
             <div class="table-responsive">
-                <table class="table table-bordered table-striped table-hover mb-0">
-                    <thead class="bg-primary text-white">
+                <table id="dtbl" class="table table-bordered table-striped align-middle" style="font-size: 14px;">
+                    <thead class="btn-primary">
                         <tr>
                             <th>Punch Date</th>
                             <th>Staff ID</th>
                             <th>Employee Name</th>
                             <th>Status</th>
+
                             <th>Remark</th>
-                            <th>Action</th>
+
+                            <th>C-IN Time</th>
+                            <th>C-OUT Time</th>
+                            <th>Duration</th>
+
+                            <th class="text-center">Action</th>
                         </tr>
                     </thead>
 
@@ -101,10 +107,8 @@
                             $dbHoliday  = $holiday_model->getHolidayByDate($formatDate);
                             $dayName    = date('l', strtotime($formatDate));
 
-                            // HOLIDAY only if in database (NO weekend)
                             $isHoliday = !empty($dbHoliday);
 
-                            // Status logic
                             $status = !empty($item->staff_st) ? $item->staff_st : "No Punch";
 
                             if (!empty($dbHoliday)) {
@@ -115,72 +119,59 @@
                                 $status = "Sunday Off";
                             }
 
-                            // CSS class
                             $statusClass = '';
                             if ($status == "Saturday Off" || $status == "Sunday Off") {
                                 $statusClass = 'text-danger font-weight-bold';
-                            } elseif ($isHoliday && !empty($dbHoliday)) {
+                            } elseif ($isHoliday) {
                                 $statusClass = 'text-danger';
                             }
                             ?>
 
-                            <tr class="<?= (!empty($dbHoliday) ? 'table-danger' : '') ?>">
+                            <tr class="<?= ($isHoliday ? 'table-danger' : '') ?>">
 
                                 <td><?= $item->punch_date ?></td>
                                 <td><?= $item->staff_id ?></td>
                                 <td><?= $item->emp_name ?></td>
 
-                                <td class="<?= $statusClass ?>">
-                                    <?= $status ?>
-                                </td>
+                                <td class="<?= $statusClass ?>"><?= $status ?></td>
 
-                                <td>
-                                    <?= !empty($item->remark) ? $item->remark : '-' ?>
-                                </td>
+                                <td><?= $item->remark ?: '-' ?></td>
+
+                                <td><?= $item->cin_time ?: '-' ?></td>
+                                <td><?= $item->cout_time ?: '-' ?></td>
+                                <td><?= $item->duration ?: '-' ?></td>
 
                                 <td class="text-center">
 
                                     <?php if (!in_array(strtolower($status), ['saturday off', 'sunday off'])): ?>
 
-                                        <!-- VIEW -->
-                                        <a href="<?= base_url('Staff/status/' . $item->staff_id . '?date=' . $item->punch_date . '&mode=view') ?>"
-                                            style="color:#007bff; font-size:16px; margin-right:8px;">
+                                        <a href="<?= base_url('Staff/status/' . $item->staff_id . '?date=' . $item->punch_date . '&mode=view') ?>">
                                             <i class="fa fa-eye"></i>
                                         </a>
+                                        &nbsp;
 
                                         <?php if (!$isHoliday): ?>
 
                                             <?php if ($status == "No Punch"): ?>
-
-                                                <!-- CREATE -->
-                                                <a href="<?= base_url('Staff/status/' . $item->staff_id . '?date=' . $item->punch_date . '&mode=create') ?>"
-                                                    style="color:#007bff; font-size:16px; margin-right:8px;">
+                                                <a href="<?= base_url('Staff/status/' . $item->staff_id . '?date=' . $item->punch_date . '&mode=create') ?>">
                                                     <i class="fa fa-plus"></i>
                                                 </a>
-
                                             <?php else: ?>
-
-                                                <!-- EDIT -->
-                                                <a href="<?= base_url('Staff/status/' . $item->staff_id . '?date=' . $item->punch_date . '&mode=edit') ?>"
-                                                    style="color:#007bff; font-size:16px; margin-right:8px;">
+                                                <a href="<?= base_url('Staff/status/' . $item->staff_id . '?date=' . $item->punch_date . '&mode=edit') ?>">
                                                     <i class="fa fa-edit"></i>
                                                 </a>
-
                                             <?php endif; ?>
 
                                         <?php endif; ?>
 
-                                        <!-- DELETE -->
                                         <a href="<?= base_url('Staff/delete_status/' . $item->staff_id . '/' . $item->punch_date) ?>"
-                                            onclick="return confirm('Delete this record?');"
-                                            style="color:#dc3545; font-size:16px;">
-                                            <i class="fa fa-trash"></i>
+                                            onclick="return confirm('Delete this record?');">
+                                            <i class="fa fa-trash text-danger"></i>
                                         </a>
 
                                     <?php endif; ?>
 
                                 </td>
-
 
                             </tr>
 

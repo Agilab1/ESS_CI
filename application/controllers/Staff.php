@@ -1,4 +1,5 @@
 <?php
+date_default_timezone_set('Asia/Kolkata');
 defined('BASEPATH') or exit('No direct script access allowed');
 
 class Staff extends CI_Controller
@@ -14,49 +15,49 @@ class Staff extends CI_Controller
     }
 
     public function status($staff_id)
-{
-   
-    $date = $this->input->get('date');
-    $mode = $this->input->get('mode');
+    {
 
-    if (!$date) {
-        $date = date('Y-m-d');
-    }
+        $date = $this->input->get('date');
+        $mode = $this->input->get('mode');
 
-    $data['staff'] = $this->db->get_where('staffs', [
-        'staff_id' => $staff_id
-    ])->row();
+        if (!$date) {
+            $date = date('Y-m-d');
+        }
 
-   
-    $data['todayStatus'] = $this->Work_model->get_status($staff_id, $date);
+        $data['staff'] = $this->db->get_where('staffs', [
+            'staff_id' => $staff_id
+        ])->row();
 
-    
-    $data['today'] = $date;
 
-    
-    $month = $this->input->get('month');
-    $year  = $this->input->get('year');
+        $data['todayStatus'] = $this->Work_model->get_status($staff_id, $date);
 
-    if (!$month) $month = date('m', strtotime($date));
-    if (!$year)  $year  = date('Y', strtotime($date));
 
-    $data['month'] = $month;
-    $data['year']  = $year;
+        $data['today'] = $date;
 
-    // FETCH MONTHLY ATTENDANCE
-    $data['attendance'] = $this->Work_model->get_monthly_attendance(
-        $staff_id,
-        $month,
-        $year
-    );
 
-    // PASS BASIC VALUES
-    $data['staff_id'] = $staff_id;
-    $data['selected_date'] = $date;
-    $data['mode'] = $mode;
-    $data['counts'] = $this->Dashboard_model->counts();
-    // LOAD VIEW
-     $this->load->view('incld/verify');
+        $month = $this->input->get('month');
+        $year  = $this->input->get('year');
+
+        if (!$month) $month = date('m', strtotime($date));
+        if (!$year)  $year  = date('Y', strtotime($date));
+
+        $data['month'] = $month;
+        $data['year']  = $year;
+
+        // FETCH MONTHLY ATTENDANCE
+        $data['attendance'] = $this->Work_model->get_monthly_attendance(
+            $staff_id,
+            $month,
+            $year
+        );
+
+        // PASS BASIC VALUES
+        $data['staff_id'] = $staff_id;
+        $data['selected_date'] = $date;
+        $data['mode'] = $mode;
+        $data['counts'] = $this->Dashboard_model->counts();
+        // LOAD VIEW
+        $this->load->view('incld/verify');
         $this->load->view('incld/header');
         $this->load->view('incld/top_menu');
         $this->load->view('incld/side_menu');
@@ -64,35 +65,35 @@ class Staff extends CI_Controller
         $this->load->view('Staff/form', $data);
         $this->load->view('incld/jslib');
         $this->load->view('incld/script');
-}
-
-public function save_status()
-{
-    $staff_id = $this->input->post('staff_id');
-    $date     = $this->input->post('date');
-    $status   = $this->input->post('staff_st');
-    $remark   = $this->input->post('remark');
-
-    if (!$staff_id || !$date) {
-        show_error("Missing Staff ID or Date");
     }
 
-    // Prepare data
-    $data = [
-        'staff_id' => $staff_id,
-        'date'     => $date,
-        'staff_st' => $status,
-        'remark'   => $remark,
-    ];
+    public function save_status()
+    {
+        $staff_id = $this->input->post('staff_id');
+        $date     = $this->input->post('date');
+        $status   = $this->input->post('staff_st');
+        $remark   = $this->input->post('remark');
 
-    // Insert/Update work status
-    $this->Work_model->upsert_status($data);
+        if (!$staff_id || !$date) {
+            show_error("Missing Staff ID or Date");
+        }
 
-    $this->session->set_flashdata("success", "Status saved!");
+        // Prepare data
+        $data = [
+            'staff_id' => $staff_id,
+            'date'     => $date,
+            'staff_st' => $status,
+            'remark'   => $remark,
+        ];
 
-    // Redirect back to attendance page
-    redirect('Staff/emp_list/' . $staff_id . '?date=' . $date);
-}
+        // Insert/Update work status
+        $this->Work_model->upsert_status($data);
+
+        $this->session->set_flashdata("success", "Status saved!");
+
+        // Redirect back to attendance page
+        redirect('Staff/emp_list/' . $staff_id . '?date=' . $date);
+    }
 
 
 
@@ -106,51 +107,64 @@ public function save_status()
 
 
     //  SHOW MONTHLY ATTENDANCE + SAVE STATUS + REMARK
+    // MAIN PAGE — MONTHLY ATTENDANCE
     public function emp_list($staff_id = null)
     {
-        // Get staff id
+        // GET STAFF ID
         if ($staff_id === null) {
             $staff_id = $this->input->get('staff_id');
         }
         if (empty($staff_id)) redirect('Staff/list');
 
-        // Get staff details
+        // STAFF DETAILS
         $data['staff'] = $this->Staff_model->get_user($staff_id);
         if (!$data['staff']) show_error("Employee not found.");
 
-        // ⭐ NFC AUTO-PUNCH ------------------------------------------------------------
+        // ⭐⭐⭐ NFC AUTO-PUNCH LOGIC ⭐⭐⭐
         if ($this->input->get('auto')) {
 
             $today = date('Y-m-d');
+            $currentTime = date('H:i:s'); // exact NFC hit time
 
-            // CHECK → If already saved for this staff on today's date
+            // Check record
             $exists = $this->db->get_where('works', [
                 'staff_id' => $staff_id,
                 'date'     => $today
             ])->row();
 
-            // ONLY INSERT FOR THIS STAFF — not for others
+            // FIRST TAP → C-IN
             if (!$exists) {
+
                 $insert = [
-                    'staff_id' => $staff_id,
-                    'staff_st' => $this->input->get('auto'),
-                    'remark'   => '',
-                    'date'     => $today
+                    'staff_id'  => $staff_id,
+                    'staff_st'  => $this->input->get('auto'),
+                    'remark'    => '',
+                    'date'      => $today,
+                    'cin_time'  => $currentTime
                 ];
 
-                $this->Work_model->upsert_status($insert);
+                $this->Work_model->insert_cin($insert);
+            }
+
+            // SECOND TAP → C-OUT
+            else {
+
+                $this->Work_model->update_cout([
+                    'staff_id'  => $staff_id,
+                    'date'      => $today,
+                    'cout_time' => $currentTime
+                ]);
             }
 
             redirect('Staff/emp_list/' . $staff_id . '?date=' . $today);
             return;
         }
 
-        // ---------------------------------------------------------------------------
-
-        // Month navigation
+        // MONTH LOGIC
         $month = $this->input->get('month') ?? date('m');
         $year  = $this->input->get('year') ?? date('Y');
 
+        // Previous month
         $prevM = $month - 1;
         $prevY = $year;
         if ($prevM < 1) {
@@ -158,6 +172,7 @@ public function save_status()
             $prevY--;
         }
 
+        // Next month
         $nextM = $month + 1;
         $nextY = $year;
         if ($nextM > 12) {
@@ -172,13 +187,12 @@ public function save_status()
         $data['nextM'] = $nextM;
         $data['nextY'] = $nextY;
 
-        // Attendance data
+        // ATTENDANCE DATA
         $data['works'] = $this->Work_model->get_monthly_attendance($staff_id, $month, $year);
-
         $data['holiday_model'] = $this->Holiday_model;
         $data['counts'] = $this->Dashboard_model->counts();
 
-        // Load UI
+        // LOAD UI
         $this->load->view('incld/verify');
         $this->load->view('incld/header');
         $this->load->view('incld/top_menu');

@@ -1,4 +1,7 @@
 <?php
+date_default_timezone_set('Asia/Kolkata');
+
+
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /*
@@ -23,10 +26,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
+
 // $config['base_url'] = 'http://localhost/ESS_TEST/';
 $config['base_url'] = 'https://agilesaptech.com/ESS_CI/';
  // $config['base_url'] = 'http://localhost/ESS_CI/';
-
 /*
 |--------------------------------------------------------------------------
 | Index File
