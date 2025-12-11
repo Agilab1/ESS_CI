@@ -10,7 +10,6 @@
                 <div class="card-header border-5 py-3">
                     <h4 class="m-0"><?= ucfirst($action) ?> Asset</h4>
                 </div>
-
                 <div class="card-body p-4">
 
                     <?php if ($this->session->flashdata('error')): ?>
@@ -29,35 +28,31 @@
                         <table class="table table-bordered">
 
                             <tr>
+                                 <td class="p-3 w-50">
+                                    <label class="form-label">Asset ID</label>
+                                    <input type="text" name="asset_id" class="form-control" required
+                                        value="<?= $asset->asset_id ?>" <?= $disabled ?>>
+                                </td>
                                 <td class="p-3 w-50">
                                     <label class="form-label">Asset Number</label>
                                     <input type="text" name="asset_no" class="form-control" required
                                         value="<?= $asset->asset_no ?>" <?= $disabled ?>>
                                 </td>
+                                
+                            </tr>
+
+                            <tr>
                                 <td class="p-3 w-50">
                                     <label class="form-label">Asset Name</label>
                                     <input type="text" name="asset_name" class="form-control" required
                                         value="<?= $asset->asset_name ?>" <?= $disabled ?>>
                                 </td>
-                            </tr>
-
-                            <tr>
                                 <td class="p-3 w-50">
                                     <label class="form-label">Net Value</label>
                                     <input type="number" name="net_value" class="form-control"
                                         value="<?= $asset->net_value ?>" <?= $disabled ?>>
                                 </td>
-                                <td class="p-3 w-50">
-                                    <label class="form-label">Site</label>
-                                    <select name="site_id" class="form-control" <?= $disabled ?> required>
-                                        <option value="">Select Site</option>
-                                        <?php foreach ($sites as $s): ?>
-                                            <option value="<?= $s->site_id ?>" <?= ($asset->site_id == $s->site_id) ? 'selected' : '' ?>>
-                                                <?= $s->site_no ?> – <?= $s->site_name ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </td>
+                               
                             </tr>
 
                             <tr>
@@ -91,6 +86,17 @@
                                             <option value="<?= $c->cat_id ?>"
                                                 <?= ($asset->cat_id == $c->cat_id) ? 'selected' : '' ?>>
                                                 <?= $c->cat_no ?> – <?= $c->cat_name ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </td>
+                                 <td class="p-3 w-50">
+                                    <label class="form-label">Site</label>
+                                    <select name="site_id" class="form-control" <?= $disabled ?> required>
+                                        <option value="">Select Site</option>
+                                        <?php foreach ($sites as $s): ?>
+                                            <option value="<?= $s->site_id ?>" <?= ($asset->site_id == $s->site_id) ? 'selected' : '' ?>>
+                                                <?= $s->site_no ?> – <?= $s->site_name ?>
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
