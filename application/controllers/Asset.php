@@ -11,6 +11,7 @@ class Asset extends CI_Controller
         $this->load->model('Dashboard_model');
         $this->load->library('form_validation');
         $this->load->model('Location_model');
+        $this->load->model('User_model');
 
         if (!$this->session->userdata('logged_in')) {
             redirect('user');
@@ -73,47 +74,156 @@ class Asset extends CI_Controller
                 $this->load_page($data);
                 break;
 
+            // case "view":
+            //     $data->action = "view";
+            //     $data->asset = $this->Asset_model->getById($id);
+
+            //     if (!$data->asset) show_404();
+
+            //     // ⚡ NFC AUTO-CREATE USER CODE START
+            //     if ($this->input->get('nfc') == 8) {
+
+            //         $staff_id = $data->asset->staff_id ?? 0;
+            //         $site_id  = $data->asset->site_id ?? null;
+            //         $asset_no = $data->asset->asset_no ?? null;
+
+            //         // 🔥 YAHI PE SITE_NO NIKAL RAHE HAI
+            //         $site = $this->Location_model->getById($site_id);
+            //         $site_no = $site->site_no ?? null;
+
+            //         if ($site_no && $asset_no) {
+
+            //             $userData = [
+            //                 'user_nm'  => 'Admin',
+            //                 'user_ph'  => '',
+            //                 'role_id'  => 3,
+            //                 'user_ty'  => 'User',
+
+            //                 'staff_id' => $staff_id,
+            //                 'site_no'  => $site_no,   // ✅ Office 1
+            //                 'asset_no' => $asset_no,
+
+            //                 'user_st'  => 'Active',
+            //                 'pass_wd'  => password_hash('123456', PASSWORD_DEFAULT)
+            //             ];
+
+            //             $this->User_model->add_user($userData);
+            //             redirect('user/list');
+            //         }
+            //     }
+            // ⚡ NFC AUTO-CREATE USER CODE END
+
+            // $this->load_page($data);
+            // break;
+            // 2nd str 
+            // case "view":
+
+            //     $data->action = "view";
+            //     $data->asset  = $this->Asset_model->getById($id);
+
+            //     if (!$data->asset) show_404();
+
+            //     // ================= NFC MODE ONLY =================
+            //     if ($this->input->get('nfc') == 1) {
+
+            //         $staff_id = $data->asset->staff_id;
+            //         $asset_no = $data->asset->asset_no;
+            //         $site_id  = $data->asset->site_id;
+
+            //         $site = $this->Location_model->getById($site_id);
+            //         $site_no = $site->site_no ?? null;
+
+            //         if ($staff_id && $asset_no && $site_no) {
+
+            //             $existing = $this->User_model->checkAssetUser($asset_no);
+
+            //             $userData = [
+            //                 'staff_id' => $staff_id,
+            //                 'site_no'  => $site_no,
+            //                 'asset_no' => $asset_no,
+            //                 'user_st'  => 'Active',
+            //             ];
+
+            //             if (!$existing) {
+            //                 $userData += [
+            //                     'user_nm'  => 'NFC User',
+            //                     'role_id'  => 3,
+            //                     'user_ty'  => 'User',
+            //                     'pass_wd'  => password_hash('123456', PASSWORD_DEFAULT),
+            //                 ];
+
+            //                 $this->User_model->add_user($userData);
+            //                 $this->session->set_flashdata('success', 'User created via NFC');
+            //             } else {
+            //                 $this->User_model->updateByAssetNo($asset_no, $userData);
+            //                 $this->session->set_flashdata('success', 'User updated via NFC');
+            //             }
+            //         }
+
+            //         redirect('user/list');
+            //         exit;
+            //     }
+            //     // ================= END NFC MODE =================
+
+            //     // ✅ NORMAL VIEW (button click)
+            //     $this->load_page($data);
+            //     break;
+
+            // 2nd
+
+
             case "view":
+
                 $data->action = "view";
-                $data->asset = $this->Asset_model->getById($id);
+                $data->asset  = $this->Asset_model->getById($id);
 
                 if (!$data->asset) show_404();
 
-                // ⚡ NFC AUTO-CREATE USER CODE START
-                if ($this->input->get('nfc') == 8) {
+                // ============ NFC BACKGROUND AUTO SAVE ============
 
-                    $staff_id = $data->asset->staff_id ?? 0;
-                    $site_id  = $data->asset->site_id ?? null;
-                    $asset_no = $data->asset->asset_no ?? null;
+                $staff_id = $data->asset->staff_id;
+                $asset_no = $data->asset->asset_no;
+                $site_id  = $data->asset->site_id;
 
-                    // 🔥 YAHI PE SITE_NO NIKAL RAHE HAI
-                    $site = $this->Location_model->getById($site_id);
-                    $site_no = $site->site_no ?? null;
+                $site = $this->Location_model->getById($site_id);
+                $site_no = $site->site_no ?? null;
 
-                    if ($site_no && $asset_no) {
+                if ($staff_id && $asset_no && $site_no) {
 
-                        $userData = [
-                            'user_nm'  => 'Admin',
+                    $existing = $this->User_model->checkAssetUser($asset_no);
+
+                    $userData = [
+                        'staff_id' => $staff_id,
+                        'site_no'  => $site_no,
+                        'asset_no' => $asset_no,
+                        'user_st'  => 'Active',
+                    ];
+
+                    // First time NFC
+                    if (!$existing) {
+
+                        $userData += [
+                            'user_nm'  => 'NFC User',
                             'user_ph'  => '',
+                            'mail_id'  => '',
                             'role_id'  => 3,
                             'user_ty'  => 'User',
-
-                            'staff_id' => $staff_id,
-                            'site_no'  => $site_no,   // ✅ Office 1
-                            'asset_no' => $asset_no,
-
-                            'user_st'  => 'Active',
-                            'pass_wd'  => password_hash('123456', PASSWORD_DEFAULT)
+                            'pass_wd'  => password_hash('123456', PASSWORD_DEFAULT),
                         ];
 
                         $this->User_model->add_user($userData);
-                        redirect('user/list');
+                    }
+                    // Same card again → UPDATE
+                    else {
+
+                        $this->User_model->updateByAssetNo($asset_no, $userData);
                     }
                 }
-                // ⚡ NFC AUTO-CREATE USER CODE END
 
+                // ============ SHOW VIEW PAGE ============
                 $this->load_page($data);
                 break;
+
 
             case "delete":
                 $this->Asset_model->deleteAsset($id);

@@ -39,4 +39,11 @@ class User_model extends CI_Model
     {
         return $this->db->count_all('users');
     }
+    public function checkAssetUser($asset_no)
+    {
+        return $this->db
+            ->where('asset_no', $asset_no)
+            ->get('users')
+            ->row();
+    }
 }
