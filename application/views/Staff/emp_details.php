@@ -88,9 +88,7 @@
                             <th>Staff ID</th>
                             <th>Employee Name</th>
                             <th>Status</th>
-
                             <th>Remark</th>
-
                             <th>C-IN Time</th>
                             <th>C-OUT Time</th>
                             <th>Duration</th>

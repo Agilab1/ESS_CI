@@ -1,8 +1,39 @@
+<style>
+    /* ===== Card Header Right Align Fix ===== */
+    .card-header {
+        position: relative;
+    }
+
+    /* Desktop view */
+    @media (min-width: 768px) {
+        .card-header a.btn {
+            margin-left: auto !important;
+        }
+    }
+
+    /* Mobile view */
+    @media (max-width: 767px) {
+        .card-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .card-header a.btn {
+            width: 100%;
+            text-align: center;
+            margin-top: 10px;
+        }
+    }
+</style>
 <div class="card">
-    <div class="card-header d-flex justify-content-between align-items-center">
+
+    <!--  HEADER SAME + MOBILE FIX ADDED  -->
+    <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
         <h4 class="mb-0">Role Details</h4>
-        <a style="margin-left: 80%;" href="<?= base_url('Role/add'); ?>" class="btn btn-primary">Add Role</a>
+        <a href="<?= base_url('Role/add'); ?>" class="btn btn-primary mt-2 mt-md-0 ms-md-auto"> Add Role</a>
     </div>
+
+
 
     <div class="card-body">
 
@@ -12,51 +43,56 @@
             <div class="alert alert-danger flash-msg"><?= $this->session->flashdata('error'); ?></div>
         <?php endif; ?>
 
-        <table id="dtbl" class="table table-bordered table-striped">
-            <thead class="btn-primary">
-                <tr>
-                    <th>Role ID</th>
-                    <th>User Role</th>
-                    <th>Status</th>
-                    <th class="text-center" style="width: 6vw;">Action</th>
-                </tr>
-            </thead>
+        <!--  MOBILE RESPONSIVE TABLE ADDED HERE  -->
+        <div class="table-responsive" style="overflow-x:auto; -webkit-overflow-scrolling: touch;">
 
-            <tbody>
-                <?php if (!empty($roles)): ?>
-                    <?php foreach ($roles as $i => $role): ?>
-                        <tr>
+            <table id="dtbl" class="table table-bordered table-striped">
+                <thead class="btn-primary">
+                    <tr>
+                        <th class="text-nowrap">Role ID</th>
+                        <th class="text-nowrap">User Role</th>
+                        <th class="text-nowrap">Status</th>
+                        <th class="text-center text-nowrap" style="width: 6vw;">Action</th>
+                    </tr>
+                </thead>
 
-                            <td><?= $role->role_id ?></td>
-                            <td><?= $role->usr_role ?></td>
-                            <td><?= $role->role_st ?></td>
+                <tbody>
+                    <?php if (!empty($roles)): ?>
+                        <?php foreach ($roles as $i => $role): ?>
+                            <tr>
+                                <td><?= $role->role_id ?></td>
+                                <td class="text-break"><?= $role->usr_role ?></td>
+                                <td><?= $role->role_st ?></td>
 
-                            <td class="text-center" style="white-space: nowrap;">
+                                <td class="text-center" style="white-space: nowrap;">
 
-                                <a href="<?= base_url('Role/view/' . $role->role_id); ?>" class="mx-1">
-                                    <i class="fa fa-eye"></i>
-                                </a>
+                                    <a href="<?= base_url('Role/view/' . $role->role_id); ?>" class="mx-1">
+                                        <i class="fa fa-eye"></i>
+                                    </a>
 
-                                <a href="<?= base_url('Role/edit/' . $role->role_id); ?>" class="mx-1">
-                                    <i class="fa fa-edit"></i>
-                                </a>
+                                    <a href="<?= base_url('Role/edit/' . $role->role_id); ?>" class="mx-1">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
 
-                                <a href="<?= base_url('Role/delete/' . $role->role_id); ?>"
-                                    onclick="return confirm('Are you sure?');"
-                                    class="mx-1">
-                                    <i class="fa fa-trash text-danger"></i>
-                                </a>
+                                    <a href="<?= base_url('Role/delete/' . $role->role_id); ?>"
+                                        onclick="return confirm('Are you sure?');"
+                                        class="mx-1">
+                                        <i class="fa fa-trash text-danger"></i>
+                                    </a>
 
-                            </td>
+                                </td>
 
-                        </tr>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </tbody>
-        </table>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+
+        </div> <!-- table-responsive end -->
 
     </div>
 </div>
+
 
 <script>
     // Flash message auto hide after 6 seconds

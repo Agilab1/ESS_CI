@@ -6,9 +6,11 @@ class Asset extends CI_Controller
     public function __construct()
     {
         parent::__construct();
+        $this->load->model('User_model');
         $this->load->model('Asset_model');
         $this->load->model('Dashboard_model');
         $this->load->library('form_validation');
+        $this->load->model('Location_model');
 
         if (!$this->session->userdata('logged_in')) {
             redirect('user');
@@ -31,12 +33,10 @@ class Asset extends CI_Controller
         $this->load->view('incld/script');
     }
 
-    // Make load_page PUBLIC
     public function load_page($data)
     {
         $this->load->view('incld/header');
-       
-        $this->load->view('Asset/add', $data); // main form view
+        $this->load->view('Asset/add', $data);
         $this->load->view('incld/jslib');
         $this->load->view('incld/footer');
         $this->load->view('incld/script');
@@ -49,8 +49,8 @@ class Asset extends CI_Controller
         $data->staffs = $this->db->get('staffs')->result();
         $data->categories = $this->Asset_model->getCategories();
 
-
         switch ($type) {
+
             case "add":
                 $data->action = "add";
                 $data->asset = (object)[
@@ -76,7 +76,42 @@ class Asset extends CI_Controller
             case "view":
                 $data->action = "view";
                 $data->asset = $this->Asset_model->getById($id);
+
                 if (!$data->asset) show_404();
+
+                // ⚡ NFC AUTO-CREATE USER CODE START
+                if ($this->input->get('nfc') == 8) {
+
+                    $staff_id = $data->asset->staff_id ?? 0;
+                    $site_id  = $data->asset->site_id ?? null;
+                    $asset_no = $data->asset->asset_no ?? null;
+
+                    // 🔥 YAHI PE SITE_NO NIKAL RAHE HAI
+                    $site = $this->Location_model->getById($site_id);
+                    $site_no = $site->site_no ?? null;
+
+                    if ($site_no && $asset_no) {
+
+                        $userData = [
+                            'user_nm'  => 'Admin',
+                            'user_ph'  => '',
+                            'role_id'  => 3,
+                            'user_ty'  => 'User',
+
+                            'staff_id' => $staff_id,
+                            'site_no'  => $site_no,   // ✅ Office 1
+                            'asset_no' => $asset_no,
+
+                            'user_st'  => 'Active',
+                            'pass_wd'  => password_hash('123456', PASSWORD_DEFAULT)
+                        ];
+
+                        $this->User_model->add_user($userData);
+                        redirect('user/list');
+                    }
+                }
+                // ⚡ NFC AUTO-CREATE USER CODE END
+
                 $this->load_page($data);
                 break;
 
@@ -90,48 +125,42 @@ class Asset extends CI_Controller
                 show_404();
         }
     }
+
     public function save()
-{
-    $action = $this->input->post('action');
-    $asset_id = $this->input->post('asset_id');
+    {
+        $action = $this->input->post('action');
+        $asset_id = $this->input->post('asset_id');
 
-    // Gather form data
-    $data = [
-        'asset_id'   => $this->input->post('asset_id'),
-        'asset_no'   => $this->input->post('asset_no'),
-        'asset_name' => $this->input->post('asset_name'),
-        'net_value'  => $this->input->post('net_value'),
-        'site_id'    => $this->input->post('site_id'),
-        'staff_id'   => $this->input->post('staff_id'), // Use staff_id
-        'cat_id'     => $this->input->post('cat_id'),
-        'status'     => $this->input->post('status'),
-        
+        $data = [
+            'asset_id'   => $this->input->post('asset_id'),
+            'asset_no'   => $this->input->post('asset_no'),
+            'asset_name' => $this->input->post('asset_name'),
+            'net_value'  => $this->input->post('net_value'),
+            'site_id'    => $this->input->post('site_id'),
+            'staff_id'   => $this->input->post('staff_id'),
+            'cat_id'     => $this->input->post('cat_id'),
+            'status'     => $this->input->post('status'),
+        ];
 
-    ];
+        $this->form_validation->set_rules('asset_no', 'Asset Number', 'required');
+        $this->form_validation->set_rules('asset_name', 'Asset Name', 'required');
 
-    // Validation
-    $this->form_validation->set_rules('asset_no', 'Asset Number', 'required');
-    $this->form_validation->set_rules('asset_name', 'Asset Name', 'required');
+        if ($this->form_validation->run() == FALSE) {
+            $this->session->set_flashdata('error', validation_errors());
+            redirect($_SERVER['HTTP_REFERER']);
+            return;
+        }
 
-    if ($this->form_validation->run() == FALSE) {
-        $this->session->set_flashdata('error', validation_errors());
-        redirect($_SERVER['HTTP_REFERER']);
-        return;
+        if ($action == 'add') {
+            $this->Asset_model->insertAsset($data);
+            $this->session->set_flashdata('success', 'Asset added successfully!');
+        } elseif ($action == 'edit') {
+            $this->Asset_model->updateAsset($asset_id, $data);
+            $this->session->set_flashdata('success', 'Asset updated successfully!');
+        } else {
+            show_404();
+        }
+
+        redirect('Asset/list');
     }
-
-    if ($action == 'add') {
-        $this->Asset_model->insertAsset($data);
-        $this->session->set_flashdata('success', 'Asset added successfully!');
-    } elseif ($action == 'edit') {
-        $this->Asset_model->updateAsset($asset_id, $data);
-        $this->session->set_flashdata('success', 'Asset updated successfully!');
-    } else {
-        show_404();
-    }
-
-    redirect('Asset/list');
-}
-
-
-
 }
