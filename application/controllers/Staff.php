@@ -13,7 +13,6 @@ class Staff extends CI_Controller
         $this->load->model('Work_model');
         $this->load->model('Holiday_model');
     }
-
     public function status($staff_id)
     {
 
@@ -105,7 +104,34 @@ class Staff extends CI_Controller
         redirect('Staff/emp_list/' . $staff_id);
     }
 
+    // ================= PUNCH DETAILS (PORTRAIT VIEW) =================
+    public function punch_details($staff_id)
+    {
+        $data['staff'] = $this->Staff_model->get_user($staff_id);
+        if (!$data['staff']) show_error('Employee not found');
 
+        $month = $this->input->get('month') ?? date('m');
+        $year  = $this->input->get('year') ?? date('Y');
+
+        $data['month'] = $month;
+        $data['year']  = $year;
+        $data['daysInMonth'] = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+
+        $records = $this->Work_model->get_monthly_attendance($staff_id, $month, $year);
+
+        $attendance = [];
+        foreach ($records as $r) {
+            $attendance[$r->punch_date] = $r;
+        }
+
+        $data['attendance'] = $attendance;
+
+        $this->load->view('incld/verify');
+        $this->load->view('incld/header');
+        $this->load->view('Staff/punch_details', $data);
+        $this->load->view('incld/jslib');
+        $this->load->view('incld/script');
+    }
     //  SHOW MONTHLY ATTENDANCE + SAVE STATUS + REMARK
     // MAIN PAGE — MONTHLY ATTENDANCE
     public function emp_list($staff_id = null)
@@ -121,44 +147,69 @@ class Staff extends CI_Controller
         if (!$data['staff']) show_error("Employee not found.");
 
         // ⭐⭐⭐ NFC AUTO-PUNCH LOGIC ⭐⭐⭐
+        // ⭐⭐⭐ NFC AUTO-PUNCH LOGIC ⭐⭐⭐
         if ($this->input->get('auto')) {
 
             $today = date('Y-m-d');
-            $currentTime = date('H:i:s'); // exact NFC hit time
+            $time  = date('H:i:s');
+            $day   = date('l'); // Saturday / Sunday
 
-            // Check record
+            // 🚫 BLOCK SATURDAY & SUNDAY
+            if ($day === 'Saturday' || $day === 'Sunday') {
+
+                // Optional: flash message
+                $this->session->set_flashdata(
+                    'error',
+                    'Saturday / Sunday ko punch allowed nahi hai'
+                );
+
+                // Just show punch details, NO INSERT / UPDATE
+                redirect('Staff/punch_details/' . $staff_id);
+                return;
+            }
+
+            // Check today's record
             $exists = $this->db->get_where('works', [
                 'staff_id' => $staff_id,
                 'date'     => $today
             ])->row();
 
-            // FIRST TAP → C-IN
+            // ✅ FIRST TAP → IN
+            // ✅ FIRST TAP → CHECK IN
+            // FIRST TAP → CHECK IN
             if (!$exists) {
 
-                $insert = [
-                    'staff_id'  => $staff_id,
-                    'staff_st'  => $this->input->get('auto'),
-                    'remark'    => '',
-                    'date'      => $today,
-                    'cin_time'  => $currentTime
-                ];
+                $this->Work_model->insert_cin([
+                    'staff_id' => $staff_id,
+                    'staff_st' => 'Punched',
+                    'date'     => $today,
+                    'cin_time' => $time
+                ]);
 
-                $this->Work_model->insert_cin($insert);
+                $this->session->set_flashdata(
+                    'success',
+                    $staff_id . ' successfully CHECK IN at ' . date('h:i A', strtotime($time))
+                );
             }
-
-            // SECOND TAP → C-OUT
+            // SECOND & NEXT TAP → CHECK OUT
             else {
 
                 $this->Work_model->update_cout([
                     'staff_id'  => $staff_id,
                     'date'      => $today,
-                    'cout_time' => $currentTime
+                    'cout_time' => $time
                 ]);
-            }
 
-            redirect('Staff/emp_list/' . $staff_id . '?date=' . $today);
+                $this->session->set_flashdata(
+                    'success',
+                    $staff_id . ' successfully CHECK OUT at ' . date('h:i A', strtotime($time))
+                );
+            }
+            // Redirect to punch details
+            redirect('Staff/punch_details/' . $staff_id);
             return;
         }
+
 
         // MONTH LOGIC
         $month = $this->input->get('month') ?? date('m');

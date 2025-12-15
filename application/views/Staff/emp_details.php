@@ -88,13 +88,10 @@
                             <th>Staff ID</th>
                             <th>Employee Name</th>
                             <th>Status</th>
-
                             <th>Remark</th>
-
                             <th>C-IN Time</th>
                             <th>C-OUT Time</th>
                             <th>Duration</th>
-
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
@@ -137,8 +134,21 @@
 
                                 <td><?= $item->remark ?: '-' ?></td>
 
-                                <td><?= $item->cin_time ?: '-' ?></td>
-                                <td><?= $item->cout_time ?: '-' ?></td>
+                                <!-- ✅ 12-HOUR C-IN -->
+                                <td>
+                                    <?= !empty($item->cin_time)
+                                        ? date('h:i A', strtotime($item->cin_time))
+                                        : '-' ?>
+                                </td>
+
+                                <!-- ✅ 12-HOUR C-OUT -->
+                                <td>
+                                    <?= !empty($item->cout_time)
+                                        ? date('h:i A', strtotime($item->cout_time))
+                                        : '-' ?>
+                                </td>
+
+                                <!-- DURATION -->
                                 <td><?= $item->duration ?: '-' ?></td>
 
                                 <td class="text-center">
