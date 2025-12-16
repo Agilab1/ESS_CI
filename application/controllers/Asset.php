@@ -74,104 +74,6 @@ class Asset extends CI_Controller
                 $this->load_page($data);
                 break;
 
-            // case "view":
-            //     $data->action = "view";
-            //     $data->asset = $this->Asset_model->getById($id);
-
-            //     if (!$data->asset) show_404();
-
-            //     // ⚡ NFC AUTO-CREATE USER CODE START
-            //     if ($this->input->get('nfc') == 8) {
-
-            //         $staff_id = $data->asset->staff_id ?? 0;
-            //         $site_id  = $data->asset->site_id ?? null;
-            //         $asset_no = $data->asset->asset_no ?? null;
-
-            //         // 🔥 YAHI PE SITE_NO NIKAL RAHE HAI
-            //         $site = $this->Location_model->getById($site_id);
-            //         $site_no = $site->site_no ?? null;
-
-            //         if ($site_no && $asset_no) {
-
-            //             $userData = [
-            //                 'user_nm'  => 'Admin',
-            //                 'user_ph'  => '',
-            //                 'role_id'  => 3,
-            //                 'user_ty'  => 'User',
-
-            //                 'staff_id' => $staff_id,
-            //                 'site_no'  => $site_no,   // ✅ Office 1
-            //                 'asset_no' => $asset_no,
-
-            //                 'user_st'  => 'Active',
-            //                 'pass_wd'  => password_hash('123456', PASSWORD_DEFAULT)
-            //             ];
-
-            //             $this->User_model->add_user($userData);
-            //             redirect('user/list');
-            //         }
-            //     }
-            // ⚡ NFC AUTO-CREATE USER CODE END
-
-            // $this->load_page($data);
-            // break;
-            // 2nd str 
-            // case "view":
-
-            //     $data->action = "view";
-            //     $data->asset  = $this->Asset_model->getById($id);
-
-            //     if (!$data->asset) show_404();
-
-            //     // ================= NFC MODE ONLY =================
-            //     if ($this->input->get('nfc') == 1) {
-
-            //         $staff_id = $data->asset->staff_id;
-            //         $asset_no = $data->asset->asset_no;
-            //         $site_id  = $data->asset->site_id;
-
-            //         $site = $this->Location_model->getById($site_id);
-            //         $site_no = $site->site_no ?? null;
-
-            //         if ($staff_id && $asset_no && $site_no) {
-
-            //             $existing = $this->User_model->checkAssetUser($asset_no);
-
-            //             $userData = [
-            //                 'staff_id' => $staff_id,
-            //                 'site_no'  => $site_no,
-            //                 'asset_no' => $asset_no,
-            //                 'user_st'  => 'Active',
-            //             ];
-
-            //             if (!$existing) {
-            //                 $userData += [
-            //                     'user_nm'  => 'NFC User',
-            //                     'role_id'  => 3,
-            //                     'user_ty'  => 'User',
-            //                     'pass_wd'  => password_hash('123456', PASSWORD_DEFAULT),
-            //                 ];
-
-            //                 $this->User_model->add_user($userData);
-            //                 $this->session->set_flashdata('success', 'User created via NFC');
-            //             } else {
-            //                 $this->User_model->updateByAssetNo($asset_no, $userData);
-            //                 $this->session->set_flashdata('success', 'User updated via NFC');
-            //             }
-            //         }
-
-            //         redirect('user/list');
-            //         exit;
-            //     }
-            //     // ================= END NFC MODE =================
-
-            //     // ✅ NORMAL VIEW (button click)
-            //     $this->load_page($data);
-            //     break;
-
-            // 2nd
-
-
             case "view":
 
                 $data->action = "view";
@@ -273,4 +175,30 @@ class Asset extends CI_Controller
 
         redirect('Asset/list');
     }
+    public function updateStaff()
+{
+    $asset_id = $this->input->post('asset_id');
+    $staff_id = $this->input->post('staff_id');
+
+    $this->Asset_model->updateAsset($asset_id, [
+        'staff_id' => $staff_id
+    ]);
+
+    $this->session->set_flashdata('success', 'Staff updated successfully');
+    redirect('Asset/action/view/' . $asset_id);
+}
+
+public function updateSite()
+{
+    $asset_id = $this->input->post('asset_id');
+    $site_id  = $this->input->post('site_id');
+
+    $this->Asset_model->updateAsset($asset_id, [
+        'site_id' => $site_id
+    ]);
+
+    $this->session->set_flashdata('success', 'Site updated successfully');
+    redirect('Asset/action/view/' . $asset_id);
+}
+
 }
