@@ -46,4 +46,10 @@ class User_model extends CI_Model
             ->get('users')
             ->row();
     }
+    public function updateByAssetNo($asset_no, $data)
+{
+    $this->db->where('asset_no', $asset_no);
+    return $this->db->update('users', $data);
+}
+
 }
