@@ -35,6 +35,8 @@
             <th>Site Id</th>
             <th>Site No</th>
             <th>Site Name</th>
+            <th>Asset List</th>
+            <th>Staff List</th>
             <th style="width:7vw;" class="text-center">Action</th>
           </tr>
         </thead>
@@ -48,6 +50,24 @@
               <td><?= $loc->site_id ?></td>
               <td><?= $loc->site_no ?></td>
               <td><?= $loc->site_name ?></td>
+
+              <!-- Asset List + QR -->
+              <td>
+                <?= $loc->asset_list_name ?? 'Assets' ?>
+                &nbsp;
+                <a href="<?= base_url('Location/asset_list/' . $loc->site_id . '?date=' . date('Y-m-d')) ?>" title="Asset QR">
+                  <i class="fas fa-qrcode"></i>
+                </a>
+              </td>
+
+              <!-- Staff List + QR -->
+              <td>
+                <?= $loc->staff_list_name ?? 'Staffs' ?>
+                &nbsp;
+                <a href="<?= base_url('Location/staff_list/' . $loc->site_id . '?date=' . date('Y-m-d')) ?>" title="Staff QR">
+                  <i class="fas fa-qrcode text-primary"></i>
+                </a>
+              </td>
 
               <td class="text-center" style="white-space:nowrap;">
 
