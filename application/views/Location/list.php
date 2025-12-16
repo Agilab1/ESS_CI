@@ -55,7 +55,7 @@
               <td>
                 <?= $loc->asset_list_name ?? 'Assets' ?>
                 &nbsp;
-                <a href="<?= base_url('Location/asset_list/' . $loc->site_id . '?date=' . date('Y-m-d')) ?>" title="Asset QR">
+                <a href="<?= base_url('Location/asset_list/' . $loc->site_id ) ?>" title="Asset QR">
                   <i class="fas fa-qrcode"></i>
                 </a>
               </td>
@@ -64,7 +64,7 @@
               <td>
                 <?= $loc->staff_list_name ?? 'Staffs' ?>
                 &nbsp;
-                <a href="<?= base_url('Location/staff_list/' . $loc->site_id . '?date=' . date('Y-m-d')) ?>" title="Staff QR">
+                <a href="<?= base_url('Location/staff_list/' . $loc->site_id) ?>" title="Staff QR">
                   <i class="fas fa-qrcode text-primary"></i>
                 </a>
               </td>
