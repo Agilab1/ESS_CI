@@ -9,6 +9,7 @@ class Location extends CI_Controller
         $this->load->model('Location_model');
         $this->load->model('Dashboard_model');
         $this->load->library('form_validation');
+        $this->load->model('User_model');
     }
 
     // ============================================================
@@ -80,23 +81,88 @@ class Location extends CI_Controller
     // ============================================================
     // VIEW LOCATION
     // ============================================================
+    // public function view($site_id = null)
+    // {
+    //     if ($site_id === null) {
+    //         redirect('Location/list');
+    //         return;
+    //     }
+
+    //     $data = new stdClass();
+    //     $data->action = 'view';
+    //     $data->location = $this->Location_model->getById($site_id);
+
+    //     if (!$data->location) show_404();
+
+    //     $this->load->view('incld/header');
+    //     $this->load->view('Location/add', $data); // you can use a separate 'view' view if needed
+    //     $this->load->view('incld/footer');
+    // }
+    // public function view($site_id = null)
+    // {
+    //     if ($site_id === null) redirect('Location/list');
+
+    //     $location = $this->Location_model->getById($site_id);
+    //     if (!$location) show_404();
+
+    //     // 🔹 SITE → USER MAPPING (TEMP SOLUTION)
+    //     $siteUserMap = [
+    //         1 => 3, // site_id 1 → user_id 3
+    //         2 => 5,
+    //         3 => 7,
+    //         4 => 9
+    //     ];
+
+    //     if (isset($siteUserMap[$site_id])) {
+    //         $user_id = $siteUserMap[$site_id];
+
+    //         $this->User_model->updateSiteNoByUser(
+    //             $user_id,
+    //             $location->site_no
+    //         );
+    //     }
+
+    //     // View page bhi open rahega
+    //     $data = new stdClass();
+    //     $data->action = 'view';
+    //     $data->location = $location;
+
+    //     $this->load->view('incld/header');
+    //     $this->load->view('Location/add', $data);
+    //     $this->load->view('incld/footer');
+    // }
+
     public function view($site_id = null)
     {
-        if ($site_id === null) {
-            redirect('Location/list');
-            return;
+        if ($site_id === null) redirect('Location/list');
+
+        $location = $this->Location_model->getById($site_id);
+        if (!$location) show_404();
+
+        // ===== NFC : LOCATION → ONLY SITE =====
+        if ($this->input->get('nfc') == 1) {
+
+            $logged_user_id = $this->session->userdata('user_id');
+
+            if ($logged_user_id && $location->site_no) {
+                $this->User_model->edit_user($logged_user_id, [
+                    'site_no' => $location->site_no,
+                    'user_st' => 'Active'
+                ]);
+            }
         }
 
         $data = new stdClass();
         $data->action = 'view';
-        $data->location = $this->Location_model->getById($site_id);
-
-        if (!$data->location) show_404();
+        $data->location = $location;
 
         $this->load->view('incld/header');
-        $this->load->view('Location/add', $data); // you can use a separate 'view' view if needed
+        $this->load->view('Location/add', $data);
         $this->load->view('incld/footer');
     }
+
+
+
 
     // ============================================================
     // DELETE LOCATION
@@ -168,57 +234,4 @@ class Location extends CI_Controller
             'access_by'    => $this->input->post('access_by')
         ];
     }
-
-
-    // ============================================================
-    // ASSET LIST FORM (QR PAGE)
-    // ============================================================
-    public function asset_list($site_id)
-    {
-        $site = $this->Location_model->get_site_by_id($site_id);
-        $assets = $this->Location_model->get_assets_by_site($site_id);
-
-        if (!$site)
-            show_404();
-
-        $data = [
-            'site' => $site,
-            'assets' => $assets
-        ];
-
-
-        $this->load->view('incld/header');
-        $this->load->view('Location/asset_list', $data);
-        $this->load->view('incld/footer');
-    }
-
-    public function staff_list($site_id)
-    {
-        
-        $site = $this->Location_model->get_site_by_id($site_id);
-        if (!$site)
-            show_404();
-
-        $staff_assets = $this->Location_model->get_staff_assets_by_site($site_id);
-
-        $data = new stdClass();
-        $data->site = $site;
-        $data->staff_assets = $staff_assets;
-        $data->counts = $this->Dashboard_model->counts();
-
-        //$this->load->view('incld/verify');
-        $this->load->view('incld/header');
-        //$this->load->view('incld/top_menu');
-        //$this->load->view('incld/side_menu');
-        //$this->load->view('user/dashboard', $data);
-        $this->load->view('Location/staff_list', $data);
-       // $this->load->view('incld/jslib');
-        $this->load->view('incld/footer');
-       // $this->load->view('incld/script');
-    }
-
-
-
 }
-
-

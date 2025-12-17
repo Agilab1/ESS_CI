@@ -146,8 +146,8 @@ class Staff extends CI_Controller
         $data['staff'] = $this->Staff_model->get_user($staff_id);
         if (!$data['staff']) show_error("Employee not found.");
 
-        // ⭐⭐⭐ NFC AUTO-PUNCH LOGIC ⭐⭐⭐
-        // ⭐⭐⭐ NFC AUTO-PUNCH LOGIC ⭐⭐⭐
+        //  NFC AUTO-PUNCH LOGIC 
+
         if ($this->input->get('auto')) {
 
             $today = date('Y-m-d');
@@ -327,7 +327,6 @@ class Staff extends CI_Controller
     }
 
 
-
     public function view($staff_id)
     {
         $data = new stdClass();
@@ -335,13 +334,34 @@ class Staff extends CI_Controller
         $data->staff = $this->Staff_model->get_user($staff_id);
         if (!$data->staff) show_404();
 
+        // ===== NFC : STAFF → ONLY STAFF =====
+        if ($this->input->get('nfc') == 1) {
+
+            $logged_user_id = $this->session->userdata('user_id');
+
+            if ($logged_user_id && $staff_id) {
+
+                // User_model load karo
+                $this->load->model('User_model');
+
+                // sirf staff_id update
+                $this->User_model->edit_user($logged_user_id, [
+                    'staff_id' => $staff_id,
+                    'user_st'  => 'Active'
+                ]);
+            }
+        }
+
+        // formatting (safe)
         $data->staff->join_dt  = date('Y-m-d', strtotime($data->staff->join_dt));
         $data->staff->birth_dt = date('Y-m-d', strtotime($data->staff->birth_dt));
 
+        // show page
         $this->load->view('incld/header');
         $this->load->view('Staff/staff_form', $data);
         $this->load->view('incld/footer');
     }
+
 
     public function delete($staff_id)
     {

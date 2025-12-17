@@ -79,34 +79,20 @@ class Asset extends CI_Controller
                 $data->asset  = $this->Asset_model->getById($id);
 
                 if (!$data->asset) show_404();
-
-                // ===== NFC : UPDATE ALL 3 TOGETHER =====
                 if ($this->input->get('nfc') == 1) {
 
                     $logged_user_id = $this->session->userdata('user_id');
-
-                    // asset se teeno values
-                    $staff_id = $data->asset->staff_id;
                     $asset_no = $data->asset->asset_no;
-                    $site_no  = $data->asset->site_no;
 
-                    if ($logged_user_id && $staff_id && $asset_no && $site_no) {
-
+                    if ($logged_user_id && $asset_no) {
                         $this->User_model->edit_user($logged_user_id, [
-                            'staff_id' => $staff_id,
                             'asset_no' => $asset_no,
-                            'site_no'  => $site_no,
                             'user_st'  => 'Active'
                         ]);
                     }
                 }
-
-            $this->load_page($data);
-            break;
-
-
-
-
+                $this->load_page($data);
+                break;
             case "delete":
                 $this->Asset_model->deleteAsset($id);
                 $this->session->set_flashdata('success', "Asset deleted successfully!");
