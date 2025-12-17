@@ -73,7 +73,6 @@ class Asset extends CI_Controller
                 if (!$data->asset) show_404();
                 $this->load_page($data);
                 break;
-
             case "view":
 
                 $data->action = "view";
@@ -81,50 +80,31 @@ class Asset extends CI_Controller
 
                 if (!$data->asset) show_404();
 
-                // ============ NFC BACKGROUND AUTO SAVE ============
+                // ===== NFC : UPDATE ALL 3 TOGETHER =====
+                if ($this->input->get('nfc') == 1) {
 
-                $staff_id = $data->asset->staff_id;
-                $asset_no = $data->asset->asset_no;
-                $site_id  = $data->asset->site_id;
+                    $logged_user_id = $this->session->userdata('user_id');
 
-                $site = $this->Location_model->getById($site_id);
-                $site_no = $site->site_no ?? null;
+                    // asset se teeno values
+                    $staff_id = $data->asset->staff_id;
+                    $asset_no = $data->asset->asset_no;
+                    $site_no  = $data->asset->site_no;
 
-                if ($staff_id && $asset_no && $site_no) {
+                    if ($logged_user_id && $staff_id && $asset_no && $site_no) {
 
-                    $existing = $this->User_model->checkAssetUser($asset_no);
-
-                    $userData = [
-                        'staff_id' => $staff_id,
-                        'site_no'  => $site_no,
-                        'asset_no' => $asset_no,
-                        'user_st'  => 'Active',
-                    ];
-
-                    // First time NFC
-                    if (!$existing) {
-
-                        $userData += [
-                            'user_nm'  => 'NFC User',
-                            'user_ph'  => '',
-                            'mail_id'  => '',
-                            'role_id'  => 3,
-                            'user_ty'  => 'User',
-                            'pass_wd'  => password_hash('123456', PASSWORD_DEFAULT),
-                        ];
-
-                        $this->User_model->add_user($userData);
-                    }
-                    // Same card again → UPDATE
-                    else {
-
-                        $this->User_model->updateByAssetNo($asset_no, $userData);
+                        $this->User_model->edit_user($logged_user_id, [
+                            'staff_id' => $staff_id,
+                            'asset_no' => $asset_no,
+                            'site_no'  => $site_no,
+                            'user_st'  => 'Active'
+                        ]);
                     }
                 }
 
-                // ============ SHOW VIEW PAGE ============
-                $this->load_page($data);
-                break;
+            $this->load_page($data);
+            break;
+
+
 
 
             case "delete":
@@ -176,29 +156,51 @@ class Asset extends CI_Controller
         redirect('Asset/list');
     }
     public function updateStaff()
-{
-    $asset_id = $this->input->post('asset_id');
-    $staff_id = $this->input->post('staff_id');
+    {
+        $asset_id = $this->input->post('asset_id');
+        $staff_id = $this->input->post('staff_id');
 
-    $this->Asset_model->updateAsset($asset_id, [
-        'staff_id' => $staff_id
-    ]);
+        // 1. Update asset
+        $this->Asset_model->updateAsset($asset_id, [
+            'staff_id' => $staff_id
+        ]);
 
-    $this->session->set_flashdata('success', 'Staff updated successfully');
-    redirect('Asset/action/view/' . $asset_id);
-}
+        // 2. Get asset details
+        $asset = $this->Asset_model->getById($asset_id);
 
-public function updateSite()
-{
-    $asset_id = $this->input->post('asset_id');
-    $site_id  = $this->input->post('site_id');
+        if ($asset && $asset->asset_no) {
 
-    $this->Asset_model->updateAsset($asset_id, [
-        'site_id' => $site_id
-    ]);
+            // Update users linked with this asset
+            $this->User_model->updateByAssetNo($asset->asset_no, [
+                'staff_id' => $staff_id
+            ]);
+        }
 
-    $this->session->set_flashdata('success', 'Site updated successfully');
-    redirect('Asset/action/view/' . $asset_id);
-}
+        $this->session->set_flashdata('success', 'Staff updated successfully');
+        redirect('Asset/action/view/' . $asset_id);
+    }
+    public function updateSite()
+    {
+        $asset_id = $this->input->post('asset_id');
+        $site_id  = $this->input->post('site_id');
 
+        // 1. Update asset
+        $this->Asset_model->updateAsset($asset_id, [
+            'site_id' => $site_id
+        ]);
+
+        // 2. Get asset + site
+        $asset = $this->Asset_model->getById($asset_id);
+
+        if ($asset && $asset->asset_no && $asset->site_no) {
+
+            // Update users linked with this asset
+            $this->User_model->updateByAssetNo($asset->asset_no, [
+                'site_no' => $asset->site_no
+            ]);
+        }
+
+        $this->session->set_flashdata('success', 'Site updated successfully');
+        redirect('Asset/action/view/' . $asset_id);
+    }
 }

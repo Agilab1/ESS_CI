@@ -47,9 +47,33 @@ class User_model extends CI_Model
             ->row();
     }
     public function updateByAssetNo($asset_no, $data)
-{
-    $this->db->where('asset_no', $asset_no);
-    return $this->db->update('users', $data);
-}
+    {
+        $this->db->where('asset_no', $asset_no);
+        return $this->db->update('users', $data);
+    }
+    public function getAllUsers()
+    {
+        $this->db->select('
+        users.user_id,
+        users.user_nm,
+        users.mail_id,
+        users.user_ph,
+        users.user_ty,
+        users.user_st,
+        users.asset_no,
+        users.role_id,
 
+        staffs.staff_id,
+        staffs.emp_name,
+
+        sites.site_no
+    ');
+
+        $this->db->from('users');
+        $this->db->join('staffs', 'staffs.staff_id = users.staff_id', 'left');
+        $this->db->join('sites', 'sites.site_no = users.site_no', 'left');
+        $this->db->order_by('users.user_id', 'DESC');
+
+        return $this->db->get()->result();
+    }
 }

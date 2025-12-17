@@ -59,7 +59,8 @@ class User extends CI_Controller
     public function list()
     {
         $this->load->model('Dashboard_model');
-        $data['users'] = $this->User_model->get_user();
+        $data['users'] = $this->User_model->getAllUsers();
+
         $data['counts'] = $this->Dashboard_model->counts();
         $this->load->view('incld/verify');
         $this->load->view('incld/header');
