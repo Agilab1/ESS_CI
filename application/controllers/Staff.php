@@ -454,4 +454,17 @@ class Staff extends CI_Controller
                 show_error("Invalid Action");
         }
     }
+
+    public function asset_form($staff_id)
+    {
+        $this->load->model('Staff_model');
+        $this->load->model('Asset_model');
+
+        $data['staff'] = $this->Staff_model->get_by_id($staff_id);
+        $data['assets'] = $this->Asset_model->get_assets_with_site_by_staff($staff_id);
+
+        $this->load->view('incld/header');
+        $this->load->view('staff/asset_form', $data);
+        $this->load->view('incld/footer');
+    }
 }

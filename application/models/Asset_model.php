@@ -72,4 +72,21 @@ class Asset_model extends CI_Model
 {
     return $this->db->get('categories')->result();
 }
+
+public function get_assets_with_site_by_staff($staff_id)
+{
+    $this->db->select('
+        a.asset_id,
+        a.asset_name,
+        s.site_name,
+        s.site_no
+    ');
+    $this->db->from('assets a');
+    $this->db->join('sites s', 's.site_id = a.site_id', 'left');
+    $this->db->where('a.staff_id', $staff_id);
+
+    return $this->db->get()->result();
+}
+
+
 }

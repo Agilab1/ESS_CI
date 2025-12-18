@@ -45,6 +45,7 @@
                         <th>Join Date</th>
                         <th>Phone NO</th>
                         <th>Birth Date</th>
+                        <th>Asset List</th>
                         <th>Status</th>
                         <th class="text-center">Action</th>
                     </tr>
@@ -69,6 +70,11 @@
                                 <td><?= $staff->join_dt ?></td>
                                 <td><?= $staff->phn_no ?></td>
                                 <td><?= $staff->birth_dt ?></td>
+                                <td class="text-center">
+                                <a href="<?= base_url('Staff/asset_form/' . $staff->staff_id); ?>" title="View Assets">
+                                    <i class="fa fa-qrcode"></i>
+                                </a>
+                                </td>
                                 <td><?= $staff->staff_st ?></td>
 
                                 <td class="text-center">
@@ -99,7 +105,7 @@
 
 <script>
     // Flash message auto hide after 6 seconds
-    setTimeout(function() {
+    setTimeout(function () {
         const flash = document.querySelector('.flash-msg');
         if (flash) {
             flash.style.transition = "opacity 0.5s ease";
