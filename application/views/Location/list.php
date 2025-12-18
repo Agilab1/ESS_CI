@@ -60,14 +60,7 @@
                 </a>
               </td>
 
-              <!-- Staff List + QR -->
-              <td>
-                <?= $loc->staff_list_name ?? 'Staffs' ?>
-                &nbsp;
-                <a href="<?= base_url('Location/staff_list/' . $loc->site_id) ?>" title="Staff QR">
-                  <i class="fas fa-qrcode text-primary"></i>
-                </a>
-              </td>
+              
 
               <td class="text-center" style="white-space:nowrap;">
 
