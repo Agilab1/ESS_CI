@@ -3,6 +3,21 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class User_model extends CI_Model
 {
+    // 🔐 LOGIN CHECK (HASHED PASSWORD)
+    public function login_check($mail_id, $pass_wd)
+    {
+        $user = $this->db
+            ->where('mail_id', $mail_id)
+            ->where('user_st', 'Active')
+            ->get('users')
+            ->row();
+
+        if ($user && password_verify($pass_wd, $user->pass_wd)) {
+            return $user;
+        }
+        return false;
+    }
+
     public function get_user($user_id = '')
     {
         if ($user_id != '') {
@@ -39,41 +54,37 @@ class User_model extends CI_Model
     {
         return $this->db->count_all('users');
     }
+
     public function checkAssetUser($asset_no)
     {
-        return $this->db
-            ->where('asset_no', $asset_no)
-            ->get('users')
-            ->row();
+        return $this->db->where('asset_no', $asset_no)->get('users')->row();
     }
+
     public function updateByAssetNo($asset_no, $data)
     {
         $this->db->where('asset_no', $asset_no);
         return $this->db->update('users', $data);
     }
+
     public function getAllUsers()
     {
         $this->db->select('
-        users.user_id,
-        users.user_nm,
-        users.mail_id,
-        users.user_ph,
-        users.user_ty,
-        users.user_st,
-        users.asset_no,
-        users.role_id,
-
-        staffs.staff_id,
-        staffs.emp_name,
-
-        sites.site_no
-    ');
-
+            users.user_id,
+            users.user_nm,
+            users.mail_id,
+            users.user_ph,
+            users.user_ty,
+            users.user_st,
+            users.asset_no,
+            users.role_id,
+            staffs.staff_id,
+            staffs.emp_name,
+            sites.site_no
+        ');
         $this->db->from('users');
         $this->db->join('staffs', 'staffs.staff_id = users.staff_id', 'left');
         $this->db->join('sites', 'sites.site_no = users.site_no', 'left');
         $this->db->order_by('users.user_id', 'DESC');
-
         return $this->db->get()->result();
     }
 }

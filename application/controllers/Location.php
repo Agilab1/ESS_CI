@@ -78,60 +78,6 @@ class Location extends CI_Controller
         $this->load->view('incld/footer');
     }
 
-    // ============================================================
-    // VIEW LOCATION
-    // ============================================================
-    // public function view($site_id = null)
-    // {
-    //     if ($site_id === null) {
-    //         redirect('Location/list');
-    //         return;
-    //     }
-
-    //     $data = new stdClass();
-    //     $data->action = 'view';
-    //     $data->location = $this->Location_model->getById($site_id);
-
-    //     if (!$data->location) show_404();
-
-    //     $this->load->view('incld/header');
-    //     $this->load->view('Location/add', $data); // you can use a separate 'view' view if needed
-    //     $this->load->view('incld/footer');
-    // }
-    // public function view($site_id = null)
-    // {
-    //     if ($site_id === null) redirect('Location/list');
-
-    //     $location = $this->Location_model->getById($site_id);
-    //     if (!$location) show_404();
-
-    //     // 🔹 SITE → USER MAPPING (TEMP SOLUTION)
-    //     $siteUserMap = [
-    //         1 => 3, // site_id 1 → user_id 3
-    //         2 => 5,
-    //         3 => 7,
-    //         4 => 9
-    //     ];
-
-    //     if (isset($siteUserMap[$site_id])) {
-    //         $user_id = $siteUserMap[$site_id];
-
-    //         $this->User_model->updateSiteNoByUser(
-    //             $user_id,
-    //             $location->site_no
-    //         );
-    //     }
-
-    //     // View page bhi open rahega
-    //     $data = new stdClass();
-    //     $data->action = 'view';
-    //     $data->location = $location;
-
-    //     $this->load->view('incld/header');
-    //     $this->load->view('Location/add', $data);
-    //     $this->load->view('incld/footer');
-    // }
-
     public function view($site_id = null)
     {
         if ($site_id === null) redirect('Location/list');

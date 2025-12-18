@@ -107,6 +107,10 @@ class Staff extends CI_Controller
     // ================= PUNCH DETAILS (PORTRAIT VIEW) =================
     public function punch_details($staff_id)
     {
+        if (!$this->session->userdata('logged_in')) {
+            redirect('user');
+        }
+
         $data['staff'] = $this->Staff_model->get_user($staff_id);
         if (!$data['staff']) show_error('Employee not found');
 
@@ -126,59 +130,57 @@ class Staff extends CI_Controller
 
         $data['attendance'] = $attendance;
 
-        $this->load->view('incld/verify');
         $this->load->view('incld/header');
         $this->load->view('Staff/punch_details', $data);
         $this->load->view('incld/jslib');
         $this->load->view('incld/script');
     }
-    //  SHOW MONTHLY ATTENDANCE + SAVE STATUS + REMARK
+
     // MAIN PAGE — MONTHLY ATTENDANCE
     public function emp_list($staff_id = null)
     {
-        // GET STAFF ID
         if ($staff_id === null) {
             $staff_id = $this->input->get('staff_id');
         }
         if (empty($staff_id)) redirect('Staff/list');
 
-        // STAFF DETAILS
         $data['staff'] = $this->Staff_model->get_user($staff_id);
         if (!$data['staff']) show_error("Employee not found.");
 
-        //  NFC AUTO-PUNCH LOGIC 
+        //  USER NFC BLOCK (IMPORTANT)
+        if ($this->session->userdata('role_id') !== 'Admin' && $this->input->get('auto')) {
+            $this->session->set_flashdata(
+                'error',
+                'You are not authorized to punch using NFC'
+            );
+            redirect('Staff/punch_details/' . $staff_id);
+            return;
+        }
 
+        // ================= NFC AUTO-PUNCH (ADMIN ONLY) =================
         if ($this->input->get('auto')) {
 
             $today = date('Y-m-d');
             $time  = date('H:i:s');
-            $day   = date('l'); // Saturday / Sunday
+            $day   = date('l');
 
-            // 🚫 BLOCK SATURDAY & SUNDAY
             if ($day === 'Saturday' || $day === 'Sunday') {
-
-                // Optional: flash message
                 $this->session->set_flashdata(
                     'error',
                     'Saturday / Sunday ko punch allowed nahi hai'
                 );
-
-                // Just show punch details, NO INSERT / UPDATE
                 redirect('Staff/punch_details/' . $staff_id);
                 return;
             }
 
-            // Check today's record
             $exists = $this->db->get_where('works', [
                 'staff_id' => $staff_id,
                 'date'     => $today
             ])->row();
 
-            // ✅ FIRST TAP → IN
-            // ✅ FIRST TAP → CHECK IN
-            // FIRST TAP → CHECK IN
             if (!$exists) {
 
+                // ✅ CHECK IN
                 $this->Work_model->insert_cin([
                     'staff_id' => $staff_id,
                     'staff_st' => 'Punched',
@@ -190,10 +192,9 @@ class Staff extends CI_Controller
                     'success',
                     $staff_id . ' successfully CHECK IN at ' . date('h:i A', strtotime($time))
                 );
-            }
-            // SECOND & NEXT TAP → CHECK OUT
-            else {
+            } else {
 
+                // ✅ CHECK OUT
                 $this->Work_model->update_cout([
                     'staff_id'  => $staff_id,
                     'date'      => $today,
@@ -205,17 +206,19 @@ class Staff extends CI_Controller
                     $staff_id . ' successfully CHECK OUT at ' . date('h:i A', strtotime($time))
                 );
             }
-            // Redirect to punch details
+
+
             redirect('Staff/punch_details/' . $staff_id);
             return;
         }
 
 
-        // MONTH LOGIC
+        // ================= NORMAL MONTH VIEW =================
+        // ================= NORMAL MONTH VIEW =================
         $month = $this->input->get('month') ?? date('m');
         $year  = $this->input->get('year') ?? date('Y');
 
-        // Previous month
+        // PREV / NEXT LOGIC
         $prevM = $month - 1;
         $prevY = $year;
         if ($prevM < 1) {
@@ -223,7 +226,6 @@ class Staff extends CI_Controller
             $prevY--;
         }
 
-        // Next month
         $nextM = $month + 1;
         $nextY = $year;
         if ($nextM > 12) {
@@ -238,12 +240,11 @@ class Staff extends CI_Controller
         $data['nextM'] = $nextM;
         $data['nextY'] = $nextY;
 
-        // ATTENDANCE DATA
         $data['works'] = $this->Work_model->get_monthly_attendance($staff_id, $month, $year);
         $data['holiday_model'] = $this->Holiday_model;
         $data['counts'] = $this->Dashboard_model->counts();
 
-        // LOAD UI
+
         $this->load->view('incld/verify');
         $this->load->view('incld/header');
         $this->load->view('incld/top_menu');
@@ -253,6 +254,7 @@ class Staff extends CI_Controller
         $this->load->view('incld/jslib');
         $this->load->view('incld/script');
     }
+
 
 
     // 🔥 INLINE UPDATE AJAX
