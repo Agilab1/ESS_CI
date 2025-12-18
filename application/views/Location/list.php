@@ -36,7 +36,7 @@
             <th>Site No</th>
             <th>Site Name</th>
             <th>Asset List</th>
-            <th>Staff List</th>
+          
             <th style="width:7vw;" class="text-center">Action</th>
           </tr>
         </thead>

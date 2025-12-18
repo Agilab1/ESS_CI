@@ -180,4 +180,33 @@ class Location extends CI_Controller
             'access_by'    => $this->input->post('access_by')
         ];
     }
-}
+
+    //============================================================
+    // ASSET LIST FORM (QR PAGE)
+    // ============================================================
+    public function asset_list($site_id)
+    {
+        $site = $this->Location_model->get_site_by_id($site_id);
+        $assets = $this->Location_model->get_assets_by_site($site_id);
+
+        if (!$site)
+            show_404();
+
+        $data = [
+            'site' => $site,
+            'assets' => $assets
+        ];
+
+
+        $this->load->view('incld/header');
+        $this->load->view('Location/asset_list', $data);
+        $this->load->view('incld/footer');
+    }
+
+    }
+
+
+
+
+
+
