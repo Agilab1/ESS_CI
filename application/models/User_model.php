@@ -87,4 +87,36 @@ class User_model extends CI_Model
         $this->db->order_by('users.user_id', 'DESC');
         return $this->db->get()->result();
     }
+
+    // User_model.php
+
+public function getUserByAssetNo($asset_no)
+{
+    return $this->db
+        ->select('
+            users.staff_id,
+            staffs.emp_name,
+            users.site_no,
+            sites.site_name
+        ')
+        ->from('users')
+        ->join('staffs', 'staffs.staff_id = users.staff_id', 'left')
+        ->join('sites', 'sites.site_no = users.site_no', 'left')
+        ->where('users.asset_no', $asset_no)
+        ->limit(1)
+        ->get()
+        ->row();
+}
+public function getUserAssetLink($asset_no)
+{
+    return $this->db
+        ->select('users.staff_id, users.site_no')
+        ->from('users')
+        ->where('users.asset_no', $asset_no)
+        ->limit(1)
+        ->get()
+        ->row();
+}
+
+
 }

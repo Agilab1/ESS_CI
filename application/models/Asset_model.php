@@ -87,6 +87,12 @@ public function get_assets_with_site_by_staff($staff_id)
 
     return $this->db->get()->result();
 }
+public function updateAssetByAssetNo($asset_no, $data)
+{
+    return $this->db
+        ->where('asset_no', $asset_no)
+        ->update('assets', $data);
+}
 
 
 }
