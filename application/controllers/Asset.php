@@ -186,6 +186,7 @@ class Asset extends CI_Controller
             ]);
         }
 
+        
         $this->session->set_flashdata('success', 'Site updated successfully');
         redirect('Asset/action/view/' . $asset_id);
     }
