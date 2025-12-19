@@ -72,4 +72,9 @@ class Asset_model extends CI_Model
 {
     return $this->db->get('categories')->result();
 }
+
+
+
+
+//test
 }
