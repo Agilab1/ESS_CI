@@ -97,7 +97,7 @@
 
                             <thead class="table-light">
                                 <tr>
-                                    <th>Asset ID</th>
+                                    <th>AID</th>
                                     <th>Asset Name</th>
                                     <th>Site No</th>
                                     <th>Site Name</th>
