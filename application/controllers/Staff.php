@@ -17,7 +17,6 @@ class Staff extends CI_Controller{
         if (!$date) {
             $date = date('Y-m-d');
         }
-
         $data['staff'] = $this->db->get_where('staffs', [
             'staff_id' => $staff_id
         ])->row();
@@ -81,9 +80,6 @@ class Staff extends CI_Controller{
         // Redirect back to attendance page
         redirect('Staff/emp_list/' . $staff_id . '?date=' . $date);
     }
-
-
-
 
         public function delete_status($staff_id, $date){
         $this->Work_model->delete_status($staff_id, $date);
