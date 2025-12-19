@@ -70,7 +70,7 @@
 
                     <a class="btn btn-outline-primary"
                         href="<?= base_url('Staff/emp_list/' . $staff->staff_id . '?month=' . $nextM . '&year=' . $nextY) ?>">
-                        Next Month ➜
+                        Next Month ➡
                     </a>
 
                 </div>

@@ -93,7 +93,7 @@
         <a class="btn btn-outline-primary" href="<?= base_url('Holiday/list/' .  '?month=' . date('m') . '&year=' . date('Y')) ?>">📅 Current Month</a>
 
         <a class="btn btn-outline-primary"
-          href="<?= base_url('Holiday/list/' . $nextM . '/' . $nextY) ?>">Next Month ➜</a>
+          href="<?= base_url('Holiday/list/' . $nextM . '/' . $nextY) ?>">Next Month ➡</a>
       </div>
 
     </div>
