@@ -423,7 +423,7 @@ class Staff extends CI_Controller{
         $data['assets'] = $this->Asset_model->get_assets_with_site_by_staff($staff_id);
 
         $this->load->view('incld/header');
-        $this->load->view('staff/asset_form', $data);
+        $this->load->view('Staff/asset_form', $data);
         $this->load->view('incld/footer');
     }
 
