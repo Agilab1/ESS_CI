@@ -73,26 +73,20 @@ class Asset extends CI_Controller
                 if (!$data->asset) show_404();
                 $this->load_page($data);
                 break;
-            case "view":
+           case "view":
 
-                $data->action = "view";
-                $data->asset  = $this->Asset_model->getById($id);
+    $data->action = "view";
+    $data->asset  = $this->Asset_model->getById($id);
+    if (!$data->asset) show_404();
 
-                if (!$data->asset) show_404();
-                if ($this->input->get('nfc') == 1) {
+    // logged-in user (for dropdown selected value)
+    $data->loginUser = $this->User_model->get_user(
+        $this->session->userdata('user_id')
+    );
 
-                    $logged_user_id = $this->session->userdata('user_id');
-                    $asset_no = $data->asset->asset_no;
+    $this->load_page($data);
+    break;
 
-                    if ($logged_user_id && $asset_no) {
-                        $this->User_model->edit_user($logged_user_id, [
-                            'asset_no' => $asset_no,
-                            'user_st'  => 'Active'
-                        ]);
-                    }
-                }
-                $this->load_page($data);
-                break;
             case "delete":
                 $this->Asset_model->deleteAsset($id);
                 $this->session->set_flashdata('success', "Asset deleted successfully!");
@@ -142,52 +136,56 @@ class Asset extends CI_Controller
         redirect('Asset/list');
     }
     public function updateStaff()
-    {
-        $asset_id = $this->input->post('asset_id');
-        $staff_id = $this->input->post('staff_id');
+{
+    $staff_id = $this->input->post('staff_id');
+    $asset_id = $this->input->post('asset_id');
+    $user_id  = $this->session->userdata('user_id');
 
-        // 1. Update asset
-        $this->Asset_model->updateAsset($asset_id, [
+    // update users table
+    $this->User_model->edit_user($user_id, [
+        'staff_id' => $staff_id
+    ]);
+
+    // update CURRENT viewed asset
+    $this->db
+        ->where('asset_id', $asset_id)
+        ->update('assets', [
             'staff_id' => $staff_id
         ]);
 
-        // 2. Get asset details
-        $asset = $this->Asset_model->getById($asset_id);
+    redirect($_SERVER['HTTP_REFERER']);
+}
 
-        if ($asset && $asset->asset_no) {
-
-            // Update users linked with this asset
-            $this->User_model->updateByAssetNo($asset->asset_no, [
-                'staff_id' => $staff_id
-            ]);
-        }
-
-        $this->session->set_flashdata('success', 'Staff updated successfully');
-        redirect('Asset/action/view/' . $asset_id);
-    }
     public function updateSite()
-    {
-        $asset_id = $this->input->post('asset_id');
-        $site_id  = $this->input->post('site_id');
+{
+    $site_no  = $this->input->post('site_no');
+    $asset_id = $this->input->post('asset_id');
+    $user_id  = $this->session->userdata('user_id');
 
-        // 1. Update asset
-        $this->Asset_model->updateAsset($asset_id, [
-            'site_id' => $site_id
+    // update users table
+    $this->User_model->edit_user($user_id, [
+        'site_no' => $site_no
+    ]);
+
+    // convert site_no → site_id
+    $site = $this->db
+        ->where('site_no', $site_no)
+        ->get('sites')
+        ->row();
+
+    if (!$site) {
+        redirect($_SERVER['HTTP_REFERER']);
+        return;
+    }
+
+    // update CURRENT viewed asset
+    $this->db
+        ->where('asset_id', $asset_id)
+        ->update('assets', [
+            'site_id' => $site->site_id
         ]);
 
-        // 2. Get asset + site
-        $asset = $this->Asset_model->getById($asset_id);
+    redirect($_SERVER['HTTP_REFERER']);
+}
 
-        if ($asset && $asset->asset_no && $asset->site_no) {
-
-            // Update users linked with this asset
-            $this->User_model->updateByAssetNo($asset->asset_no, [
-                'site_no' => $asset->site_no
-            ]);
-        }
-
-        
-        $this->session->set_flashdata('success', 'Site updated successfully');
-        redirect('Asset/action/view/' . $asset_id);
-    }
 }
