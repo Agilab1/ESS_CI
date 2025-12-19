@@ -206,13 +206,10 @@ class Location extends CI_Controller
 
     }
 
-<<<<<<< HEAD
 //
-=======
 
 
 
 
 
 
->>>>>>> 6dac3f6d0bdebc6ec4953a291158a9aac16bf411
