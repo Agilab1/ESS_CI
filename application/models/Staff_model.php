@@ -37,12 +37,4 @@ class Staff_model extends CI_Model
         $this->db->where('staff_id', $staff_id);
         return $this->db->get('staffs')->num_rows() > 0;
     }
-
-
-public function get_by_id($staff_id)
-    {
-        return $this->db
-            ->get_where('staffs', ['staff_id' => $staff_id])
-            ->row();
-    }
 }

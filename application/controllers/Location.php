@@ -180,6 +180,7 @@ class Location extends CI_Controller
             'access_by'    => $this->input->post('access_by')
         ];
     }
+<<<<<<< HEAD
 
     //============================================================
     // ASSET LIST FORM (QR PAGE)
@@ -210,3 +211,6 @@ class Location extends CI_Controller
 
 
 
+=======
+}
+>>>>>>> d1e2f410151e32a38d2d36e0213e62dbcb1f0d32

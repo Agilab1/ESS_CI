@@ -1,11 +1,3 @@
-<style>
-/* Space between Staff update button and Site update button */
-.card-header .d-flex.align-items-center {
-    gap: 12px; /* adjust spacing if needed */
-}
-</style>
-
-
 <?php
 $isView = ($action === 'view');
 $disabled = $isView ? 'disabled' : '';
@@ -27,25 +19,24 @@ $disabled = $isView ? 'disabled' : '';
         <!-- UPDATE STAFF -->
         <form method="post"
               action="<?= base_url('Asset/updateStaff'); ?>"
-              class="d-flex align-items-center me-3">
+              class="d-flex"
+              style="margin-right:20px;">
 
             <input type="hidden" name="asset_id" value="<?= $asset->asset_id ?>">
 
             <select name="staff_id"
-                    id="staffSelect"
                     class="form-control form-control-sm"
-                    readonly>
+                    style="margin-right:8px;"
+                    required>
                 <?php foreach ($staffs as $s): ?>
                     <option value="<?= $s->staff_id ?>"
-                        <?= ($loginUser->staff_id == $s->staff_id) ? 'selected' : '' ?>>
-                        <?= $s->staff_id ?> - <?= $s->emp_name ?>
+                        <?= $asset->staff_id == $s->staff_id ? 'selected' : '' ?>>
+                        <?= $s->emp_name ?>
                     </option>
                 <?php endforeach; ?>
             </select>
 
-            <button type="button"
-                    id="staffBtn"
-                    class="btn btn-primary btn-sm ms-2">
+            <button class="btn btn-primary btn-sm" title="Update Staff">
                 <i class="fas fa-user-edit"></i>
             </button>
         </form>
@@ -53,26 +44,23 @@ $disabled = $isView ? 'disabled' : '';
         <!-- UPDATE SITE -->
         <form method="post"
               action="<?= base_url('Asset/updateSite'); ?>"
-              class="d-flex align-items-center">
+              class="d-flex">
 
             <input type="hidden" name="asset_id" value="<?= $asset->asset_id ?>">
 
-            <select name="site_no"
-                    id="siteSelect"
+            <select name="site_id"
                     class="form-control form-control-sm"
-                    disabled
+                    style="margin-right:8px;"
                     required>
                 <?php foreach ($sites as $s): ?>
-                    <option value="<?= $s->site_no ?>"
-                        <?= ($loginUser->site_no == $s->site_no) ? 'selected' : '' ?>>
+                    <option value="<?= $s->site_id ?>"
+                        <?= $asset->site_id == $s->site_id ? 'selected' : '' ?>>
                         <?= $s->site_no ?> - <?= $s->site_name ?>
                     </option>
                 <?php endforeach; ?>
             </select>
 
-            <button type="button"
-                    id="siteBtn"
-                    class="btn btn-primary btn-sm ms-2">
+            <button class="btn btn-primary btn-sm" title="Update Site">
                 <i class="fas fa-map-marker-alt"></i>
             </button>
         </form>
@@ -220,26 +208,3 @@ $disabled = $isView ? 'disabled' : '';
 </div>
 </div>
 </body>
-<script>
-document.getElementById('staffBtn').addEventListener('click', function () {
-    const select = document.getElementById('staffSelect');
-
-    if (select.disabled) {
-        select.disabled = false;   // enable edit
-        select.focus();
-    } else {
-        select.form.submit();      // save
-    }
-});
-
-document.getElementById('siteBtn').addEventListener('click', function () {
-    const select = document.getElementById('siteSelect');
-
-    if (select.disabled) {
-        select.disabled = false;   // enable edit
-        select.focus();
-    } else {
-        select.form.submit();      // save
-    }
-});
-</script>

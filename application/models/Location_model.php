@@ -76,4 +76,25 @@ class Location_model extends CI_Model
     }
 
 
+
+
+    // Get staff with assets using staff_id in assets table
+    public function get_staff_assets_by_site($site_id)
+    {
+        return $this->db
+            ->select('
+            s.staff_id,
+            s.emp_name,
+            GROUP_CONCAT(a.asset_name, ", ") AS assets
+        ')
+            ->from('assets a')
+            ->join('staffs s', 's.staff_id = a.staff_id', 'left') // FIX HERE
+            ->where('a.site_id', $site_id)
+            ->group_by('s.staff_id, s.emp_name')
+            ->order_by('s.emp_name')
+            ->get()
+            ->result();
+    }
+
+
 }
