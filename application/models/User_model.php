@@ -3,7 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class User_model extends CI_Model
 {
-    // 🔐 LOGIN CHECK (HASHED PASSWORD)
+    //  LOGIN CHECK (HASHED PASSWORD)
     public function login_check($mail_id, $pass_wd)
     {
         $user = $this->db
