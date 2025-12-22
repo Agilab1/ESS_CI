@@ -51,8 +51,8 @@ class User extends CI_Controller
         ]);
 
         // 🔀 ROLE BASED REDIRECT
-        if ($user->role_id === 'Admin') {
-            redirect('Admin');   // 🔥 EXISTING CONTROLLER
+        if ((int)$user->role_id === 1) {
+            redirect('Admin');
         } else {
             redirect('User/emp_punch');
         }
@@ -73,10 +73,9 @@ class User extends CI_Controller
         $this->load->view('incld/side_menu');
         $this->load->view('user/emp_punch', $data);
         $this->load->view('user/homepage', $data);
-         $this->load->view('incld/footer');
+        $this->load->view('incld/footer');
         $this->load->view('incld/jslib');
         $this->load->view('incld/script');
-
     }
 
     // ================= LOGOUT =================
@@ -186,5 +185,4 @@ class User extends CI_Controller
             'user_ad' => $this->input->post('user_ad') ?? 0
         ];
     }
-    
 }
