@@ -61,7 +61,7 @@ class User extends CI_Controller
     // ================= USER DASHBOARD =================
     public function emp_punch()
     {
-        if ($this->session->userdata('role_id') === 'Admin') {
+        if ((int)$this->session->userdata('role_id') === 1) {
             redirect('Dashboard');
         }
 

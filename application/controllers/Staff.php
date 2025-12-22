@@ -2,15 +2,18 @@
 date_default_timezone_set('Asia/Kolkata');
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Staff extends CI_Controller{
-        public function __construct(){
+class Staff extends CI_Controller
+{
+    public function __construct()
+    {
         parent::__construct();
         $this->load->model('Staff_model');
         $this->load->model('Dashboard_model');
         $this->load->model('Work_model');
         $this->load->model('Holiday_model');
     }
-        public function status($staff_id){
+    public function status($staff_id)
+    {
         $date = $this->input->get('date');
         $mode = $this->input->get('mode');
 
@@ -54,7 +57,8 @@ class Staff extends CI_Controller{
         $this->load->view('incld/script');
     }
 
-        public function save_status(){
+    public function save_status()
+    {
         $staff_id = $this->input->post('staff_id');
         $date     = $this->input->post('date');
         $status   = $this->input->post('staff_st');
@@ -81,14 +85,16 @@ class Staff extends CI_Controller{
         redirect('Staff/emp_list/' . $staff_id . '?date=' . $date);
     }
 
-        public function delete_status($staff_id, $date){
+    public function delete_status($staff_id, $date)
+    {
         $this->Work_model->delete_status($staff_id, $date);
         $this->session->set_flashdata('success', 'Record deleted!');
         redirect('Staff/emp_list/' . $staff_id);
-        }
+    }
 
     // ================= PUNCH DETAILS (PORTRAIT VIEW) =================
-        public function punch_details($staff_id){
+    public function punch_details($staff_id)
+    {
         if (!$this->session->userdata('logged_in')) {
             redirect('user');
         }
@@ -118,7 +124,8 @@ class Staff extends CI_Controller{
     }
 
     // MAIN PAGE — MONTHLY ATTENDANCE
-        public function emp_list($staff_id = null){
+    public function emp_list($staff_id = null)
+    {
         if ($staff_id === null) {
             $staff_id = $this->input->get('staff_id');
         }
@@ -127,9 +134,8 @@ class Staff extends CI_Controller{
         $data['staff'] = $this->Staff_model->get_user($staff_id);
         if (!$data['staff']) show_error("Employee not found.");
 
-        //  USER NFC BLOCK (IMPORTANT)
-        if ($this->session->userdata('role_id') !== 'Admin' && $this->input->get('auto')) {
-           
+        // 🔒 USER NFC BLOCK (ONLY NON-ADMIN)
+        if ((int)$this->session->userdata('role_id') !== 1 && $this->input->get('auto')) {
             redirect('Staff/punch_details/' . $staff_id);
             return;
         }
@@ -156,8 +162,7 @@ class Staff extends CI_Controller{
             ])->row();
 
             if (!$exists) {
-
-                //  CHECK IN
+                // CHECK IN
                 $this->Work_model->insert_cin([
                     'staff_id' => $staff_id,
                     'staff_st' => 'Punched',
@@ -170,8 +175,7 @@ class Staff extends CI_Controller{
                     $staff_id . ' successfully CHECK IN at ' . date('h:i A', strtotime($time))
                 );
             } else {
-
-                //  CHECK OUT
+                // CHECK OUT
                 $this->Work_model->update_cout([
                     'staff_id'  => $staff_id,
                     'date'      => $today,
@@ -183,6 +187,7 @@ class Staff extends CI_Controller{
                     $staff_id . ' successfully CHECK OUT at ' . date('h:i A', strtotime($time))
                 );
             }
+
             redirect('Staff/punch_details/' . $staff_id);
             return;
         }
@@ -202,7 +207,7 @@ class Staff extends CI_Controller{
         $nextM = $month + 1;
         $nextY = $year;
         if ($nextM > 12) {
-            $nextM = 1; 
+            $nextM = 1;
             $nextY++;
         }
 
@@ -217,7 +222,6 @@ class Staff extends CI_Controller{
         $data['holiday_model'] = $this->Holiday_model;
         $data['counts'] = $this->Dashboard_model->counts();
 
-
         $this->load->view('incld/verify');
         $this->load->view('incld/header');
         $this->load->view('incld/top_menu');
@@ -230,7 +234,9 @@ class Staff extends CI_Controller{
 
 
 
-       public function update_status_inline(){
+
+    public function update_status_inline()
+    {
         $data = [
             'staff_id' => $this->input->post('staff_id'),
             'date'     => $this->input->post('date'),
@@ -244,7 +250,8 @@ class Staff extends CI_Controller{
 
 
 
-    public function list(){
+    public function list()
+    {
         $data['staffs'] = $this->Staff_model->get_user();
         $data['counts'] = $this->Dashboard_model->counts();
         $this->load->view('incld/verify');
@@ -260,7 +267,8 @@ class Staff extends CI_Controller{
 
 
 
-        public function add(){
+    public function add()
+    {
         $data = new stdClass();
         $data->action = 'add';
         $data->staff = (object)[
@@ -282,7 +290,8 @@ class Staff extends CI_Controller{
 
 
 
-        public function edit($staff_id){
+    public function edit($staff_id)
+    {
         $data = new stdClass();
         $data->action = 'edit';
         $data->staff  = $this->Staff_model->get_user($staff_id);
@@ -297,7 +306,8 @@ class Staff extends CI_Controller{
     }
 
 
-    public function view($staff_id){
+    public function view($staff_id)
+    {
         $data = new stdClass();
         $data->action = 'view';
         $data->staff = $this->Staff_model->get_user($staff_id);
@@ -332,7 +342,8 @@ class Staff extends CI_Controller{
     }
 
 
-        public function delete($staff_id){
+    public function delete($staff_id)
+    {
         $data = new stdClass();
         $data->action = 'delete';
         $data->staff = $this->Staff_model->get_user($staff_id);
@@ -343,7 +354,8 @@ class Staff extends CI_Controller{
         $this->session->set_flashdata('success', $staff_id . ' Staff deleted successfully!');
         redirect('Staff/list');
     }
-        private function validate(){
+    private function validate()
+    {
         $this->form_validation->set_rules('staff_id', 'Staff ID', 'required|trim');
         $this->form_validation->set_rules('emp_name', 'Employee Name', 'required|trim');
         $this->form_validation->set_rules('nfc_card', 'NFC Card No', 'required|trim');
@@ -370,7 +382,8 @@ class Staff extends CI_Controller{
             return false;
         }
     }
-        public function save(){
+    public function save()
+    {
         $action = strtolower($this->input->post('action'));
         $staff_id = $this->input->post('old_staff_id');
 
