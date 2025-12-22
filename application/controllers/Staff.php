@@ -202,7 +202,7 @@ class Staff extends CI_Controller{
         $nextM = $month + 1;
         $nextY = $year;
         if ($nextM > 12) {
-            $nextM = 1;
+            $nextM = 1; 
             $nextY++;
         }
 

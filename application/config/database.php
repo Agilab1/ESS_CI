@@ -75,11 +75,11 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => '',
-	'username' => '',
-	'password' => '',
-	'database' => APPPATH.'Database/data.db',
-	'dbdriver' => 'sqlite3',
+	'hostname' => 'localhost',
+	'username' => 'agiletwn_assets',
+	'password' => 'agiletwn_assets',
+	'database' => 'agiletwn_assets',
+	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
 	'db_debug' => (ENVIRONMENT !== 'production'),
