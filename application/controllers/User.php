@@ -51,8 +51,8 @@ class User extends CI_Controller
         ]);
 
         // 🔀 ROLE BASED REDIRECT
-        if ($user->role_id === 'Admin') {
-            redirect('Admin/dashboard');   // 🔥 EXISTING CONTROLLER
+        if ($user->role_id === '1') {
+            redirect('Admin');   // 🔥 EXISTING CONTROLLER
         } else {
             redirect('User/emp_punch');
         }
