@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') or exit('No direct script access allowed');
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 /*
 | -------------------------------------------------------------------
@@ -74,21 +74,21 @@ $active_group = 'default';
 $query_builder = TRUE;
 
 $db['default'] = array(
-	'dsn'      => '',
+	'dsn'	=> '',
 	'hostname' => 'localhost',
-	'username' => 'agiletwn_assets',    
-	'password' => 'agiletwn_assets',  
-	'database' => 'agiletwn_assets',    
+	'username' => 'agiletwn_assets',
+	'password' => 'agiletwn_assets',
+	'database' => 'agiletwn_assets',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
-	'db_debug' => TRUE,                 
+	'db_debug' => (ENVIRONMENT !== 'production'),
 	'cache_on' => FALSE,
 	'cachedir' => '',
 	'char_set' => 'utf8',
 	'dbcollat' => 'utf8_general_ci',
 	'swap_pre' => '',
-	'encrypt'  => FALSE,
+	'encrypt' => FALSE,
 	'compress' => FALSE,
 	'stricton' => FALSE,
 	'failover' => array(),
