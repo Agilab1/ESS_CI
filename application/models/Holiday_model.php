@@ -45,18 +45,14 @@ class Holiday_model extends CI_Model
     // ============================================================
     public function getByMonth($month, $year)
     {
-        $month = str_pad($month, 2, '0', STR_PAD_LEFT); // 1 → 01
-
-        $query = $this->db->query("
-        SELECT *
-        FROM holiday
-        WHERE strftime('%m', date_id) = ?
-          AND strftime('%Y', date_id) = ?
-        ORDER BY date_id ASC
-    ", [$month, $year]);
-
-        return $query->result();
+        return $this->db
+            ->where('MONTH(date_id)', (int)$month)
+            ->where('YEAR(date_id)', (int)$year)
+            ->order_by('date_id', 'ASC')
+            ->get('holiday')
+            ->result();
     }
+
 
 
     // ============================================================
@@ -64,39 +60,30 @@ class Holiday_model extends CI_Model
     // ============================================================
     public function getMonthlyHolidays($limit, $offset)
     {
-        $currentMonth = date('m');
-        $currentYear  = date('Y');
-        $driver = $this->db->platform();
+        $currentMonth = (int)date('m');
+        $currentYear  = (int)date('Y');
 
-        if ($driver == "sqlite3") {
-            $this->db->where("strftime('%m', date_id) =", sprintf("%02d", $currentMonth));
-            $this->db->where("strftime('%Y', date_id) =", $currentYear);
-        } else {
-            $this->db->where("MONTH(date_id)", $currentMonth);
-            $this->db->where("YEAR(date_id)", $currentYear);
-        }
-
-        $this->db->order_by('date_id', 'ASC');
-        return $this->db->get('holiday', $limit, $offset)->result();
+        return $this->db
+            ->where('MONTH(date_id)', $currentMonth)
+            ->where('YEAR(date_id)', $currentYear)
+            ->order_by('date_id', 'ASC')
+            ->get('holiday', $limit, $offset)
+            ->result();
     }
+
+
 
     // ============================================================
     // COUNT MONTHLY HOLIDAYS – Works on MySQL & SQLite
     // ============================================================
     public function countMonthlyHolidays()
     {
-        $currentMonth = date('m');
-        $currentYear  = date('Y');
-        $driver = $this->db->platform();
+        $currentMonth = (int)date('m');
+        $currentYear  = (int)date('Y');
 
-        if ($driver == "sqlite3") {
-            $this->db->where("strftime('%m', date_id) =", sprintf("%02d", $currentMonth));
-            $this->db->where("strftime('%Y', date_id) =", $currentYear);
-        } else {
-            $this->db->where("MONTH(date_id)", $currentMonth);
-            $this->db->where("YEAR(date_id)", $currentYear);
-        }
-
-        return $this->db->count_all_results('holiday');
+        return $this->db
+            ->where('MONTH(date_id)', $currentMonth)
+            ->where('YEAR(date_id)', $currentYear)
+            ->count_all_results('holiday');
     }
 }

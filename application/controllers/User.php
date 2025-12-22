@@ -186,4 +186,5 @@ class User extends CI_Controller
             'user_ad' => $this->input->post('user_ad') ?? 0
         ];
     }
+    
 }
