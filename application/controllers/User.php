@@ -52,7 +52,7 @@ class User extends CI_Controller
 
         // 🔀 ROLE BASED REDIRECT
         if ($user->role_id === 'Admin') {
-            redirect('Admin');   // 🔥 EXISTING CONTROLLER
+            redirect('Admin/dashboard');   // 🔥 EXISTING CONTROLLER
         } else {
             redirect('User/emp_punch');
         }
@@ -61,7 +61,7 @@ class User extends CI_Controller
     // ================= USER DASHBOARD =================
     public function emp_punch()
     {
-        if ($this->session->userdata('role_id') === 'Admin') {
+        if ($this->session->userdata('role_id') === 1) {
             redirect('Dashboard');
         }
 
