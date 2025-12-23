@@ -172,7 +172,8 @@ class Staff extends CI_Controller
                     'staff_id' => $staff_id,
                     'staff_st' => 'Punched',
                     'date'     => $today,
-                    'cin_time' => $time
+                    'cin_time' => $time,
+                    'remark'   => $remark
                 ]);
 
                 $this->session->set_flashdata(
