@@ -135,10 +135,10 @@ class Staff extends CI_Controller
         if (!$data['staff']) show_error("Employee not found.");
 
         // 🔒 USER NFC BLOCK (ONLY NON-ADMIN)
-        if ((int)$this->session->userdata('role_id') !== 1 && $this->input->get('auto')) {
-            redirect('Staff/punch_details/' . $staff_id);
-            return;
-        }
+        // if ((int)$this->session->userdata('role_id') !== 1 && $this->input->get('auto')) {
+        //     redirect('Staff/punch_details/' . $staff_id);
+        //     return;
+        // }
 
         // ================= NFC AUTO-PUNCH (ADMIN ONLY) =================
         if ($this->input->get('auto')) {
