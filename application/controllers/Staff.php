@@ -134,7 +134,7 @@ class Staff extends CI_Controller
         $data['staff'] = $this->Staff_model->get_user($staff_id);
         if (!$data['staff']) show_error("Employee not found.");
 
-        // 🔒 BLOCK NFC AUTO-PUNCH FOR NORMAL USERS
+        //  BLOCK NFC AUTO-PUNCH FOR NORMAL USERS
         if ($this->input->get('auto') && (int)$this->session->userdata('role_id') !== 1) {
             redirect('Staff/punch_details/' . $staff_id);
             return;
@@ -162,6 +162,11 @@ class Staff extends CI_Controller
             ])->row();
 
             if (!$exists) {
+
+                $remark = null;
+                if (strtotime($time) > strtotime('10:00:00')) {
+                    $remark = 'Late';
+                }
                 // CHECK IN
                 $this->Work_model->insert_cin([
                     'staff_id' => $staff_id,
