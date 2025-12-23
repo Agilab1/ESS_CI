@@ -134,14 +134,14 @@ class Staff extends CI_Controller
         $data['staff'] = $this->Staff_model->get_user($staff_id);
         if (!$data['staff']) show_error("Employee not found.");
 
-        // 🔒 USER NFC BLOCK (ONLY NON-ADMIN)
-        // if ((int)$this->session->userdata('role_id') !== 1 && $this->input->get('auto')) {
-        //     redirect('Staff/punch_details/' . $staff_id);
-        //     return;
-        // }
+        // 🔒 BLOCK NFC AUTO-PUNCH FOR NORMAL USERS
+        if ($this->input->get('auto') && (int)$this->session->userdata('role_id') !== 1) {
+            redirect('Staff/punch_details/' . $staff_id);
+            return;
+        }
 
         // ================= NFC AUTO-PUNCH (ADMIN ONLY) =================
-        if ($this->input->get('auto')) {
+        if ($this->input->get('auto') && (int)$this->session->userdata('role_id') === 1) {
 
             $today = date('Y-m-d');
             $time  = date('H:i:s');
@@ -150,7 +150,7 @@ class Staff extends CI_Controller
             if ($day === 'Saturday' || $day === 'Sunday') {
                 $this->session->set_flashdata(
                     'error',
-                    'Saturday / Sunday punch not allowed '
+                    'Saturday / Sunday punch not allowed'
                 );
                 redirect('Staff/punch_details/' . $staff_id);
                 return;
@@ -172,7 +172,7 @@ class Staff extends CI_Controller
 
                 $this->session->set_flashdata(
                     'success',
-                    $staff_id . ' successfully CHECK IN at ' . date('h:i A', strtotime($time))
+                    $staff_id . ' CHECK IN at ' . date('h:i A', strtotime($time))
                 );
             } else {
                 // CHECK OUT
@@ -184,13 +184,14 @@ class Staff extends CI_Controller
 
                 $this->session->set_flashdata(
                     'success',
-                    $staff_id . ' successfully CHECK OUT at ' . date('h:i A', strtotime($time))
+                    $staff_id . ' CHECK OUT at ' . date('h:i A', strtotime($time))
                 );
             }
 
             redirect('Staff/punch_details/' . $staff_id);
             return;
         }
+
 
         // ================= NORMAL MONTH VIEW =================
         $month = $this->input->get('month') ?? date('m');
