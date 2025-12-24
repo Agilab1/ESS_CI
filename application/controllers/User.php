@@ -167,7 +167,7 @@ class User extends CI_Controller
                 $this->session->set_flashdata('success', 'User added successfully!');
                 break;
                 case 'view':
-                $this->User_model->read_user($user_id);
+                $this->User_model->read_user(       $user_id);
                 break;
 
             case 'edit':

@@ -44,9 +44,9 @@ class User_model extends CI_Model
         return $this->db->delete('users', ['user_id' => $user_id]);
     }
 
-    public function read_user($mail_id)
+    public function read_user($user_id)
     {
-        $this->db->where('mail_id', $mail_id);
+        $this->db->where('user_id', $user_id);
         return $this->db->get('users')->row();
     }
 
