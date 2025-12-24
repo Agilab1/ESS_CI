@@ -48,9 +48,7 @@ class Asset_model extends CI_Model
     {
         $this->db->select('
             assets.*,
-            // staffs.emp_name,
-            // sites.site_no,
-            // sites.site_name,
+
             categories.cat_no,
             categories.cat_name
         ');
