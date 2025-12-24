@@ -132,6 +132,17 @@ class User extends CI_Controller
         $this->load->view('incld/script');
         $this->load->view('incld/footer');
     }
+     public function view($user_id)
+    {
+        $data['action'] = 'view';
+        $data['user'] = $this->User_model->get_user($user_id);
+        $this->load->view('incld/verify');
+        $this->load->view("incld/header");
+        $this->load->view("user/form", $data);       //change here admin to user
+        $this->load->view("incld/jslib");
+        $this->load->view("incld/script");
+        $this->load->view("incld/footer");
+    }
 
     // ================= DELETE =================
     public function delete_user($user_id)
@@ -150,16 +161,33 @@ class User extends CI_Controller
         $data = $this->validate();
         if ($data === false) return;
 
-        if ($action === 'add') {
-            $this->User_model->add_user($data);
-            $this->session->set_flashdata('success', 'User added successfully!');
-        } elseif ($action === 'edit') {
-            $this->User_model->edit_user($user_id, $data);
-            $this->session->set_flashdata('success', 'User updated successfully!');
+        switch ($action) {
+            case 'add':
+                $this->User_model->add_user($data);
+                $this->session->set_flashdata('success', 'User added successfully!');
+                break;
+                // case 'view':
+                // $this->User_model->read_user($user_id, $data);
+                // break;
+
+            case 'edit':
+                $this->User_model->edit_user($user_id, $data);
+                $this->session->set_flashdata('success', 'User updated successfully!');
+                break;
+
+            case 'delete':
+                $this->User_model->delete_user($user_id);
+                $this->session->set_flashdata('success', 'User deleted successfully!');
+                break;
+
+            default:
+                $this->session->set_flashdata('error', 'Invalid action!');
+                break;
         }
 
         redirect('user/list');
     }
+
 
     // ================= VALIDATION =================
     public function validate()
