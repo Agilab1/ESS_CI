@@ -67,18 +67,19 @@
                                 <tr>
                                     <td>
                                         <label class="form-label">User Role</label>
-                                        <select class="form-control" name="role_id" required>
+                                        <select name="role_id" class="form-control" required>
                                             <option value="">Select Role</option>
 
-                                            <option value="Admin"
-                                                <?= (isset($user->role_id) && $user->role_id == "Admin") ? 'selected' : '' ?>>
+                                            <option value="1"
+                                                <?= (isset($user) && $user->role_id == 1) ? 'selected' : '' ?>>
                                                 Admin
                                             </option>
 
-                                            <option value="User"
-                                                <?= (isset($user->role_id) && $user->role_id == "User") ? 'selected' : '' ?>>
+                                            <option value="2"
+                                                <?= (isset($user) && $user->role_id == 2) ? 'selected' : '' ?>>
                                                 User
                                             </option>
+
                                         </select>
                                         <small class="text-danger"><?= form_error('role_id'); ?></small>
                                     </td>
