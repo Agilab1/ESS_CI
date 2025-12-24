@@ -10,8 +10,8 @@ class Asset_model extends CI_Model
     {
         $this->db->select('assets.*, staffs.emp_name, sites.site_no, sites.site_name, categories.cat_no, categories.cat_name');
         $this->db->from('assets');
-        $this->db->join('staffs', 'staffs.staff_id = assets.staff_id', 'left');
-        $this->db->join('sites', 'sites.site_id = assets.site_id', 'left');
+        // $this->db->join('staffs', 'staffs.staff_id = assets.staff_id', 'left');
+        // $this->db->join('sites', 'sites.site_id = assets.site_id', 'left');
         $this->db->join('categories', 'categories.cat_id = assets.cat_id', 'left');
         $this->db->where('assets.asset_id', $asset_id);
 
@@ -47,16 +47,16 @@ class Asset_model extends CI_Model
     public function getAll()
     {
         $this->db->select('
-            assets.*, 
-            staffs.emp_name,
-            sites.site_no,
-            sites.site_name,
+            assets.*,
+            // staffs.emp_name,
+            // sites.site_no,
+            // sites.site_name,
             categories.cat_no,
             categories.cat_name
         ');
         $this->db->from('assets');
-        $this->db->join('staffs', 'staffs.staff_id = assets.staff_id', 'left');
-        $this->db->join('sites', 'sites.site_id = assets.site_id', 'left');
+        // $this->db->join('staffs', 'staffs.staff_id = assets.staff_id', 'left');
+        // $this->db->join('sites', 'sites.site_id = assets.site_id', 'left');
         $this->db->join('categories', 'categories.cat_id = assets.cat_id', 'left');
         $this->db->order_by('assets.asset_id', 'DESC');
 
@@ -64,28 +64,28 @@ class Asset_model extends CI_Model
     }
 
     // GET SITE DROPDOWN
-    public function getSites()
-    {
-        return $this->db->get('sites')->result();
-    }
+    // public function getSites()
+    // {
+    //     return $this->db->get('sites')->result();
+    // }
     public function getCategories()
 {
     return $this->db->get('categories')->result();
 }
 
-public function get_assets_with_site_by_staff($staff_id)
-{
-    $this->db->select('
-        a.asset_id,
-        a.asset_name,
-        s.site_name,
-        s.site_no
-    ');
-    $this->db->from('assets a');
-    $this->db->join('sites s', 's.site_id = a.site_id', 'left');
-    $this->db->where('a.staff_id', $staff_id);
+// public function get_assets_with_site_by_staff($staff_id)
+// {
+//     $this->db->select('
+//         a.asset_id,
+//         a.asset_name,
+//         s.site_name,
+//         s.site_no
+//     ');
+//     $this->db->from('assets a');
+//     $this->db->join('sites s', 's.site_id = a.site_id', 'left');
+//     $this->db->where('a.staff_id', $staff_id);
 
-    return $this->db->get()->result();
-}
+//     return $this->db->get()->result();
+// }
 //test
 }

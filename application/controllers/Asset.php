@@ -58,11 +58,11 @@ class Asset extends CI_Controller
                     'asset_id'   => '',
                     'asset_no'   => '',
                     'asset_name' => '',
-                    'net_value'  => '',
-                    'site_id'    => '',
-                    'staff_id'   => '',
+                    // 'net_value'  => '',
+                    // 'site_id'    => '',
+                    // 'staff_id'   => '',
                     'cat_id'     => '',
-                    'status'     => ''
+                    // 'status'     => ''
                 ];
                 $this->load_page($data);
                 break;
@@ -107,11 +107,11 @@ class Asset extends CI_Controller
             'asset_id'   => $this->input->post('asset_id'),
             'asset_no'   => $this->input->post('asset_no'),
             'asset_name' => $this->input->post('asset_name'),
-            'net_value'  => $this->input->post('net_value'),
-            'site_id'    => $this->input->post('site_id'),
-            'staff_id'   => $this->input->post('staff_id'),
+            // 'net_value'  => $this->input->post('net_value'),
+            // 'site_id'    => $this->input->post('site_id'),
+            // 'staff_id'   => $this->input->post('staff_id'),
             'cat_id'     => $this->input->post('cat_id'),
-            'status'     => $this->input->post('status'),
+            // 'status'     => $this->input->post('status'),
         ];
 
         $this->form_validation->set_rules('asset_no', 'Asset Number', 'required');

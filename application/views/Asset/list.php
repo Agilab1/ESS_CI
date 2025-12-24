@@ -41,13 +41,13 @@
 
                 <thead class="btn-primary text-white">
                     <tr>
-                        <th>Asset ID</th>
+                        <!-- <th>Asset ID</th> -->
                         <th>Asset No</th>
                         <th>Asset Name</th>
-                        <th>Site</th>
-                        <th>Staff</th>
-                        <th>Net Value</th>
-                        <th>Status</th>
+                        <!-- <th>Site</th> -->
+                        <!-- <th>Staff</th> -->
+                        <!-- <th>Net Value</th> -->
+                        <!-- <th>Status</th> -->
                         <th>Category</th>
                         <th class="text-center" style="width:7vw;">Action</th>
                     </tr>
@@ -64,17 +64,13 @@
                                 <td><?= $a->asset_name ?></td>
 
                                 <!-- Site -->
-                                <td><?= $a->site_no ?> – <?= $a->site_name ?></td>
+                                <!-- <td><?= $a->site_no ?> – <?= $a->site_name ?></td> -->
 
                                 <!-- Staff -->
-                                <td><?= $a->emp_name ? $a->emp_name : '<i>No Staff</i>' ?></td>
+                                <!-- <td><?= $a->emp_name ? $a->emp_name : '<i>No Staff</i>' ?></td> -->
 
-                                <td><?= $a->net_value ?></td>
-                                <td class="text-center">
-                                <input type="checkbox"
-                                    <?= $a->status == 1 ? 'checked' : '' ?>
-                                    style="width:18px; height:10px; margin-top:10px; transform: scale(1.4); cursor: not-allowed;">
-                                </td>
+                                <!-- <td><?= $a->net_value ?></td> -->
+                                <!--  -->
                                 <td><?= $a->cat_no ?> – <?= $a->cat_name ?></td>
 
                           <td class="text-center" style="white-space:nowrap;">
