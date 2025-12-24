@@ -1,5 +1,6 @@
 <style>
-    th, td {
+    th,
+    td {
         white-space: nowrap;
     }
 
@@ -41,13 +42,8 @@
 
                 <thead class="btn-primary text-white">
                     <tr>
-                        <!-- <th>Asset ID</th> -->
                         <th>Asset No</th>
                         <th>Asset Name</th>
-                        <!-- <th>Site</th> -->
-                        <!-- <th>Staff</th> -->
-                        <!-- <th>Net Value</th> -->
-                        <!-- <th>Status</th> -->
                         <th>Category</th>
                         <th class="text-center" style="width:7vw;">Action</th>
                     </tr>
@@ -56,24 +52,21 @@
                 <tbody>
 
                     <?php if (!empty($assets)): ?>
-                        <?php $i = 1; foreach ($assets as $a): ?>
+                        <?php foreach ($assets as $a): ?>
                             <tr>
-                                <td><?= $a->asset_id ?></td>
 
-                                <td><?= $a->asset_no ?></td>
-                                <td><?= $a->asset_name ?></td>
+                                <td><?= $a->asset_no ?? '-' ?></td>
+                                <td><?= $a->asset_name ?? '-' ?></td>
 
-                                <!-- Site -->
-                                <!-- <td><?= $a->site_no ?> – <?= $a->site_name ?></td> -->
+                                <!-- ✅ CATEGORY (SAFE FIX) -->
+                                <td>
+                                    <?= (isset($a->cat_no, $a->cat_name))
+                                        ? $a->cat_no . ' - ' . $a->cat_name
+                                        : '-' ?>
+                                </td>
 
-                                <!-- Staff -->
-                                <!-- <td><?= $a->emp_name ? $a->emp_name : '<i>No Staff</i>' ?></td> -->
-
-                                <!-- <td><?= $a->net_value ?></td> -->
-                                <!--  -->
-                                <td><?= $a->cat_no ?> – <?= $a->cat_name ?></td>
-
-                          <td class="text-center" style="white-space:nowrap;">
+                                <!-- ACTION -->
+                                <td class="text-center" style="white-space:nowrap;">
                                     <a href="<?= base_url('Asset/action/view/' . $a->asset_id); ?>" class="mx-1">
                                         <i class="fa fa-eye"></i>
                                     </a>
@@ -83,18 +76,17 @@
                                     </a>
 
                                     <a href="<?= base_url('Asset/action/delete/' . $a->asset_id); ?>"
-                                       onclick="return confirm('Delete this asset?');"
-                                       class="mx-1">
+                                        onclick="return confirm('Delete this asset?');"
+                                        class="mx-1">
                                         <i class="fa fa-trash text-danger"></i>
                                     </a>
                                 </td>
 
                             </tr>
                         <?php endforeach; ?>
-
                     <?php else: ?>
                         <tr>
-                            <td colspan="8" class="text-center text-muted">No assets found.</td>
+                            <td colspan="4" class="text-center text-muted">No assets found.</td>
                         </tr>
                     <?php endif; ?>
 
