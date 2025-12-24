@@ -70,7 +70,7 @@
                                 <td class="text-break"><?= $user->mail_id ?? '' ?></td>
                                 <td><?= $user->user_ph ?? '' ?></td>
                                 <td>
-                                    <?= $user->role_id == 1 ? 'Admin' : ($user->role_id == 3 ? 'User' : '-') ?>
+                                    <?= ($u->role_id == 1 ? 'Admin' : ($u->role_id == 2 ? 'User' : '-')) ?>
                                 </td>
 
                                 <td><?= $user->user_ty ?? '' ?></td>
