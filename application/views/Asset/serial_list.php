@@ -82,22 +82,22 @@
         <input type="checkbox"
                class="form-check-input status-switch"
                <?= $s->status == 1 ? 'checked' : '' ?>
-               disabled>
+               >
     </td>
 
     <td class="text-center">
 
-        <a href="<?= base_url('asset/detail/view/'.$s->assdet_id) ?>" class="text-primary me-2">
+        <a href="<?= base_url('asset/detail/view/'.$s->assdet_id) ?>"class="mx-1" class="text-primary me-2 ">
             <i class="fa fa-eye"></i>
         </a>
 
-        <a href="<?= base_url('asset/detail/edit/'.$s->assdet_id) ?>" class="text-primary me-2">
+        <a href="<?= base_url('asset/detail/edit/'.$s->assdet_id) ?>"class="mx-1" class="text-primary me-2">
             <i class="fa fa-edit"></i>
         </a>
 
         <a href="<?= base_url('asset/detail/delete/'.$s->assdet_id) ?>"
            onclick="return confirm('Delete this detail?')"
-           class="text-danger">
+           class="text-danger" class="mx-1" >
             <i class="fa fa-trash"></i>
         </a>
 

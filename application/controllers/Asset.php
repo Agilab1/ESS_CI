@@ -134,6 +134,8 @@ class Asset extends CI_Controller
     // Asset info
     $data->asset = $this->Asset_model->getById($asset_id);
     if (!$data->asset) show_404();
+    $this->attachLoginUser($data);
+
 
     // Proper list query (with joins)
     $data->serials = $this->db
@@ -185,7 +187,9 @@ public function add_detail($asset_id)
     $data->staffs = $this->db->get('staffs')->result();
     $data->action = 'add';
     $data->detail = null;
-
+    //
+    $this->attachLoginUser($data);
+    //
     $this->load->view('incld/header');
     $this->load->view('incld/top_menu');
     $this->load->view('incld/side_menu');
@@ -203,7 +207,9 @@ public function edit_detail($assdet_id)
     $data->sites  = $this->db->get('sites')->result();
     $data->staffs = $this->db->get('staffs')->result();
     $data->action = 'edit';
-
+//
+    $this->attachLoginUser($data);
+//
     $this->load->view('incld/header');
     $this->load->view('incld/top_menu');
     $this->load->view('incld/side_menu');
@@ -250,7 +256,7 @@ public function detail($type = 'add', $id = null)
     $data->counts = $this->Dashboard_model->counts();
     $data->sites  = $this->db->get('sites')->result();
     $data->staffs = $this->db->get('staffs')->result();
-
+ 
     switch ($type) {
 
         case "add":
@@ -291,7 +297,9 @@ public function detail($type = 'add', $id = null)
         default:
             show_404();
     }
-
+    //
+$this->attachLoginUser($data);
+//
     $this->load->view('incld/header');
     // $this->load->view('incld/top_menu');
     // $this->load->view('incld/side_menu');
@@ -300,6 +308,46 @@ public function detail($type = 'add', $id = null)
     $this->load->view('incld/footer');
 }
 
+public function updateStaff()
+{
+    $staff_id = $this->input->post('staff_id');
+    $asset_id = $this->input->post('asset_id');
+
+    // Update ALL serials of this asset
+   $this->db
+    ->where('assdet_id', $this->input->post('assdet_id'))
+    ->update('assdet', [
+        'staff_id' => $staff_id
+    ]);
+
+
+    $this->session->set_flashdata('success', 'Staff updated successfully');
+    redirect($_SERVER['HTTP_REFERER']);
+}
+
+public function updateSite()
+{
+    $assdet_id = (int) $this->input->post('assdet_id');
+    $site_id   = (int) $this->input->post('site_id');
+
+    if (!$assdet_id || !$site_id) {
+        redirect($_SERVER['HTTP_REFERER']);
+        return;
+    }
+
+    $this->db->where('assdet_id', $assdet_id)
+             ->limit(1)
+             ->update('assdet', ['site_id' => $site_id]);
+
+    redirect($_SERVER['HTTP_REFERER']);
+}
+
+private function attachLoginUser(&$data)
+{
+    $data->loginUser = $this->User_model->get_user(
+        $this->session->userdata('user_id')
+    );
+}
 
 }
     
