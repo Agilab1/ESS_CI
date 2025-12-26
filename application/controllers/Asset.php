@@ -225,9 +225,9 @@ public function save_detail()
 
     if ($this->input->post('action') == 'add') {
         $this->db->insert('assdet', $data);
-        echo 'added';
-        print_r($data);
-        exit;
+        // echo 'added';
+        // print_r($data);
+        // exit;
         $this->session->set_flashdata('success', 'Asset detail added successfully!');
     } else {
         $this->db->where('assdet_id', $this->input->post('assdet_id'))->update('assdet', $data);
