@@ -225,12 +225,13 @@ public function save_detail()
 
     if ($this->input->post('action') == 'add') {
         $this->db->insert('assdet', $data);
+        echo 'added';
         $this->session->set_flashdata('success', 'Asset detail added successfully!');
     } else {
         $this->db->where('assdet_id', $this->input->post('assdet_id'))->update('assdet', $data);
         $this->session->set_flashdata('success', 'Asset detail updated successfully!');
     }
-
+exit;
     redirect('asset/serials/'.$this->input->post('asset_id'));
 }
 
