@@ -292,10 +292,10 @@ public function detail($type = 'add', $id = null)
             show_404();
     }
 
-    $this->load->view('incld/header');
-    $this->load->view('incld/top_menu');
-    $this->load->view('incld/side_menu');
-    $this->load->view('user/dashboard', $data);
+    // $this->load->view('incld/header');
+    // $this->load->view('incld/top_menu');
+    // $this->load->view('incld/side_menu');
+    // $this->load->view('user/dashboard', $data);
     $this->load->view('Asset/detail_form', $data);
     $this->load->view('incld/footer');
 }
