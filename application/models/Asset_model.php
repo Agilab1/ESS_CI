@@ -42,39 +42,34 @@ class Asset_model extends CI_Model
     }
 
     // GET ALL FOR LIST PAGE + JOIN STAFF + SITE
-    public function getAll()
-    {
-        $this->db->select('assets.*');
-        $this->db->from('assets');
-        $this->db->order_by('assets.asset_id', 'DESC');
+ public function getAll()
+{
+    $this->db->select('
+        a.asset_id,
+        a.asset_no,
+        a.asset_name,
+        c.cat_no,
+        c.cat_name,
+        COUNT(DISTINCT ad.assdet_id) AS quantity
+    ');
+    $this->db->from('assets a');
+    $this->db->join('categories c', 'c.cat_id = a.type_id', 'left');
+    $this->db->join('assdet ad', 'ad.asset_id = a.asset_id', 'left');
+    $this->db->group_by('a.asset_id');
+    $this->db->order_by('a.asset_id', 'DESC');
 
-        return $this->db->get()->result();
-    }
+    return $this->db->get()->result();
+}
 
 
-    // GET SITE DROPDOWN
-    // public function getSites()
-    // {
-    //     return $this->db->get('sites')->result();
-    // }
     public function getCategories()
     {
         return $this->db->get('categories')->result();
     }
 
-    // public function get_assets_with_site_by_staff($staff_id)
-    // {
-    //     $this->db->select('
-    //         a.asset_id,
-    //         a.asset_name,
-    //         s.site_name,
-    //         s.site_no
-    //     ');
-    //     $this->db->from('assets a');
-    //     $this->db->join('sites s', 's.site_id = a.site_id', 'left');
-    //     $this->db->where('a.staff_id', $staff_id);
+   public function getSites()
+{
+    return $this->db->get('sites')->result();
+}
 
-    //     return $this->db->get()->result();
-    // }
-    //test
 }
