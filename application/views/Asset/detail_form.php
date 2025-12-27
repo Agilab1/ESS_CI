@@ -38,53 +38,56 @@ if ($isView && empty($detail->site_id) && !empty($loginUser->site_no)) {
 <div class="container" style="max-width:900px;">
 <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
 
-<div class="card-header py-3">
-    <h4 class="m-0"><?= ucfirst($action) ?> Asset Detail — <?= $asset->asset_name ?></h4>
+<!-- HEADER -->
+<div class="card-header py-3 d-flex align-items-center justify-content-between">
+
+    <h4 class="m-0">
+        <?= ucfirst($action) ?> Asset Detail — <?= $asset->asset_name ?>
+    </h4>
+
+    <?php if ($isView): ?>
+    <div class="d-flex align-items-center">
+
+        <form method="post" action="<?= base_url('Asset/updateStaff'); ?>" class="d-flex align-items-center">
+            <input type="hidden" name="assdet_id" value="<?= $detail->assdet_id ?>">
+
+            <select name="staff_id" id="staffSelect" class="form-control form-control-sm" disabled>
+                <?php foreach ($staffs as $s): ?>
+                    <option value="<?= $s->staff_id ?>" <?= $loginUser->staff_id == $s->staff_id ? 'selected' : '' ?>>
+                        <?= $s->emp_name ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+
+            <button type="button" id="staffBtn" class="btn btn-primary btn-sm ms-2">
+                <i class="fas fa-user-edit"></i>
+            </button>
+        </form>
+
+        <div style="width:15px;"></div>
+
+        <form method="post" action="<?= base_url('Asset/updateSite'); ?>" class="d-flex align-items-center">
+            <input type="hidden" name="assdet_id" value="<?= $detail->assdet_id ?>">
+
+            <select name="site_id" id="siteSelect" class="form-control form-control-sm" disabled>
+                <?php foreach ($sites as $s): ?>
+                    <option value="<?= $s->site_id ?>"
+                        <?= (!empty($loginUser->site_no) && $loginUser->site_no == $s->site_no) ? 'selected' : '' ?>>
+                        <?= $s->site_name ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+
+            <button type="button" id="siteBtn" class="btn btn-primary btn-sm ms-2">
+                <i class="fas fa-map-marker-alt"></i>
+            </button>
+        </form>
+
+    </div>
+    <?php endif; ?>
+
 </div>
-
-<?php if ($isView): ?>
-
-<div class="d-flex p-3 border-bottom">
-
-<form method="post" action="<?= base_url('Asset/updateStaff'); ?>" class="d-flex align-items-center">
-    <input type="hidden" name="assdet_id" value="<?= $detail->assdet_id ?>">
-
-    <select name="staff_id" id="staffSelect" class="form-control form-control-sm" readonly>
-        <?php foreach ($staffs as $s): ?>
-            <option value="<?= $s->staff_id ?>" <?= $loginUser->staff_id == $s->staff_id ? 'selected' : '' ?>>
-                <?= $s->emp_name ?>
-            </option>
-        <?php endforeach; ?>
-    </select>
-
-    <button type="button" id="staffBtn" class="btn btn-primary btn-sm ms-2">
-        <i class="fas fa-user-edit"></i>
-    </button>
-</form>
-
-<!-- GUARANTEED SPACE -->
-<div style="width:20px;"></div>
-
-<form method="post" action="<?= base_url('Asset/updateSite'); ?>" class="d-flex align-items-center">
-    <input type="hidden" name="assdet_id" value="<?= $detail->assdet_id ?>">
-
-    <select name="site_id" id="siteSelect" class="form-control form-control-sm" disabled>
-        <?php foreach ($sites as $s): ?>
-            <option value="<?= $s->site_id ?>"
-                <?= (!empty($loginUser->site_no) && $loginUser->site_no == $s->site_no) ? 'selected' : '' ?>>
-                <?= $s->site_name ?>
-            </option>
-        <?php endforeach; ?>
-    </select>
-
-    <button type="button" id="siteBtn" class="btn btn-primary btn-sm ms-2">
-        <i class="fas fa-map-marker-alt"></i>
-    </button>
-</form>
-
-</div>
-
-<?php endif; ?>
+<!-- END HEADER -->
 
 <div class="card-body p-4">
 
