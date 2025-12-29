@@ -67,7 +67,7 @@
                                 <td><?= $staff->emp_name ?></td>
                                 <td><?= $staff->nfc_card ?></td>
                                 <td><?= $staff->desig ?></td>
-                                <td><?= $staff->join_dt ?></td>
+                                <td><?= date('d-m-Y', strtotime($staff->join_dt)) ?></td>
                                 <td class="text-nowrap"><?= $staff->phn_no ?></td>
                                 <td><?= date('d-m-Y', strtotime($staff->birth_dt)) ?></td>
                                 <td class="text-center">
