@@ -399,4 +399,15 @@ class Asset extends CI_Controller
             $this->session->userdata('user_id')
         );
     }
+
+public function verify_assdet()
+{
+    $assdet_id = $this->input->post('assdet_id');
+    $verified  = $this->input->post('verified');
+
+    $this->db->where('assdet_id', $assdet_id)
+             ->update('assdet', ['verified' => $verified]);
+
+    echo json_encode(['success' => true]);
+}
 }

@@ -1,58 +1,80 @@
 <style>
     /* ===== A4 Portrait Page ===== */
     .a4-portrait {
-        max-width: 794px;          /* A4 width (px) */
-        min-height: 1123px;        /* A4 height (px) */
-        margin: auto;
+        width: 794px;
+        min-height: 1123px;
+        margin: 20px auto;
         background: #fff;
+        padding: 20px;
+        box-sizing: border-box;
     }
 
-    /* Center card inside A4 */
     .a4-card {
-        max-width: 500px;
-        margin: 30px auto;
+        width: 100%;
+        margin: 0 auto;
+        border-radius: 6px;
     }
 
-    /* Table layout control */
     table {
         width: 100%;
-        table-layout: fixed;   /* IMPORTANT for width control */
+        table-layout: fixed;
+        border-collapse: collapse;
     }
 
     th, td {
         text-align: center;
         vertical-align: middle;
-        font-size: 14px;
+        font-size: 13px;
         padding: 6px !important;
+    }
+
+    th {
+        background: #f1f3f5;
+        font-weight: 600;
+    }
+
+    /* DEFAULT cells */
+    td {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
     }
 
-    /* Allow wrap for long text */
+    /* 🔥 FULL VALUE SHOW */
+    .no-cut {
+        white-space: normal !important;
+        overflow: visible !important;
+        text-overflow: unset !important;
+        word-break: break-all;   /* long IDs break */
+        font-size: 12px;
+    }
+
     .wrap {
         white-space: normal;
     }
 
-    /* Print settings */
     @media print {
         body {
+            margin: 0;
             background: #fff;
         }
 
         .a4-portrait {
-            width: 210mm;
-            height: 297mm;
             margin: 0;
+            padding: 15mm;
         }
 
         .btn {
-            display: none; /* Hide buttons on print */
+            display: none;
+        }
+
+        tr {
+            page-break-inside: avoid;
         }
     }
 </style>
 
-<div class="container-fluid a4-portrait mt-4">
+<div class="a4-portrait">
 
     <div class="card shadow a4-card">
 
@@ -68,13 +90,13 @@
                 <div class="col-6">
                     <label class="form-label fw-bold">Staff ID</label>
                     <input type="text" class="form-control"
-                           value="<?= $staff->staff_id ?>" readonly>
+                           value="<?= $staff->staff_id ?? '' ?>" readonly>
                 </div>
 
                 <div class="col-6">
                     <label class="form-label fw-bold">Staff Name</label>
                     <input type="text" class="form-control"
-                           value="<?= $staff->emp_name ?>" readonly>
+                           value="<?= $staff->emp_name ?? '' ?>" readonly>
                 </div>
             </div>
 
@@ -87,21 +109,21 @@
                     <div class="table-responsive">
                         <table class="table table-bordered table-sm align-middle mb-0">
 
-                            <!-- COLUMN WIDTH CONTROL -->
                             <colgroup>
-                                <col style="width: 10%;">  <!-- Asset ID -->
-                                <col style="width: 30%;">  <!-- Asset Name -->
-                                <col style="width: 20%;">  <!-- Site No -->
-                                <col style="width: 40%;">  <!-- Site Name -->
+                                <col style="width: 12%;">  <!-- Assdet ID -->
+                                <col style="width: 12%;">  <!-- Asset ID -->
+                                <col style="width: 22%;">  <!-- Asset Name -->
+                                <col style="width: 18%;">  <!-- Serial No -->
+                                <col style="width: 12%;">  <!-- Site No -->
+                                <col style="width: 24%;">  <!-- Site Name -->
                             </colgroup>
 
-
-                        
-
-                            <thead class="table-light">
+                            <thead>
                                 <tr>
-                                    <th>AID</th>
+                                    <th>Assdet ID</th>
+                                    <th>Asset ID</th>
                                     <th>Asset Name</th>
+                                    <th>Serial No</th>
                                     <th>Site No</th>
                                     <th>Site Name</th>
                                 </tr>
@@ -110,8 +132,12 @@
                             <tbody>
                                 <?php foreach ($assets as $a) { ?>
                                     <tr>
-                                        <td><?= $a->asset_id ?></td>
+                                        <!-- 🔥 FULL ID DISPLAY -->
+                                        <td class="no-cut"><?= $a->assdet_id ?></td>
+                                        <td class="no-cut"><?= $a->asset_id ?></td>
+
                                         <td class="wrap"><?= $a->asset_name ?></td>
+                                        <td class="no-cut"><?= $a->serial_no ?? '-' ?></td>
                                         <td><?= $a->site_no ?></td>
                                         <td class="wrap"><?= $a->site_name ?></td>
                                     </tr>
@@ -132,10 +158,9 @@
 
         </div>
 
-        <!-- FOOTER -->
         <div class="card-footer text-center">
             <a href="<?= base_url('Staff/list') ?>" class="btn btn-secondary btn-sm">
-                ← Back 
+                ← Back
             </a>
         </div>
 
