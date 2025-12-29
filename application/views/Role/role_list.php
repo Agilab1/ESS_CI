@@ -62,7 +62,12 @@
                             <tr>
                                 <td><?= $role->role_id ?></td>
                                 <td class="text-break"><?= $role->usr_role ?></td>
-                                <td><?= $role->role_st ?></td>
+                                <td class="text-center">
+                                    <input type="checkbox"
+                                        <?= (!empty($role->role_st) && ($role->role_st === 'Active' || $role->role_st == 1)) ? 'checked' : '' ?>
+                                        <?= (empty($role->role_st) || $role->role_st == 0 || $role->role_st === 'Inactive') ? 'disabled' : '' ?>>
+                                </td>
+
 
                                 <td class="text-center" style="white-space: nowrap;">
 
