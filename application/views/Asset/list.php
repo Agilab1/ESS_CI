@@ -41,15 +41,15 @@ table { table-layout: auto !important; }
     <td><?= $a->asset_no ?></td>
     <td><?= $a->asset_name ?></td>
     <td class="text-center">
-    <a href="<?= site_url('Asset/serials/'.$a->asset_id); ?>"
-       style="color:#0d6efd; text-decoration:underline; cursor:pointer;">
+    <a  href="<?= site_url('Asset/serials/'.$a->asset_id); ?>"
+       style="color:#0d6efd; text-decoration:underline; cursor:pointer; text-decoration: none;">
         <?= (int)$a->quantity ?>
     </a>
 </td>
 
 
 
-    
+
 
     <td><?= $a->cat_no ?> – <?= $a->cat_name ?></td>
 
