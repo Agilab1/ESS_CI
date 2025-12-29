@@ -25,11 +25,6 @@
                                             value="<?= set_value('role_id', $role->role_id) ?>"
                                             <?= ($action == 'edit' || $action == 'view') ? 'readonly' : '' ?>>
 
-
-
-
-
-
                                         <small class="text-danger"><?= form_error('role_id'); ?></small>
                                     </td>
                                 </tr>
@@ -49,7 +44,6 @@
                                     <td>
                                         <label>Status</label>
 
-                                        <!-- Hidden field will send Inactive if checkbox not checked -->
                                         <input type="hidden" name="role_st" value="Inactive">
 
                                         <input type="checkbox"
@@ -58,19 +52,24 @@
                                             class="form-control"
                                             <?= ($role->role_st == "Active") ? 'checked' : '' ?>
                                             <?= ($action == 'view') ? 'disabled' : '' ?>>
-
-
                                     </td>
-
                                 </tr>
 
-                                <?php if ($action != 'view'): ?>
-                                    <tr>
-                                        <td colspan="2" class="text-center">
-                                            <button type="submit" class="btn btn-primary">Submit</button>
-                                        </td>
-                                    </tr>
-                                <?php endif; ?>
+                                <tr>
+                                    <td colspan="2" class="text-center">
+
+                                        <?php if ($action != 'view'): ?>
+                                            <button type="submit" class="btn btn-primary me-2">
+                                                Submit
+                                            </button>
+                                        <?php endif; ?>
+
+                                        <a href="<?= base_url('Role/role_dash'); ?>" class="btn btn-secondary">
+                                            Back
+                                        </a>
+
+                                    </td>
+                                </tr>
 
                             </table>
 
