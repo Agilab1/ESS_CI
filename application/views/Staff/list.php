@@ -76,8 +76,11 @@
                                         <i class="fa fa-qrcode"></i>
                                     </a>
                                 </td>
-                                <td><?= $staff->staff_st ?></td>
-
+                                <td class="text-center">
+                                    <input type="checkbox"
+                                        <?= ($staff->staff_st === 'Active') ? 'checked' : '' ?>
+                                        <?= ($staff->staff_st !== 'Active') ? 'disabled' : '' ?>>
+                                </td>
                                 <td class="text-center">
                                     <a href="<?= base_url('Staff/view/' . $staff->staff_id); ?>">
                                         <i class="fa fa-eye"></i>
