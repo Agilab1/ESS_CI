@@ -62,15 +62,18 @@ class Location_model extends CI_Model
     {
         return $this->db
             ->select('
-            ad.assdet_id,
+           ad.assdet_id,
             ad.asset_id,
             ad.site_id,
             ad.staff_id,
+            ad.serial_no,
+            ad.verified,
             a.asset_name,
-            ad.verified   
+            s.emp_name 
         ')
             ->from('assdet ad')
             ->join('assets a', 'a.asset_id = ad.asset_id', 'left')
+             ->join('staffs s', 's.staff_id = ad.staff_id', 'left')
             ->where('ad.site_id', $site_id)
             ->order_by('a.asset_name', 'ASC')
             ->get()

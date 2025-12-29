@@ -48,43 +48,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <th style="width:60px;">#</th>
                                 <th>Asset ID</th>
                                 <th>Assdet ID</th>
+                                <th>Serial Name</th>
                                 <th>Staff ID</th>
+                                <th>Staff Name</th>
                                 <th>Asset Name</th>
                                 <!-- <th style="width:150px;">Quantity</th> -->
                                 <th style="width:120px;">Verify</th>
                             </tr>
                         </thead>
-
-                        <!-- <tbody>
-                            <?php if (!empty($assets)): ?>
-                                <?php foreach ($assets as $i => $asset): ?>
-                                    <tr>
-                                        <td><?= $i++ ?></td>
-                                        <td><?= $row->asset_id ?></td>
-                                        <td><?= $row->assdet_id ?></td> -->
-                        <!--<td><?= $row->site_id ?></td> old code -->
-                        <!-- <td><?= !empty($row->staff_id) ? $row->staff_id : '-' ?></td>
-
-                                        <td class="text-start"><?= $row->asset_name ?></td> -->
-
-                        <!-- <td><?= isset($row->qty) ? $row->qty : 1 ?></td> old code -->
-
-                        <!-- <td>
-                                            <input type="checkbox"
-                                                class="verify-checkbox"
-                                                data-assdet-id="<?= $row->assdet_id ?>"
-                                                <?= (isset($row->verify) && $row->verify == 1) ? 'checked' : '' ?>>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <tr>
-                                    <td colspan="4" class="text-center text-muted py-4">
-                                        No assets found for this site
-                                    </td> -->
-                        <!-- </tr>
-                            <?php endif; ?>
-                        </tbody> -->
                         <tbody>
                             <?php if (!empty($assets)): ?>
                                 <?php $i = 1;
@@ -95,8 +66,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <td><?= $asset->asset_id ?? '-' ?></td>
 
                                         <td><?= $asset->assdet_id ?? '-' ?></td>
+                                       <td><?= !empty($asset->serial_no) ? $asset->serial_no : '-' ?></td>
 
+                                       
                                         <td><?= !empty($asset->staff_id) ? $asset->staff_id : '-' ?></td>
+                                         <td><?= !empty($asset->emp_name) ? $asset->emp_name : '-' ?></td>
 
                                         <td class="text-start"><?= $asset->asset_name ?? '-' ?></td>
 
