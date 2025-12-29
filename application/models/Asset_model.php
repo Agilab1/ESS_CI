@@ -103,5 +103,28 @@ class Asset_model extends CI_Model
         ]);
 }
 
+// GET ASSETS BY STAFF  ✅ (Staff Asset Page)
+public function get_assets_with_site_by_staff($staff_id)
+{
+    return $this->db
+        ->select('
+            ad.assdet_id,
+            ad.asset_id,
+            ad.site_id,
+            ad.staff_id,
+            a.asset_name,
+            a.asset_no,
+            s.site_name
+        ')
+        ->from('assdet ad')
+        ->join('assets a', 'a.asset_id = ad.asset_id', 'left')
+        ->join('sites s', 's.site_id = ad.site_id', 'left')
+        ->where('ad.staff_id', $staff_id)
+        ->order_by('a.asset_name', 'ASC')
+        ->get()
+        ->result();
+}
+
+
 
 }
