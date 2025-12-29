@@ -26,6 +26,7 @@
 
                                     </td>
                                 </tr>
+
                                 <tr>
                                     <td>
                                         <label class="form-label">User Name</label>
@@ -62,24 +63,13 @@
                                     </td>
                                 </tr>
 
-                                <!-- Corrected Dropdowns -->
-
                                 <tr>
                                     <td>
                                         <label class="form-label">User Role</label>
                                         <select name="role_id" class="form-control" required>
                                             <option value="">Select Role</option>
-
-                                            <option value="1"
-                                                <?= (isset($user) && $user->role_id == 1) ? 'selected' : '' ?>>
-                                                Admin
-                                            </option>
-
-                                            <option value="2"
-                                                <?= (isset($user) && $user->role_id == 2) ? 'selected' : '' ?>>
-                                                User
-                                            </option>
-
+                                            <option value="1" <?= (isset($user) && $user->role_id == 1) ? 'selected' : '' ?>>Admin</option>
+                                            <option value="2" <?= (isset($user) && $user->role_id == 2) ? 'selected' : '' ?>>User</option>
                                         </select>
                                         <small class="text-danger"><?= form_error('role_id'); ?></small>
                                     </td>
@@ -88,16 +78,8 @@
                                         <label class="form-label">User Status</label>
                                         <select class="form-control" name="user_st" required>
                                             <option value="">Select Status</option>
-
-                                            <option value="Active"
-                                                <?= (isset($user->user_st) && $user->user_st == "Active") ? 'selected' : '' ?>>
-                                                Active
-                                            </option>
-
-                                            <option value="Inactive"
-                                                <?= (isset($user->user_st) && $user->user_st == "Inactive") ? 'selected' : '' ?>>
-                                                Inactive
-                                            </option>
+                                            <option value="Active" <?= (isset($user->user_st) && $user->user_st == "Active") ? 'selected' : '' ?>>Active</option>
+                                            <option value="Inactive" <?= (isset($user->user_st) && $user->user_st == "Inactive") ? 'selected' : '' ?>>Inactive</option>
                                         </select>
                                         <small class="text-danger"><?= form_error('user_st'); ?></small>
                                     </td>
@@ -108,32 +90,25 @@
                                         <label class="form-label">User Type</label>
                                         <select class="form-control" name="user_ty" required>
                                             <option value="">Select Type</option>
-
-                                            <option value="User"
-                                                <?= (isset($user->user_ty) && $user->user_ty == "User") ? 'selected' : '' ?>>
-                                                User
-                                            </option>
-
-                                            <option value="Manager"
-                                                <?= (isset($user->user_ty) && $user->user_ty == "Manager") ? 'selected' : '' ?>>
-                                                Manager
-                                            </option>
-
+                                            <option value="User" <?= (isset($user->user_ty) && $user->user_ty == "User") ? 'selected' : '' ?>>User</option>
+                                            <option value="Manager" <?= (isset($user->user_ty) && $user->user_ty == "Manager") ? 'selected' : '' ?>>Manager</option>
                                         </select>
                                         <small class="text-danger"><?= form_error('user_ty'); ?></small>
                                     </td>
 
                                     <td>
-
                                         <label class="form-label">Is Admin?</label>
                                         <input type="checkbox" class="form-control" name="user_ad" value="1"
-                                            <?= (isset($user->user_ad) && $user->user_ad == "1") ? 'checked' : '' ?> class="form-control">
+                                            <?= (isset($user->user_ad) && $user->user_ad == "1") ? 'checked' : '' ?>>
                                         <small class="text-danger"><?= form_error('user_ad'); ?></small>
                                     </td>
                                 </tr>
+
+                                <!-- Buttons (UI unchanged, only Back added) -->
                                 <tr>
                                     <td colspan="2" class="text-center">
                                         <button class="btn btn-primary" type="submit">Save</button>
+                                        <a href="<?= base_url('user/list'); ?>" class="btn btn-secondary">Back</a>
                                     </td>
                                 </tr>
 
