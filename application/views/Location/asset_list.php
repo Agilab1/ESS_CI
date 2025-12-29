@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 
 <div class="d-flex justify-content-center align-items-center" style="min-height:100vh; background:#f4f6f9;">
@@ -22,20 +22,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <div class="row mb-4">
                     <div class="col-md-4">
                         <label class="form-label fw-bold">Site ID</label>
-                        <input type="text" class="form-control" 
-                               value="<?= $site->site_id ?? '' ?>" readonly>
+                        <input type="text" class="form-control"
+                            value="<?= $site->site_id ?? '' ?>" readonly>
                     </div>
 
                     <div class="col-md-4">
                         <label class="form-label fw-bold">Site No</label>
-                        <input type="text" class="form-control" 
-                               value="<?= $site->site_no ?? '' ?>" readonly>
+                        <input type="text" class="form-control"
+                            value="<?= $site->site_no ?? '' ?>" readonly>
                     </div>
 
                     <div class="col-md-4">
                         <label class="form-label fw-bold">Site Name</label>
-                        <input type="text" class="form-control" 
-                               value="<?= $site->site_name ?? '' ?>" readonly>
+                        <input type="text" class="form-control"
+                            value="<?= $site->site_name ?? '' ?>" readonly>
                     </div>
                 </div>
 
@@ -46,23 +46,34 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <thead style="background:#bcdcff;">
                             <tr class="text-center">
                                 <th style="width:60px;">#</th>
+                                <th>Asset ID</th>
+                                <th>Assdet ID</th>
+                                <th>Staff ID</th>
                                 <th>Asset Name</th>
-                                <th style="width:150px;">Quantity</th>
+                                <!-- <th style="width:150px;">Quantity</th> -->
                                 <th style="width:120px;">Verify</th>
                             </tr>
                         </thead>
 
-                        <tbody>
+                        <!-- <tbody>
                             <?php if (!empty($assets)): ?>
                                 <?php foreach ($assets as $i => $asset): ?>
                                     <tr>
-                                        <td class="text-center"><?= $i + 1 ?></td>
-                                        <td><?= $asset->asset_name ?></td>
-                                        <td class="text-center">
-                                            <?= $asset->quantity ?? '-' ?>
-                                        </td>
-                                        <td class="text-center">
-                                            <input type="checkbox" checked>
+                                        <td><?= $i++ ?></td>
+                                        <td><?= $row->asset_id ?></td>
+                                        <td><?= $row->assdet_id ?></td> -->
+                        <!--<td><?= $row->site_id ?></td> old code -->
+                        <!-- <td><?= !empty($row->staff_id) ? $row->staff_id : '-' ?></td>
+
+                                        <td class="text-start"><?= $row->asset_name ?></td> -->
+
+                        <!-- <td><?= isset($row->qty) ? $row->qty : 1 ?></td> old code -->
+
+                        <!-- <td>
+                                            <input type="checkbox"
+                                                class="verify-checkbox"
+                                                data-assdet-id="<?= $row->assdet_id ?>"
+                                                <?= (isset($row->verify) && $row->verify == 1) ? 'checked' : '' ?>>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -70,18 +81,50 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 <tr>
                                     <td colspan="4" class="text-center text-muted py-4">
                                         No assets found for this site
+                                    </td> -->
+                        <!-- </tr>
+                            <?php endif; ?>
+                        </tbody> -->
+                        <tbody>
+                            <?php if (!empty($assets)): ?>
+                                <?php $i = 1;
+                                foreach ($assets as $asset): ?>
+                                    <tr>
+                                        <td class="text-center"><?= $i++; ?></td>
+
+                                        <td><?= $asset->asset_id ?? '-' ?></td>
+
+                                        <td><?= $asset->assdet_id ?? '-' ?></td>
+
+                                        <td><?= !empty($asset->staff_id) ? $asset->staff_id : '-' ?></td>
+
+                                        <td class="text-start"><?= $asset->asset_name ?? '-' ?></td>
+
+                                        <!-- VERIFIED FLAG FROM assdet TABLE -->
+                                        <td class="text-center">
+                                            <input type="checkbox"
+                                                <?= ((int)($asset->verified ?? 0) === 1) ? 'checked' : '' ?>
+                                                disabled>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted py-4">
+                                        No assets found for this site
                                     </td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>
+
 
                     </table>
                 </div>
 
                 <!-- BACK BUTTON -->
                 <div class="text-center mt-4">
-                    <a href="<?= base_url('Location/list'); ?>" 
-                       class="btn btn-secondary px-4 py-2">
+                    <a href="<?= base_url('Location/list'); ?>"
+                        class="btn btn-secondary px-4 py-2">
                         <i class="fa fa-arrow-left me-1"></i>
                         Back to Location List
                     </a>
@@ -92,3 +135,40 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     </div>
 
 </div>
+
+<!-- ================= VERIFY AJAX ================= -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        document.querySelectorAll('.verify-checkbox').forEach(function(checkbox) {
+
+            checkbox.addEventListener('change', function() {
+
+                const assdetId = this.dataset.assdetId;
+                const verify = this.checked ? 1 : 0;
+
+                fetch("<?= base_url('Asset/verify_assdet'); ?>", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded"
+                        },
+                        body: "assdet_id=" + assdetId + "&verify=" + verify
+                    })
+                    .then(res => res.json())
+                    .then(resp => {
+                        if (!resp.success) {
+                            //alert('Verification failed!');
+                            this.checked = !this.checked;
+                        }
+                    })
+                    .catch(() => {
+                        //alert('Server error!');
+                        this.checked = !this.checked;
+                    });
+
+            });
+
+        });
+
+    });
+</script>

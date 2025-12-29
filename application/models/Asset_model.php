@@ -71,5 +71,37 @@ class Asset_model extends CI_Model
 {
     return $this->db->get('sites')->result();
 }
+// ============================================================
+    // GET ASSETS BY SITE  ✅ (QR / NFC PAGE)
+    // ============================================================
+   public function get_assets_by_site($site_id)
+{
+    return $this->db
+        ->select('
+            ad.assdet_id,
+            ad.asset_id,
+            ad.site_id,
+            ad.staff_id,
+            a.asset_name,
+            a.verified,
+            1 as qty
+        ')
+        ->from('assdet ad')
+        ->join('assets a', 'a.asset_id = ad.asset_id', 'left')
+        ->where('ad.site_id', $site_id)
+        ->order_by('a.asset_name', 'ASC')
+        ->get()
+        ->result();
+}
+
+   public function update_asset_verify($asset_id, $verified)
+{
+    return $this->db
+        ->where('asset_id', $asset_id)
+        ->update('assets', [
+            'verified' => (int)$verified
+        ]);
+}
+
 
 }

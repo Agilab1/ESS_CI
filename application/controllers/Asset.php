@@ -98,7 +98,7 @@ class Asset extends CI_Controller
         $assetData = [
             'asset_no'   => $this->input->post('asset_no'),
             'asset_name' => $this->input->post('asset_name'),
-            'type_id'    => $this->input->post('type_id'),   
+            'type_id'    => $this->input->post('type_id'),
         ];
 
         // Duplicate Asset Number Check
@@ -128,9 +128,7 @@ class Asset extends CI_Controller
         if ($action == 'add') {
             $this->Asset_model->insertAsset($assetData);
             $this->session->set_flashdata('success', 'Asset added successfully!');
-        }
-
-        elseif ($action == 'edit') {
+        } elseif ($action == 'edit') {
             $asset_id = $this->input->post('asset_id');
             $this->Asset_model->updateAsset($asset_id, $assetData);
             $this->session->set_flashdata('success', 'Asset updated successfully!');
@@ -265,14 +263,14 @@ class Asset extends CI_Controller
             $this->session->set_flashdata('success', 'Asset detail updated successfully!');
         }
 
-        redirect('asset/serials/'.$this->input->post('asset_id'));
+        redirect('asset/serials/' . $this->input->post('asset_id'));
     }
 
     public function delete_detail($assdet_id)
     {
         $row = $this->db->get_where('assdet', ['assdet_id' => $assdet_id])->row();
         $this->db->delete('assdet', ['assdet_id' => $assdet_id]);
-        redirect('asset/serials/'.$row->asset_id);
+        redirect('asset/serials/' . $row->asset_id);
     }
 
     public function detail($type = 'add', $id = null)
@@ -306,16 +304,53 @@ class Asset extends CI_Controller
 
             case "view":
                 $data->action = "view";
-                $data->detail = $this->db->get_where('assdet', ['assdet_id' => $id])->row();
+                $data->detail = $this->db
+                    ->get_where('assdet', ['assdet_id' => $id])
+                    ->row();
+
                 if (!$data->detail) show_404();
+
                 $data->asset = $this->Asset_model->getById($data->detail->asset_id);
+
+                // NFC SCAN HANDLER (ONLY ONE SERIAL VERIFIED)
+                // NFC SCAN HANDLER (ONLY WHEN INVENTORY IS ON)
+                if ($this->input->get('nfc') == 1 && $type === 'view') {
+
+                    $assdet_id = (int) $id;
+
+                    // 1️ get assdet row
+                    $assdet = $this->db
+                        ->get_where('assdet', ['assdet_id' => $assdet_id])
+                        ->row();
+
+                    if ($assdet) {
+
+                        // 2️ get site inventory status
+                        $site = $this->db
+                            ->get_where('sites', ['site_id' => $assdet->site_id])
+                            ->row();
+
+                        // 3️ ONLY if inventory checkbox is TICKED
+                        if ($site && (int)$site->inventory_checked === 1) {
+
+                            //  verify only this assdet
+                            $this->db
+                                ->where('assdet_id', $assdet_id)
+                                ->limit(1)
+                                ->update('assdet', ['verified' => 1]);
+                        }
+                        //  inventory OFF → NFC ignored
+                    }
+                }
+
+
                 break;
 
             case "delete":
                 $row = $this->db->get_where('assdet', ['assdet_id' => $id])->row();
                 $this->db->delete('assdet', ['assdet_id' => $id]);
                 $this->session->set_flashdata('success', 'Asset detail deleted successfully!');
-                redirect('asset/serials/'.$row->asset_id);
+                redirect('asset/serials/' . $row->asset_id);
                 return;
 
             default:
@@ -352,8 +387,8 @@ class Asset extends CI_Controller
         }
 
         $this->db->where('assdet_id', $assdet_id)
-                 ->limit(1)
-                 ->update('assdet', ['site_id' => $site_id]);
+            ->limit(1)
+            ->update('assdet', ['site_id' => $site_id]);
 
         redirect($_SERVER['HTTP_REFERER']);
     }

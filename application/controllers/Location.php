@@ -10,6 +10,7 @@ class Location extends CI_Controller
         $this->load->model('Dashboard_model');
         $this->load->library('form_validation');
         $this->load->model('User_model');
+        $this->load->model('Asset_model');
     }
 
     // ============================================================
@@ -137,7 +138,10 @@ class Location extends CI_Controller
         $action  = strtolower($this->input->post('action'));
         $site_id = $this->input->post('site_id');
 
-        $data = $this->validate();
+        // Inventory checkbox
+        $inventory_checked = $this->input->post('inventory_checked') ? 1 : 0;
+
+        $data = $this->validate($inventory_checked);
 
         if (!$data) {
             return $action === 'add' ? $this->add() : $this->edit($site_id);
@@ -145,21 +149,32 @@ class Location extends CI_Controller
 
         if ($action === 'add') {
             $this->Location_model->insertLocation($data);
-            $this->session->set_flashdata('success', "Location added successfully!");
         } elseif ($action === 'edit') {
             $this->Location_model->updateLocation($site_id, $data);
-            $this->session->set_flashdata('success', "Location updated successfully!");
-        } else {
-            show_error("Invalid Action!");
         }
 
+        //  INVERSE LOGIC
+        // Inventory  → assets UN-verified
+        // Inventory  → assets verified
+        $verify_value = ($inventory_checked == 1) ? 0 : 1;
+
+        //  APPLY TO ALL ASSET DETAILS OF THIS SITE
+        $this->db
+            ->where('site_id', (int)$site_id)
+            ->update('assdet', [
+                'verified' => $verify_value
+            ]);
+
+        $this->session->set_flashdata('success', 'Location saved successfully!');
         redirect('Location/list');
     }
+
+
 
     // ============================================================
     // VALIDATION RULES
     // ============================================================
-    private function validate()
+    private function validate($inventory_checked)
     {
         $this->form_validation->set_rules('site_no', 'Site Number', 'required');
         $this->form_validation->set_rules('site_name', 'Site Name', 'required');
@@ -169,47 +184,41 @@ class Location extends CI_Controller
             return false;
         }
 
+        // inverse logic for site-level flag
+        $verify_asset = ($inventory_checked == 1) ? 0 : 1;
+
         return [
-            'site_id'      => $this->input->post('site_id'),
-            'site_no'      => $this->input->post('site_no'),
-            'site_name'    => $this->input->post('site_name'),
-            'last_visit'   => $this->input->post('last_visit'),
-            'verify_asset' => $this->input->post('verify_asset'),
-            'status'       => $this->input->post('status'),
-            'access_flag'  => $this->input->post('access_flag'),
-            'access_by'    => $this->input->post('access_by')
+            'site_id'           => $this->input->post('site_id'),
+            'site_no'           => $this->input->post('site_no'),
+            'site_name'         => $this->input->post('site_name'),
+            'last_visit'        => $this->input->post('last_visit'),
+            'inventory_checked' => $inventory_checked,
+            'verify_asset'      => $verify_asset,
+            'status'            => $this->input->post('status'),
+            'access_flag'       => $this->input->post('access_flag'),
+            'access_by'         => $this->input->post('access_by')
         ];
     }
 
 
     //============================================================
     // ASSET LIST FORM (QR PAGE)
-    // ============================================================
     public function asset_list($site_id)
     {
         $site = $this->Location_model->get_site_by_id($site_id);
         $assets = $this->Location_model->get_assets_by_site($site_id);
 
-        if (!$site)
-            show_404();
+        if (!$site) show_404();
 
         $data = [
             'site' => $site,
             'assets' => $assets
         ];
 
-
         $this->load->view('incld/header');
         $this->load->view('Location/asset_list', $data);
         $this->load->view('incld/footer');
     }
-
-    }
+}
 
 //
-
-
-
-
-
-
