@@ -28,7 +28,7 @@
                                 <!-- Staff ID -->
                                 <tr>
                                     <td colspan="2">
-                                        <label class="form-label">Staff ID<span class="text-danger">*</label>
+                                        <label class="form-label">Staff ID<span class="text-danger">*</span></label>
                                         <input class="form-control" type="text" name="staff_id"
                                             value="<?= set_value('staff_id', $staff->staff_id ?? '') ?>"
                                             <?= ($action == 'edit' || $action == 'view') ? 'readonly' : '' ?>>
@@ -39,7 +39,7 @@
                                 <!-- Employee + NFC -->
                                 <tr>
                                     <td>
-                                        <label>Employee Name<span class="text-danger">*</label>
+                                        <label>Employee Name<span class="text-danger">*</span></label>
                                         <input class="form-control" type="text" name="emp_name"
                                             value="<?= set_value('emp_name', $staff->emp_name ?? '') ?>"
                                             <?= $readonly ?>>
@@ -47,7 +47,7 @@
                                     </td>
 
                                     <td>
-                                        <label>NFC Card<span class="text-danger">*</label>
+                                        <label>NFC Card<span class="text-danger">*</span></label>
                                         <input class="form-control" type="text" name="nfc_card"
                                             value="<?= set_value('nfc_card', $staff->nfc_card ?? '') ?>"
                                             <?= $readonly ?>>
@@ -58,7 +58,7 @@
                                 <!-- Desig + Join Date -->
                                 <tr>
                                     <td>
-                                        <label>Designation<span class="text-danger">*</label>
+                                        <label>Designation<span class="text-danger">*</span></label>
                                         <input class="form-control" type="text" name="desig"
                                             value="<?= set_value('desig', $staff->desig ?? '') ?>"
                                             <?= $readonly ?>>
@@ -66,7 +66,7 @@
                                     </td>
 
                                     <td>
-                                        <label>Join Date<span class="text-danger">*</label>
+                                        <label>Join Date<span class="text-danger">*</span></label>
                                         <input class="form-control" type="date" name="join_dt"
                                             value="<?= set_value('join_dt', $staff->join_dt ?? '') ?>"
                                             <?= $readonly ?>>
@@ -77,7 +77,7 @@
                                 <!-- Phone + Birth -->
                                 <tr>
                                     <td>
-                                        <label>Phone No<span class="text-danger">*</label>
+                                        <label>Phone No<span class="text-danger">*</span></label>
                                         <input class="form-control" type="text" name="phn_no"
                                             value="<?= set_value('phn_no', $staff->phn_no ?? '') ?>"
                                             <?= $readonly ?>>
@@ -85,7 +85,7 @@
                                     </td>
 
                                     <td>
-                                        <label>Birth Date<span class="text-danger">*</label>
+                                        <label>Birth Date<span class="text-danger">*</span></label>
                                         <input class="form-control" type="date" name="birth_dt"
                                             value="<?= set_value('birth_dt', $staff->birth_dt ?? '') ?>"
                                             <?= $readonly ?>>
@@ -116,15 +116,22 @@
                                     </td>
                                 </tr>
 
+                                <!-- Buttons -->
+                                <tr>
+                                    <td colspan="2" class="text-center">
 
-                                <!-- Save Button -->
-                                <?php if ($action != 'view'): ?>
-                                    <tr>
-                                        <td colspan="2" class="text-center">
-                                            <button class="btn btn-primary px-5" type="submit">Save</button>
-                                        </td>
-                                    </tr>
-                                <?php endif; ?>
+                                        <?php if ($action != 'view'): ?>
+                                            <button class="btn btn-primary px-5 me-2" type="submit">
+                                                Save
+                                            </button>
+                                        <?php endif; ?>
+
+                                        <a href="<?= base_url('Staff/list'); ?>" class="btn btn-secondary px-5">
+                                            Back
+                                        </a>
+
+                                    </td>
+                                </tr>
 
                             </table>
                         </form>
