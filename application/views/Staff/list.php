@@ -67,12 +67,12 @@
                                 <td><?= $staff->emp_name ?></td>
                                 <td><?= $staff->nfc_card ?></td>
                                 <td><?= $staff->desig ?></td>
-                                <td><?= $staff->join_dt ?></td>
-                                <td><?= $staff->phn_no ?></td>
-                                <td><?= $staff->birth_dt ?></td>
+                                <td><?= date('d-m-Y', strtotime($staff->join_dt)) ?></td>
+                                <td class="text-nowrap"><?= $staff->phn_no ?></td>
+                                <td><?= date('d-m-Y', strtotime($staff->birth_dt)) ?></td>
                                 <td class="text-center">
                                     <a href="<?= base_url('Staff/asset_form/' . $staff->staff_id); ?>"
-                                         title="View Assets">
+                                        title="View Assets">
                                         <i class="fa fa-qrcode"></i>
                                     </a>
                                 </td>
@@ -117,7 +117,4 @@
             }, 500);
         }
     }, 6000);
-
-
-
 </script>
