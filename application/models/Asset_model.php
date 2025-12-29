@@ -42,9 +42,9 @@ class Asset_model extends CI_Model
     }
 
     // GET ALL FOR LIST PAGE + JOIN STAFF + SITE
- public function getAll()
-{
-    $this->db->select('
+    public function getAll()
+    {
+        $this->db->select('
         a.asset_id,
         a.asset_no,
         a.asset_name,
@@ -52,14 +52,14 @@ class Asset_model extends CI_Model
         c.cat_name,
         COUNT(DISTINCT ad.assdet_id) AS quantity
     ');
-    $this->db->from('assets a');
-    $this->db->join('categories c', 'c.cat_id = a.type_id', 'left');
-    $this->db->join('assdet ad', 'ad.asset_id = a.asset_id', 'left');
-    $this->db->group_by('a.asset_id');
-    $this->db->order_by('a.asset_id', 'DESC');
+        $this->db->from('assets a');
+        $this->db->join('categories c', 'c.cat_id = a.type_id', 'left');
+        $this->db->join('assdet ad', 'ad.asset_id = a.asset_id', 'left');
+        $this->db->group_by('a.asset_id');
+        $this->db->order_by('a.asset_id', 'DESC');
 
-    return $this->db->get()->result();
-}
+        return $this->db->get()->result();
+    }
 
 
     public function getCategories()
@@ -67,17 +67,17 @@ class Asset_model extends CI_Model
         return $this->db->get('categories')->result();
     }
 
-   public function getSites()
-{
-    return $this->db->get('sites')->result();
-}
-// ============================================================
+    public function getSites()
+    {
+        return $this->db->get('sites')->result();
+    }
+    // ============================================================
     // GET ASSETS BY SITE  ✅ (QR / NFC PAGE)
     // ============================================================
-   public function get_assets_by_site($site_id)
-{
-    return $this->db
-        ->select('
+    public function get_assets_by_site($site_id)
+    {
+        return $this->db
+            ->select('
             ad.assdet_id,
             ad.asset_id,
             ad.site_id,
@@ -86,45 +86,41 @@ class Asset_model extends CI_Model
             a.verified,
             1 as qty
         ')
-        ->from('assdet ad')
-        ->join('assets a', 'a.asset_id = ad.asset_id', 'left')
-        ->where('ad.site_id', $site_id)
-        ->order_by('a.asset_name', 'ASC')
-        ->get()
-        ->result();
-}
+            ->from('assdet ad')
+            ->join('assets a', 'a.asset_id = ad.asset_id', 'left')
+            ->where('ad.site_id', $site_id)
+            ->order_by('a.asset_name', 'ASC')
+            ->get()
+            ->result();
+    }
 
-   public function update_asset_verify($asset_id, $verified)
-{
-    return $this->db
-        ->where('asset_id', $asset_id)
-        ->update('assets', [
-            'verified' => (int)$verified
-        ]);
-}
-
-// GET ASSETS BY STAFF  ✅ (Staff Asset Page)
-public function get_assets_with_site_by_staff($staff_id)
-{
-    return $this->db
-        ->select('
+    public function update_asset_verify($asset_id, $verified)
+    {
+        return $this->db
+            ->where('asset_id', $asset_id)
+            ->update('assets', [
+                'verified' => (int)$verified
+            ]);
+    }
+    public function get_assets_with_site_by_staff($staff_id)
+    {
+        return $this->db
+            ->select('
             ad.assdet_id,
             ad.asset_id,
             ad.site_id,
             ad.staff_id,
             a.asset_name,
             a.asset_no,
-            s.site_name
+            s.site_name,
+            s.site_no
         ')
-        ->from('assdet ad')
-        ->join('assets a', 'a.asset_id = ad.asset_id', 'left')
-        ->join('sites s', 's.site_id = ad.site_id', 'left')
-        ->where('ad.staff_id', $staff_id)
-        ->order_by('a.asset_name', 'ASC')
-        ->get()
-        ->result();
-}
-
-
-
+            ->from('assdet ad')
+            ->join('assets a', 'a.asset_id = ad.asset_id', 'left')
+            ->join('sites s', 's.site_id = ad.site_id', 'left')
+            ->where('ad.staff_id', $staff_id)
+            ->order_by('a.asset_name', 'ASC')
+            ->get()
+            ->result();
+    }
 }
