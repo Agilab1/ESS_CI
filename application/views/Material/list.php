@@ -20,6 +20,7 @@
     }
     #materialTable {
         width: 100% !important;
+        table-layout: fixed;
     }
 </style>
 
