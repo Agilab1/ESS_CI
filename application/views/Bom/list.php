@@ -2,6 +2,9 @@
     th, td { white-space: nowrap; }
 table { table-layout: auto !important; }
 .card-body { overflow: visible !important; }
+.dataTables_wrapper {
+    width: 100% !important;
+}
 
 </style>
 
