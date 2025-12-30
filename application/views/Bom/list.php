@@ -1,30 +1,36 @@
 <style>
-    .dataTables_wrapper {
-        width: 100% !important;
+    th,
+    td {
+        white-space: nowrap;
     }
 
-    .dataTables_wrapper .row {
+    table {
+        table-layout: auto !important;
+    }
+
+    .card-body {
+        overflow: visible !important;
+    }
+
+
+    .main-footer {
         width: 100% !important;
         margin-left: 0 !important;
-        margin-right: 0 !important;
     }
 
-    .dataTables_info {
-        float: left !important;
-        padding-left: 10px;
+    .main-footer .container,
+    .main-footer .container-fluid {
+        max-width: 100% !important;
+        width: 100% !important;
     }
 
-    .dataTables_paginate {
-        float: right !important;
-        padding-right: 10px;
-    }
-
-    .dataTables_wrapper .col-sm-12,
-    .dataTables_wrapper .col-md-5,
-    .dataTables_wrapper .col-md-7 {
-        width: auto !important;
+    .main-footer .float-left,
+    .main-footer .float-right {
+        padding-left: 15px;
+        padding-right: 15px;
     }
 </style>
+
 
 <div class="card">
 
@@ -32,8 +38,7 @@
     <div class="card-header d-flex justify-content-between align-items-center">
         <h4 class="mb-0">BOM – Bill of Material</h4>
 
-        <a href="<?= base_url('bom/add'); ?>"
-            class="btn btn-primary ml-auto">
+        <a href="<?= base_url('bom/add'); ?>" class="btn btn-primary ml-auto">
             <i class="fa fa-plus"></i> Add BOM
         </a>
     </div>
