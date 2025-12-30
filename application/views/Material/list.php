@@ -1,17 +1,23 @@
 <style>
+.card-body {
+    overflow-y: visible !important;
+    overflow-x: visible !important;
+    max-height: none !important;
+}
+.content-wrapper {
+    height: auto !important;
+    overflow: visible !important;
+}
+.content {
+    overflow: visible !important;
+}
 
     .content-wrapper .container-fluid {
         max-width: 100% !important;
-        padding-left: 15px;
-        padding-right: 15px;
     }
-
-
     .content-wrapper .card {
         width: 100% !important;
     }
-
-
     #materialTable {
         width: 100% !important;
     }
