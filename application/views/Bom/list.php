@@ -5,6 +5,30 @@ table { table-layout: auto !important; }
 .dataTables_wrapper {
     width: 100% !important;
 }
+.dataTables_wrapper {
+    width: 100% !important;
+}
+.dataTables_wrapper .row {
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+.dataTables_info {
+    float: left !important;
+    padding-left: 10px;
+}
+.dataTables_paginate {
+    float: right !important;
+    padding-right: 10px;
+}
+
+.dataTables_wrapper .col-sm-12,
+.dataTables_wrapper .col-md-5,
+.dataTables_wrapper .col-md-7 {
+    width: 100% !important;
+}
+
 
 </style>
 
