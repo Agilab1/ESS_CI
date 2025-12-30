@@ -8,6 +8,7 @@ class Material extends CI_Controller
         parent::__construct();
         $this->load->model('Material_model');
         $this->load->model('Dashboard_model');
+
         
     }
 
@@ -17,6 +18,9 @@ class Material extends CI_Controller
         $data['materials'] = $this->Material_model->get_all();
         $data['counts'] = $this->Dashboard_model->counts();
         $this->load->view('incld/header');
+        //$this->load->view('incld/header');
+        $this->load->view('incld/top_menu');
+        $this->load->view('incld/side_menu');
         $this->load->view('user/dashboard', $data);
         $this->load->view('Material/list', $data);
         $this->load->view('incld/footer');
