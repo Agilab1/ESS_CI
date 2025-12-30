@@ -3,7 +3,7 @@
     <div  style ="color:white; text-align:center";>Employee Self Service Portal</div>
     <div>
     <a href="../index.php" class="brand-link">
-      <img  src="assets/dist/img/ess.jpg" alt="WSS Logo" style="width:230px;height:60px;opacity: .8; border-radius: 11px; ">
+      <img  src="assets/dist/img/ess.jpg" alt="WSS Logo" style="width:230px;height:60px;opacity: .8; border-radius: 10px; ">
     </a>
     </div>
 
