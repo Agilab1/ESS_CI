@@ -26,7 +26,7 @@ class Material extends CI_Controller
     public function create()
     {
         $this->load->view('incld/header');
-        $this->load->view('material/form');
+        $this->load->view('Material/form');
         $this->load->view('incld/footer');
     }
 
@@ -52,7 +52,7 @@ class Material extends CI_Controller
         if (!$data['material']) show_404();
 
         $this->load->view('incld/header');
-        $this->load->view('material/form', $data);
+        $this->load->view('Material/form', $data);
         $this->load->view('incld/footer');
     }
 
