@@ -97,7 +97,7 @@ $is_view_only = isset($mode) && $mode === 'view';
                                     <td colspan="2" class="text-center">
                                         <a href="<?= base_url('/Staff/emp_list/'). $staff->staff_id . '?date=' . date('Y-m-d') ?>"  class="btn btn-secondary">Back</a>
                                         <button class="btn btn-primary" type="submit">Save</button>
-                                        
+
                                     </td>
 
                                 </tr>
