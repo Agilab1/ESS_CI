@@ -100,7 +100,7 @@ $query_builder = TRUE;
 
 
 
-// mysqli database local code 
+// mysqli database local code
 
 // $db['default'] = array(
 // 	'dsn'	=> '',
@@ -124,7 +124,7 @@ $query_builder = TRUE;
 // 	'save_queries' => TRUE
 // );
 
-//  cpanel mysqli database code 
+//  cpanel mysqli database code
 
 $db['default'] = array(
 	'dsn'	=> '',

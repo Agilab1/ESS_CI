@@ -12,6 +12,19 @@
     table {
         table-layout: auto !important;
     }
+
+    form select.form-control {
+        min-width: 160px;
+        
+    }
+    form select[name="year"] {
+    min-width: 100px;
+}
+
+    form {
+        gap: 10px;
+
+    }
 </style>
 
 <div class="container-fluid">
@@ -36,7 +49,7 @@
 
                     <input type="hidden" name="staff_id" value="<?= $staff->staff_id ?>">
 
-                    <select name="month" class="form-control" style="max-width:140px;">
+                    <select name="month" class="form-control" style="max-width:150px;">
                         <?php for ($m = 1; $m <= 12; $m++): ?>
                             <option value="<?= $m ?>" <?= ($m == $curMonth ? 'selected' : '') ?>>
                                 <?= date('F', mktime(0, 0, 0, $m, 1)) ?>
