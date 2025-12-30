@@ -9,7 +9,7 @@ class Material extends CI_Controller
         $this->load->model('Material_model');
         $this->load->model('Dashboard_model');
 
-        
+
     }
 
     // LIST
@@ -38,7 +38,7 @@ class Material extends CI_Controller
     public function store()
     {
         $data = [
-            'material_name' => $this->input->post('material_name'),
+            //'material_name' => $this->input->post('material_name'),
             'material_code' => $this->input->post('material_code'),
             'uom'           => $this->input->post('uom'),
             'status'        => 1
@@ -64,7 +64,7 @@ class Material extends CI_Controller
     public function update($id)
     {
         $data = [
-            'material_name' => $this->input->post('material_name'),
+            //'material_name' => $this->input->post('material_name'),
             'material_code' => $this->input->post('material_code'),
             'uom'           => $this->input->post('uom'),
         ];
