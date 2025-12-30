@@ -24,7 +24,10 @@
       <!-- Sidebar Menu -->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-         
+          <a href="<?= base_url('incld/side_link')?>"> Test</a>
+           <?php $this->load->view('incld/side_link'); ?>
+
+        
         </ul>
       </nav>
       <!-- /.sidebar-menu -->
