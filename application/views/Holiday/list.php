@@ -16,6 +16,18 @@
   .card-header a.btn {
     margin-left: auto !important;
   }
+
+  form select[name="month"] {
+    min-width: 160px;
+  }
+
+  form select[name="year"] {
+    min-width: 100px;
+  }
+
+  form.d-flex {
+    gap: 10px;
+  }
 </style>
 
 
