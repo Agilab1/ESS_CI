@@ -33,23 +33,38 @@
                     <table class="table table-bordered text-center">
 
                         <thead class="table-primary">
-                            <tr>
+                            <form action="">
+                                <tr>
+                                    <!-- <th><?= $i++ ?></th>  -->
+                                     <!-- <input type=""> -->
+                                    <th><input type="text" value="#" readonly></th>
+                                    <th><input type="text" value="BOM ID" readonly></th>
+                                    <th> <input type="text" value="Child Material" readonly> </th>
+                                    <th><input type="text" value="UOM" readonly></th>
+                                    <th><input type="text" value="QTY" readonly> </th>
+                                    <th><input type="text" value="Action" readonly> </th>
+                                </tr>
+                            </form>
+                            <!-- <tr>
+
                                 <th>#</th>
                                 <th>BOM ID</th>
                                 <th>Child Material</th>
                                 <th>UOM</th>
                                 <th>Qty</th>
                                 <th>Action</th>
-                            </tr>
+                            </tr> -->
                         </thead>
 
                         <tbody>
                             <?php if (!empty($boms)): ?>
                                 <?php $i = 1;
                                 foreach ($boms as $b): ?>
-                                    <tr>
-                                        <td><?= $i++ ?></td>
-                                        <td><?= $b->bom_id ?></td>
+                                    <form action="">
+                                        <!-- <tr>
+                                        <td><?= $i++ ?></td> -->
+                                        <!-- <td><input type="<?= $b->bom_id ?>"></td> -->
+                                        <!-- <td><?= $b->bom_id ?></td>
                                         <td><?= $b->child_name ?></td>
                                         <td><?= $b->uom ?></td>
                                         <td><?= $b->qty ?></td>
@@ -61,7 +76,29 @@
                                                 <i class="fa fa-trash text-danger"></i>
                                             </a>
                                         </td>
-                                    </tr>
+                                    </tr> -->
+
+                                        <tr>
+                                            <td> <input type="text" value="<?= $i++ ?>" readonly ></td>
+                                            <td><input type="text" value="<?= $b->bom_id ?>" readonly></td>
+                                            <td><input type="text" value="<?= $b->child_name ?>" readonly></td>
+                                            <td><input type="text" value="<?= $b->uom ?>" readonly> </td>
+                                            <td><input type="text" value="<?= $b->qty ?>" readonly></td>
+                                            <!-- <td><?= $b->bom_id ?></td>
+                                        <td><?= $b->child_name ?></td>
+                                        <td><?= $b->uom ?></td>
+                                        <td><?= $b->qty ?></td> -->
+                                            <td>
+                                                <a href="<?= base_url('bom/view/' . $b->bom_id) ?>"><i class="fa fa-eye"></i></a>
+                                                <a href="<?= base_url('bom/edit/' . $b->bom_id) ?>"><i class="fa fa-edit text-primary"></i></a>
+                                                <a href="<?= base_url('bom/delete/' . $b->bom_id) ?>"
+                                                    onclick="return confirm('Delete BOM?')">
+                                                    <i class="fa fa-trash text-danger"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+
+                                    </form>
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <tr>
