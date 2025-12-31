@@ -47,25 +47,29 @@ class Asset_model extends CI_Model
     /* ================= ASSET LIST ================= */
 
     // GET ALL ASSETS (LIST PAGE)
-    public function getAll()
-    {
-        return $this->db
-            ->select('
-                a.asset_id,
-                a.asset_no,
-                a.asset_name,
-                c.cat_no,
-                c.cat_name,
-                COUNT(ad.assdet_id) AS quantity
-            ')
-            ->from('assets a')
-            ->join('categories c', 'c.cat_id = a.type_id', 'left')
-            ->join('assdet ad', 'ad.asset_id = a.asset_id', 'left')
-            ->group_by('a.asset_id')
-            ->order_by('a.asset_id', 'DESC')
-            ->get()
-            ->result();
-    }
+ public function getAll()
+{
+    return $this->db
+        ->select('
+            a.asset_id,
+            a.asset_no,
+            a.asset_name,
+            MAX(m.material_code) AS material_code,
+            c.cat_no,
+            c.cat_name,
+            COUNT(ad.assdet_id) AS quantity
+        ')
+        ->from('assets a')
+        ->join('material m', 'm.asset_id = a.asset_id', 'left')
+        ->join('categories c', 'c.cat_id = a.type_id', 'left')
+        ->join('assdet ad', 'ad.asset_id = a.asset_id', 'left')
+        ->group_by('a.asset_id')
+        ->order_by('a.asset_id', 'DESC')
+        ->get()
+        ->result();
+}
+
+
 
     public function getCategories()
     {

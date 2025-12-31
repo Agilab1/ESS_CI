@@ -29,6 +29,7 @@ table { table-layout: auto !important; }
     <th>Asset No</th>
     <th>Name</th>
     <th>Quantity</th>
+    <th>Material</th>
     <th>Category</th>
     <th class="text-center">Action</th>
 </tr>
@@ -49,6 +50,7 @@ table { table-layout: auto !important; }
 
 
 
+<td><?= $a->material_code ?: '<span class="text-muted">N/A</span>' ?></td>
 
 
     <td><?= $a->cat_no ?> – <?= $a->cat_name ?></td>
@@ -60,6 +62,7 @@ table { table-layout: auto !important; }
             <i class="fa fa-trash text-danger"></i>
         </a>
     </td>
+    
 </tr>
 <?php endforeach; else: ?>
 <tr><td colspan="7" class="text-center text-muted">No assets found</td></tr>
