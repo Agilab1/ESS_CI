@@ -67,11 +67,13 @@
                             <td><?= $m->uom ?></td>
                             <td><?= number_format($m->unit_price, 2) ?></td>
                             <td><?= $m->quantity ?></td>
-                            <td>
-                                <span class="badge <?= $m->status ? 'badge-success' : 'badge-danger' ?>">
-                                    <?= $m->status ? 'Active' : 'Inactive' ?>
-                                </span>
+                            <td style="text-align:center;">
+                                <input type="checkbox"
+                                    class="status-checkbox"
+                                    <?= $m->status ? 'checked' : '' ?>
+                                    disabled>
                             </td>
+
                             <td class="text-center">
                                 <a href="<?= base_url('material/view/' . $m->material_id); ?>">
                                     <i class="fa fa-eye"></i>
