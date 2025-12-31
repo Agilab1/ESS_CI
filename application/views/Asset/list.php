@@ -55,9 +55,9 @@ table { table-layout: auto !important; }
     <td><?= $a->cat_no ?> – <?= $a->cat_name ?></td>
 
     <td class="text-center">
-        <a href="<?= base_url('Asset/action/view/' . $a->asset_id); ?>" class="mx-1"><i class="fa fa-eye" class="mx-1"></i></a>
-        <a href="<?= base_url('Asset/action/edit/' . $a->asset_id); ?>"class="mx-1"><i class="fa fa-edit text-primary" class="mx-1"></i></a>
-        <a href="<?= base_url('Asset/action/delete/' . $a->asset_id); ?>"class="mx-1" onclick="return confirm('Delete asset?');" class="mx-1">
+        <a href="<?= base_url('Asset/action/view/' . $a->asset_id); ?>" class="mx-1"><i class="fa fa-eye" ></i></a>
+        <a href="<?= base_url('Asset/action/edit/' . $a->asset_id); ?>"class="mx-1"><i class="fa fa-edit text-primary" ></i></a>
+        <a href="<?= base_url('Asset/action/delete/' . $a->asset_id); ?>"class="mx-1" onclick="return confirm('Delete asset?');" >
             <i class="fa fa-trash text-danger"></i>
         </a>
     </td>
