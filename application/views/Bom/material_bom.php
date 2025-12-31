@@ -53,11 +53,11 @@
                                 foreach ($boms as $b): ?>
                                     <form action="">
                                         
-                                        <form action="">
+                                        <!-- <form action="">
                                             <tr>
                                                 <td><input type="text" value=""></td>
                                             </tr>
-                                        </form>
+                                        </form> -->
                                         <tr>
                                            
                                             <td> <input type="text" value="<?= $i++ ?>" readonly ></td>
