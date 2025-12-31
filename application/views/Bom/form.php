@@ -1,118 +1,119 @@
 <?php
-$readonly = ($action == 'view') ? 'disabled' : '';
-$is_view  = ($action == 'view');
+$readonly = ($action === 'view') ? 'disabled' : '';
 ?>
 
-<style>
-    /* Same look as Add Staff */
-    .bom-card {
-        max-width: 700px;
-        margin: 40px auto;
-    }
+<div class="d-flex justify-content-center align-items-center"
+    style="min-height:100vh; background:#f4f6f9;">
 
-    .bom-card .card {
-        box-shadow: 0 8px 20px rgba(0, 0, 0, .08);
-        border-radius: 6px;
-    }
+    <div class="container" style="max-width:800px;">
+        <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
 
-    .bom-card .card-header {
-        background: #fff;
-        font-weight: 600;
-        font-size: 18px;
-    }
+            <!-- HEADER -->
+            <div class="card-header bg-primary text-white py-3">
+                <h4 class="m-0">
+                    <?= ucfirst($action) ?> BOM
+                </h4>
+            </div>
 
-    .form-group label {
-        font-weight: 600;
-    }
-</style>
+            <!-- BODY -->
+            <div class="card-body p-4">
 
-<div class="bom-card">
-
-    <div class="card">
-
-        <!-- Header -->
-        <div class="card-header">
-            <?= $action == 'add' ? 'Add BOM' : ($action == 'edit' ? 'Edit BOM' : 'View BOM') ?>
-        </div>
-
-        <!-- Body -->
-        <div class="card-body">
-
-            <form method="post" action="<?= base_url('bom/save') ?>">
-                <input type="hidden" name="action" value="<?= $action ?>">
-
-                <?php if ($bom): ?>
-                    <input type="hidden" name="bom_id" value="<?= $bom->bom_id ?>">
+                <?php if ($this->session->flashdata('error')): ?>
+                    <div class="alert alert-danger">
+                        <?= $this->session->flashdata('error'); ?>
+                    </div>
                 <?php endif; ?>
 
-                <!-- Parent Material -->
-                <div class="form-group mb-3">
-                    <label>Parent Material *</label>
-                    <select name="parent_material_id"
-                        class="form-control"
-                        required <?= $readonly ?>>
-                        <option value="">Select</option>
-                        <?php foreach ($materials as $m): ?>
-                            <option value="<?= $m->material_id ?>"
-                                <?= ($bom && $bom->parent_material_id == $m->material_id) ? 'selected' : '' ?>>
-                                <?= $m->material_code ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
+                <?php if ($this->session->flashdata('success')): ?>
+                    <div class="alert alert-success">
+                        <?= $this->session->flashdata('success'); ?>
+                    </div>
+                <?php endif; ?>
 
-                <!-- Child Material -->
-                <div class="form-group mb-3">
-                    <label>Child Material *</label>
-                    <select name="child_material_id"
-                        class="form-control"
-                        required <?= $readonly ?>>
-                        <option value="">Select</option>
-                        <?php foreach ($materials as $m): ?>
-                            <option value="<?= $m->material_id ?>"
-                                <?= ($bom && $bom->child_material_id == $m->material_id) ? 'selected' : '' ?>>
-                                <?= $m->material_code ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
+                <?php if ($action !== 'view'): ?>
+                    <form method="post" action="<?= base_url('Bom/save'); ?>">
+                        <input type="hidden" name="action" value="<?= $action ?>">
 
-                <!-- UOM -->
-                <div class="form-group mb-3">
-                    <label>UOM *</label>
-                    <input type="text"
-                        name="uom"
-                        class="form-control"
-                        value="<?= $bom->uom ?? '' ?>"
-                        required <?= $readonly ?>>
-                </div>
-
-                <!-- Quantity -->
-                <div class="form-group mb-4">
-                    <label>Quantity *</label>
-                    <input type="number"
-                        name="qty"
-                        class="form-control"
-                        value="<?= $bom->qty ?? '' ?>"
-                        required <?= $readonly ?>>
-                </div>
-
-                <!-- Buttons -->
-                <div class="text-center">
-                    <?php if (!$is_view): ?>
-                        <button type="submit" class="btn btn-primary px-5">
-                            Save
-                        </button>
+                        <?php if ($action === 'edit'): ?>
+                            <input type="hidden" name="bom_id" value="<?= $bom->bom_id ?>">
+                        <?php endif; ?>
                     <?php endif; ?>
 
-                    <a href="<?= base_url('bom/bom_dash') ?>"
-                        class="btn btn-secondary px-5 ml-2">
-                        Back
-                    </a>
-                </div>
+                    <!-- PARENT MATERIAL -->
+                    <div class="mb-3">
+                        <label class="fw-bold">Parent Material *</label>
+                        <select name="parent_material_id"
+                            class="form-control"
+                            required <?= $readonly ?>>
+                            <option value="">Select</option>
+                            <?php foreach ($materials as $m): ?>
+                                <option value="<?= $m->material_id ?>"
+                                    <?= (!empty($bom->parent_material_id)
+                                        && $bom->parent_material_id == $m->material_id)
+                                        ? 'selected' : '' ?>>
+                                    <?= $m->material_code ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
 
-            </form>
+                    <!-- CHILD MATERIAL -->
+                    <div class="mb-3">
+                        <label class="fw-bold">Child Material *</label>
+                        <select name="child_material_id"
+                            class="form-control"
+                            required <?= $readonly ?>>
+                            <option value="">Select</option>
+                            <?php foreach ($materials as $m): ?>
+                                <option value="<?= $m->material_id ?>"
+                                    <?= (!empty($bom->child_material_id)
+                                        && $bom->child_material_id == $m->material_id)
+                                        ? 'selected' : '' ?>>
+                                    <?= $m->material_code ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
 
+                    <!-- UOM -->
+                    <div class="mb-3">
+                        <label class="fw-bold">UOM *</label>
+                        <input type="text"
+                            name="uom"
+                            class="form-control"
+                            value="<?= $bom->uom ?? '' ?>"
+                            required <?= $readonly ?>>
+                    </div>
+
+                    <!-- QUANTITY -->
+                    <div class="mb-4">
+                        <label class="fw-bold">Quantity *</label>
+                        <input type="number"
+                            name="qty"
+                            class="form-control"
+                            value="<?= $bom->qty ?? '' ?>"
+                            required <?= $readonly ?>>
+                    </div>
+
+                    <!-- BUTTONS -->
+                    <div class="text-center">
+                        <?php if ($action !== 'view'): ?>
+                            <button type="submit" class="btn btn-primary px-4 me-2">
+                                <i class="fa fa-save"></i> Save
+                            </button>
+                        <?php endif; ?>
+
+                        <a href="<?= base_url('Bom/bom_dash'); ?>"
+                            class="btn btn-secondary px-4">
+                            Back
+                        </a>
+                    </div>
+
+                    <?php if ($action !== 'view'): ?>
+                    </form>
+                <?php endif; ?>
+
+            </div>
         </div>
     </div>
 

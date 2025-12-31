@@ -152,6 +152,7 @@ class Asset extends CI_Controller
             ->from('assdet')
             ->join('sites', 'sites.site_id = assdet.site_id', 'left')
             ->join('staffs', 'staffs.staff_id = assdet.staff_id', 'left')
+            ->join('bom', 'bom.parent_material_id = assdet.parent_material_id', 'left')
             ->where('assdet.asset_id', $asset_id)
             ->get()
             ->result();

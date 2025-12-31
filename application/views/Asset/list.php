@@ -29,6 +29,7 @@ table { table-layout: auto !important; }
     <th>Asset No</th>
     <th>Name</th>
     <th>Quantity</th>
+    <th>Material</th>
     <th>Category</th>
     <th class="text-center">Action</th>
 </tr>
@@ -46,6 +47,7 @@ table { table-layout: auto !important; }
         <?= (int)$a->quantity ?>
     </a>
 </td>
+<td></td>
 
 
 
