@@ -49,16 +49,15 @@ table { table-layout: auto !important; }
 </td>
 
 
-
 <td><?= $a->material_code ?: '<span class="text-muted">N/A</span>' ?></td>
 
 
     <td><?= $a->cat_no ?> – <?= $a->cat_name ?></td>
 
     <td class="text-center">
-        <a href="<?= base_url('Asset/action/view/' . $a->asset_id); ?>" class="mx-1"><i class="fa fa-eye"></i></a>
-        <a href="<?= base_url('Asset/action/edit/' . $a->asset_id); ?>"class="mx-1"><i class="fa fa-edit text-primary"></i></a>
-        <a href="<?= base_url('Asset/action/delete/' . $a->asset_id); ?>"class="mx-1" onclick="return confirm('Delete asset?');">
+        <a href="<?= base_url('Asset/action/view/' . $a->asset_id); ?>" class="mx-1"><i class="fa fa-eye" class="mx-1"></i></a>
+        <a href="<?= base_url('Asset/action/edit/' . $a->asset_id); ?>"class="mx-1"><i class="fa fa-edit text-primary" class="mx-1"></i></a>
+        <a href="<?= base_url('Asset/action/delete/' . $a->asset_id); ?>"class="mx-1" onclick="return confirm('Delete asset?');" class="mx-1">
             <i class="fa fa-trash text-danger"></i>
         </a>
     </td>
