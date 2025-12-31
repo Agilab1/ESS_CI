@@ -1,5 +1,4 @@
 <style>
-    /* ===== Existing table styles (NO CHANGE) ===== */
     th,
     td {
         white-space: nowrap;
@@ -68,18 +67,32 @@
                             <td><?= $m->uom ?></td>
                             <td><?= number_format($m->unit_price, 2) ?></td>
                             <td><?= $m->quantity ?></td>
-                            <td>
-                                <span class="badge <?= $m->status ? 'badge-success' : 'badge-danger' ?>">
-                                    <?= $m->status ? 'Active' : 'Inactive' ?>
-                                </span>
+                            <td style="text-align:center;">
+                                <input type="checkbox"
+                                    class="status-checkbox"
+                                    <?= $m->status ? 'checked' : '' ?>
+                                    >
                             </td>
+
                             <td class="text-center">
+
                                 <a href="<?= base_url('material/view/' . $m->material_id) ?>"><i class="fa fa-eye"></i></a>
                                 <a href="<?= base_url('material/edit/' . $m->material_id) ?>"><i class="fa fa-edit text-primary"></i></a>
 
                                 <a href="<?= base_url('Bom/material/' . $m->material_id) ?>"
                                     class="btn btn-sm btn-info">
                                     View BOM
+
+                                <a href="<?= base_url('material/view/' . $m->material_id); ?>"class="mx-1">
+                                    <i class="fa fa-eye"></i>
+                                </a>
+                                <a href="<?= base_url('material/edit/' . $m->material_id); ?>"class="mx-1">
+                                    <i class="fa fa-edit text-primary"></i>
+                                </a>
+                                <a href="<?= base_url('material/delete/' . $m->material_id); ?>"
+                                    onclick="return confirm('Delete?');"class="mx-1">
+                                    <i class="fa fa-trash text-danger"></i>
+
                                 </a>
                             </td>
 

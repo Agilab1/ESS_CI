@@ -1,5 +1,9 @@
 <?php
 $is_edit = isset($material);
+$is_view = isset($view_only);
+
+$readonly = $is_view ? 'readonly' : '';
+$disabled = $is_view ? 'disabled' : '';
 ?>
 
 <div class="py-5">
@@ -10,7 +14,7 @@ $is_edit = isset($material);
                 <!-- Header -->
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">
-                        <?= $is_edit ? 'Edit Material' : 'Add Material' ?>
+                        <?= $is_view ? 'View Material' : ($is_edit ? 'Edit Material' : 'Add Material') ?>
                     </h4>
                 </div>
 
@@ -19,9 +23,9 @@ $is_edit = isset($material);
                     <div class="card-body">
 
                         <form method="post"
-                            action="<?= $is_edit
+                            action="<?= (!$is_view && $is_edit)
                                         ? base_url('material/update/' . $material->material_id)
-                                        : base_url('material/store') ?>">
+                                        : (!$is_view ? base_url('material/store') : 'javascript:void(0)') ?>">
 
                             <table class="table table-bordered">
 
@@ -43,8 +47,8 @@ $is_edit = isset($material);
                                         <input class="form-control"
                                             type="text"
                                             name="material_code"
-                                            required
-                                            value="<?= $material->material_code ?? '' ?>">
+                                            value="<?= $material->material_code ?? '' ?>"
+                                            <?= $readonly ?>>
                                     </td>
 
                                     <td>
@@ -52,7 +56,8 @@ $is_edit = isset($material);
                                         <input class="form-control"
                                             type="text"
                                             name="uom"
-                                            value="<?= $material->uom ?? 'Nos' ?>">
+                                            value="<?= $material->uom ?? 'Nos' ?>"
+                                            <?= $readonly ?>>
                                     </td>
                                 </tr>
 
@@ -64,7 +69,8 @@ $is_edit = isset($material);
                                             type="number"
                                             step="0.01"
                                             name="unit_price"
-                                            value="<?= $material->unit_price ?? '' ?>">
+                                            value="<?= $material->unit_price ?? '' ?>"
+                                            <?= $readonly ?>>
                                     </td>
 
                                     <td>
@@ -72,7 +78,8 @@ $is_edit = isset($material);
                                         <input class="form-control"
                                             type="number"
                                             name="quantity"
-                                            value="<?= $material->quantity ?? '' ?>">
+                                            value="<?= $material->quantity ?? '' ?>"
+                                            <?= $readonly ?>>
                                     </td>
                                 </tr>
 
@@ -80,8 +87,7 @@ $is_edit = isset($material);
                                 <tr>
                                     <td colspan="2">
                                         <label>Status</label>
-                                        <select name="status" class="form-control">
-                                            <option value="">Select Status</option>
+                                        <select name="status" class="form-control" <?= $disabled ?>>
                                             <option value="1"
                                                 <?= (isset($material) && $material->status == 1) ? 'selected' : '' ?>>
                                                 Active
@@ -100,9 +106,12 @@ $is_edit = isset($material);
                                         <a href="<?= base_url('material') ?>" class="btn btn-secondary">
                                             Back
                                         </a>
-                                        <button type="submit" class="btn btn-primary ml-2">
-                                            Save
-                                        </button>
+
+                                        <?php if (!$is_view): ?>
+                                            <button type="submit" class="btn btn-primary ml-2">
+                                                Save
+                                            </button>
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
 

@@ -3,10 +3,10 @@
     <div  style ="color:white; text-align:center";>Employee Self Service Portal</div>
     <div>
     <a href="../index.php" class="brand-link">
-      <img  src="assets/dist/img/ess.jpg" alt="WSS Logo" style="width:230px;height:60px;opacity: .8; ">
+      <img  src="assets/dist/img/ess.jpg" alt="WSS Logo" style="width:230px;height:60px;opacity: .8; border-radius: 10px; ">
     </a>
     </div>
-    
+
 
     <!-- Sidebar -->
     <div class="sidebar">
@@ -24,10 +24,9 @@
       <!-- Sidebar Menu -->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-          <a href="<?= base_url('incld/side_link')?>"> Test</a>
            <?php $this->load->view('incld/side_link'); ?>
 
-        
+
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

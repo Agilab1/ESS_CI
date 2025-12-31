@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 class Material extends CI_Controller
 {
@@ -8,8 +8,6 @@ class Material extends CI_Controller
         parent::__construct();
         $this->load->model('Material_model');
         $this->load->model('Dashboard_model');
-
-
     }
 
     // LIST
@@ -17,8 +15,8 @@ class Material extends CI_Controller
     {
         $data['materials'] = $this->Material_model->get_all();
         $data['counts'] = $this->Dashboard_model->counts();
+
         $this->load->view('incld/header');
-        //$this->load->view('incld/header');
         $this->load->view('incld/top_menu');
         $this->load->view('incld/side_menu');
         $this->load->view('user/dashboard', $data);
@@ -38,10 +36,11 @@ class Material extends CI_Controller
     public function store()
     {
         $data = [
-            //'material_name' => $this->input->post('material_name'),
             'material_code' => $this->input->post('material_code'),
             'uom'           => $this->input->post('uom'),
-            'status'        => 1
+            'unit_price'    => $this->input->post('unit_price'),
+            'quantity'      => $this->input->post('quantity'),
+            'status'        => $this->input->post('status'),
         ];
 
         $this->Material_model->insert($data);
@@ -60,13 +59,28 @@ class Material extends CI_Controller
         $this->load->view('incld/footer');
     }
 
+    // 🔒 VIEW FORM (READ ONLY)
+    public function view($id)
+    {
+        $data['material']  = $this->Material_model->get_by_id($id);
+        $data['view_only'] = true;
+
+        if (!$data['material']) show_404();
+
+        $this->load->view('incld/header');
+        $this->load->view('Material/form', $data);
+        $this->load->view('incld/footer');
+    }
+
     // UPDATE
     public function update($id)
     {
         $data = [
-            //'material_name' => $this->input->post('material_name'),
             'material_code' => $this->input->post('material_code'),
             'uom'           => $this->input->post('uom'),
+            'unit_price'    => $this->input->post('unit_price'),
+            'quantity'      => $this->input->post('quantity'),
+            'status'        => $this->input->post('status'),
         ];
 
         $this->Material_model->update($id, $data);
