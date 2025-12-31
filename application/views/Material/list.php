@@ -1,5 +1,4 @@
 <style>
-    /* ===== Existing table styles (NO CHANGE) ===== */
     th,
     td {
         white-space: nowrap;

@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 class Material extends CI_Controller
 {
@@ -8,8 +8,6 @@ class Material extends CI_Controller
         parent::__construct();
         $this->load->model('Material_model');
         $this->load->model('Dashboard_model');
-
-
     }
 
     // LIST
@@ -47,6 +45,18 @@ class Material extends CI_Controller
         $this->Material_model->insert($data);
         redirect('material');
     }
+    // VIEW (ONLY FOR VIEW ICON)
+    public function view($id)
+    {
+        $data['material'] = $this->Material_model->get_by_id($id);
+
+        if (!$data['material']) show_404();
+
+        $this->load->view('incld/header');
+        $this->load->view('Material/form', $data);
+        $this->load->view('incld/footer');
+    }
+
 
     // EDIT FORM
     public function edit($id)
