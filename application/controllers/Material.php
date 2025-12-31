@@ -45,18 +45,15 @@ class Material extends CI_Controller
         $this->Material_model->insert($data);
         redirect('material');
     }
-    // VIEW (ONLY FOR VIEW ICON)
     public function view($id)
     {
         $data['material'] = $this->Material_model->get_by_id($id);
-
+        $data['view_only'] = true;
         if (!$data['material']) show_404();
-
         $this->load->view('incld/header');
         $this->load->view('Material/form', $data);
         $this->load->view('incld/footer');
     }
-
 
     // EDIT FORM
     public function edit($id)
