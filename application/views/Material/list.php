@@ -83,17 +83,17 @@
                                     class="btn btn-sm btn-info">
                                     View BOM
 
-                                <a href="<?= base_url('material/view/' . $m->material_id); ?>"class="mx-1">
+                                <!-- <a href="<?= base_url('material/view/' . $m->material_id); ?>"class="mx-1">
                                     <i class="fa fa-eye"></i>
-                                </a>
-                                <a href="<?= base_url('material/edit/' . $m->material_id); ?>"class="mx-1">
+                                </a> -->
+                                <!-- <a href="<?= base_url('material/edit/' . $m->material_id); ?>"class="mx-1">
                                     <i class="fa fa-edit text-primary"></i>
                                 </a>
                                 <a href="<?= base_url('material/delete/' . $m->material_id); ?>"
                                     onclick="return confirm('Delete?');"class="mx-1">
                                     <i class="fa fa-trash text-danger"></i>
 
-                                </a>
+                                </a> -->
                             </td>
 
                         </tr>
