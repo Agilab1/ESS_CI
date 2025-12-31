@@ -71,7 +71,7 @@
                                 <input type="checkbox"
                                     class="status-checkbox"
                                     <?= $m->status ? 'checked' : '' ?>
-                                    disabled>
+                                    >
                             </td>
 
                             <td class="text-center">
