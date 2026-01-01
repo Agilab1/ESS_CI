@@ -140,4 +140,16 @@ class Asset_model extends CI_Model
                 'verified' => (int)$verified
             ]);
     }
+    public function get_asset_count_by_site()
+    {
+        return $this->db
+            ->select('site_id, COUNT(*) AS total')
+            ->from('assdet')   // 👉 asset detail table
+            ->group_by('site_id')
+            ->get()
+            ->result();
+
+    }
+
+
 }

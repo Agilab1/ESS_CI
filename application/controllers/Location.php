@@ -41,15 +41,15 @@ class Location extends CI_Controller
     {
         $data = new stdClass();
         $data->action = 'add';
-        $data->location = (object)[
-            'site_id'      => '',
-            'site_no'      => '',
-            'site_name'    => '',
-            'last_visit'   => '',
+        $data->location = (object) [
+            'site_id' => '',
+            'site_no' => '',
+            'site_name' => '',
+            'last_visit' => '',
             'verify_asset' => '',
-            'status'       => '',
-            'access_flag'  => '',
-            'access_by'    => ''
+            'status' => '',
+            'access_flag' => '',
+            'access_by' => ''
         ];
 
         $this->load->view('incld/header');
@@ -72,7 +72,8 @@ class Location extends CI_Controller
         $data->action = 'edit';
         $data->location = $this->Location_model->getById($site_id);
 
-        if (!$data->location) show_404();
+        if (!$data->location)
+            show_404();
 
         $this->load->view('incld/header');
         $this->load->view('Location/add', $data);
@@ -81,10 +82,12 @@ class Location extends CI_Controller
 
     public function view($site_id = null)
     {
-        if ($site_id === null) redirect('Location/list');
+        if ($site_id === null)
+            redirect('Location/list');
 
         $location = $this->Location_model->getById($site_id);
-        if (!$location) show_404();
+        if (!$location)
+            show_404();
 
         // ===== NFC : LOCATION → ONLY SITE =====
         if ($this->input->get('nfc') == 1) {
@@ -122,7 +125,8 @@ class Location extends CI_Controller
         }
 
         $location = $this->Location_model->getById($site_id);
-        if (!$location) show_404();
+        if (!$location)
+            show_404();
 
         $this->Location_model->deleteLocation($site_id);
         $this->session->set_flashdata('success', "Location deleted successfully!");
@@ -135,7 +139,7 @@ class Location extends CI_Controller
     // ============================================================
     public function save()
     {
-        $action  = strtolower($this->input->post('action'));
+        $action = strtolower($this->input->post('action'));
         $site_id = $this->input->post('site_id');
 
         // Inventory checkbox
@@ -160,7 +164,7 @@ class Location extends CI_Controller
 
         //  APPLY TO ALL ASSET DETAILS OF THIS SITE
         $this->db
-            ->where('site_id', (int)$site_id)
+            ->where('site_id', (int) $site_id)
             ->update('assdet', [
                 'verified' => $verify_value
             ]);
@@ -188,27 +192,29 @@ class Location extends CI_Controller
         $verify_asset = ($inventory_checked == 1) ? 0 : 1;
 
         return [
-            'site_id'           => $this->input->post('site_id'),
-            'site_no'           => $this->input->post('site_no'),
-            'site_name'         => $this->input->post('site_name'),
-            'last_visit'        => $this->input->post('last_visit'),
+            'site_id' => $this->input->post('site_id'),
+            'site_no' => $this->input->post('site_no'),
+            'site_name' => $this->input->post('site_name'),
+            'last_visit' => $this->input->post('last_visit'),
             'inventory_checked' => $inventory_checked,
-            'verify_asset'      => $verify_asset,
-            'status'            => $this->input->post('status'),
-            'access_flag'       => $this->input->post('access_flag'),
-            'access_by'         => $this->input->post('access_by')
+            'verify_asset' => $verify_asset,
+            'status' => $this->input->post('status'),
+            'access_flag' => $this->input->post('access_flag'),
+            'access_by' => $this->input->post('access_by')
         ];
     }
 
 
     //============================================================
     // ASSET LIST FORM (QR PAGE)
+
     public function asset_list($site_id)
     {
         $site = $this->Location_model->get_site_by_id($site_id);
         $assets = $this->Location_model->get_assets_by_site($site_id);
 
-        if (!$site) show_404();
+        if (!$site)
+            show_404();
 
         $data = [
             'site' => $site,
@@ -219,6 +225,7 @@ class Location extends CI_Controller
         $this->load->view('Location/asset_list', $data);
         $this->load->view('incld/footer');
     }
+
 }
 
-//
+

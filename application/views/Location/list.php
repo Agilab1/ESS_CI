@@ -1,8 +1,21 @@
 <style>
-  th, td { white-space: nowrap; }
-  th { writing-mode: horizontal-tb !important; transform: rotate(0deg) !important; }
-  table { table-layout: auto !important; }
-  .card-header a.btn { margin-left: auto !important; }
+  th,
+  td {
+    white-space: nowrap;
+  }
+
+  th {
+    writing-mode: horizontal-tb !important;
+    transform: rotate(0deg) !important;
+  }
+
+  table {
+    table-layout: auto !important;
+  }
+
+  .card-header a.btn {
+    margin-left: auto !important;
+  }
 </style>
 
 <div class="card">
@@ -36,58 +49,58 @@
             <th>Site No</th>
             <th>Site Name</th>
             <th>Asset List</th>
-            
+
             <th style="width:7vw;" class="text-center">Action</th>
           </tr>
         </thead>
 
         <tbody>
 
-        <?php if (!empty($locations)): ?>
-          <?php foreach ($locations as $i => $loc): ?>
+          <?php if (!empty($locations)): ?>
+            <?php foreach ($locations as $i => $loc): ?>
+              <tr>
+                <td><?= $i + 1 ?></td>
+                <td><?= $loc->site_id ?></td>
+                <td><?= $loc->site_no ?></td>
+                <td><?= $loc->site_name ?></td>
+
+                <!-- Asset List + QR -->
+                <td class="text-center">
+                  <a href="<?= base_url('Location/asset_list/' . $loc->site_id); ?>" class="badge badge-primary"
+                    style="font-size:14px; padding:6px 10px;">
+                    <?= $assetMap[$loc->site_id] ?? 0 ?>
+                  </a>
+                </td>
+
+
+
+
+
+                <td class="text-center" style="white-space:nowrap;">
+
+                  <a href="<?= base_url('Location/view/' . $loc->site_id); ?>" class="mx-1">
+                    <i class="fa fa-eye"></i>
+                  </a>
+
+                  <a href="<?= base_url('Location/edit/' . $loc->site_id); ?>" class="mx-1">
+                    <i class="fa fa-edit"></i>
+                  </a>
+
+
+                  <a href="<?= base_url('Location/delete/' . $loc->site_id); ?>"
+                    onclick="return confirm('Delete Location: <?= $loc->site_name ?> ?');" class="mx-1">
+                    <i class="fa fa-trash text-danger"></i>
+                  </a>
+
+                </td>
+              </tr>
+            <?php endforeach; ?>
+
+          <?php else: ?>
             <tr>
-              <td><?= $i + 1 ?></td>
-              <td><?= $loc->site_id ?></td>
-              <td><?= $loc->site_no ?></td>
-              <td><?= $loc->site_name ?></td>
-
-              <!-- Asset List + QR -->
-              <td>
-                <?= $loc->asset_list_name ?? 'Assets' ?>
-                &nbsp;
-                <a href="<?= base_url('Location/asset_list/' . $loc->site_id ) ?>" title="Asset QR">
-                  <i class="fas fa-qrcode"></i>
-                </a>
-              </td>
-
-            
-
-              <td class="text-center" style="white-space:nowrap;">
-
-                <a href="<?= base_url('Location/view/' . $loc->site_id); ?>" class="mx-1">
-                  <i class="fa fa-eye"></i>
-                </a>
-
-                 <a href="<?= base_url('Location/edit/' . $loc->site_id); ?>" class="mx-1">
-                  <i class="fa fa-edit"></i>
-                </a>
-              
-
-                <a href="<?= base_url('Location/delete/' . $loc->site_id); ?>"
-                  onclick="return confirm('Delete Location: <?= $loc->site_name ?> ?');"
-                  class="mx-1">
-                  <i class="fa fa-trash text-danger"></i>
-                </a>
-
-              </td>
+              <td colspan="5" class="text-center text-muted">No locations found.</td>
             </tr>
-          <?php endforeach; ?>
-
-        <?php else: ?>
-          <tr>
-            <td colspan="5" class="text-center text-muted">No locations found.</td>
-          </tr>
-        <?php endif; ?>
+          <?php endif; ?>
 
         </tbody>
 
