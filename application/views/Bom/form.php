@@ -32,6 +32,9 @@ $readonly = ($action === 'view') ? 'disabled' : '';
 
                 <?php if ($action !== 'view'): ?>
                     <form method="post" action="<?= base_url('Bom/save'); ?>">
+                        <input type="hidden" name="parent_material_id"
+                            value="<?= $bom->parent_material_id ?? '' ?>">
+
                         <input type="hidden" name="action" value="<?= $action ?>">
 
                         <?php if ($action === 'edit'): ?>
@@ -103,10 +106,11 @@ $readonly = ($action === 'view') ? 'disabled' : '';
                             </button>
                         <?php endif; ?>
 
-                        <a href="<?= base_url('Bom/bom_dash'); ?>"
-                            class="btn btn-secondary px-4">
+                        <a href="<?= base_url('Bom/material/' . $bom->parent_material_id) ?>"
+                            class="btn btn-secondary">
                             Back
                         </a>
+
                     </div>
 
                     <?php if ($action !== 'view'): ?>

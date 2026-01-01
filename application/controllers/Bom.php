@@ -16,7 +16,7 @@ class Bom extends CI_Controller
 
         $data->action   = 'add_child';
         $data->material = $this->Material_model->get_by_id($material_id);
-         $data->counts = $this->Dashboard_model->counts();
+        $data->counts = $this->Dashboard_model->counts();
         if (!$data->material) show_404();
 
         // child materials (exclude parent itself)
@@ -121,10 +121,21 @@ class Bom extends CI_Controller
     // ================= DELETE =================
     public function delete($bom_id)
     {
+        // delete  parent material id 
+        $bom = $this->Bom_model->get_by_id($bom_id);
+
+        if (!$bom) {
+            show_404();
+        }
+
+        $parent_id = $bom->parent_material_id;
+
         $this->Bom_model->delete($bom_id);
         $this->session->set_flashdata('success', 'BOM deleted successfully!');
-        redirect('Bom/bom_dash');
+
+        redirect('Bom/material/' . $parent_id);
     }
+
 
     // ================= VALIDATION =================
     private function validate()
@@ -168,13 +179,19 @@ class Bom extends CI_Controller
             case 'edit':
                 $data = $this->validate();
                 if ($data) {
+
                     $this->Bom_model->update($bom_id, $data);
+
+                    // 👉 parent material id form 
+                    $parent_id = $this->input->post('parent_material_id');
+
                     $this->session->set_flashdata('success', 'BOM updated successfully!');
-                    redirect('Bom/bom_dash');
+                    redirect('Bom/material/' . $parent_id);
                 } else {
                     $this->edit($bom_id);
                 }
                 break;
+
 
             case 'delete':
                 $this->Bom_model->delete($bom_id);
@@ -195,7 +212,7 @@ class Bom extends CI_Controller
             'status'             => 1
         ];
 
-        // 🔒 prevent duplicate child
+        //  prevent duplicate child
         $exists = $this->db
             ->where('parent_material_id', $data['parent_material_id'])
             ->where('child_material_id', $data['child_material_id'])
