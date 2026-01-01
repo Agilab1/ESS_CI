@@ -228,7 +228,8 @@ class Staff extends CI_Controller
         $data['nextM'] = $nextM;
         $data['nextY'] = $nextY;
 
-        $data['works'] = $this->Work_model->get_monthly_attendance($staff_id, $month, $year);
+        $data['works'] = $this->Work_model->get_monthly_punches($staff_id, $month, $year);
+
         $data['holiday_model'] = $this->Holiday_model;
         $data['counts'] = $this->Dashboard_model->counts();
 

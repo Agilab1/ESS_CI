@@ -8,15 +8,15 @@ class Work_model extends CI_Model
     // =====================================================
     // MONTHLY ATTENDANCE (emp_details & punch_details)
     // =====================================================
-   public function get_monthly_attendance($staff_id, $month = null, $year = null)
-{
-    if ($month === null) $month = date('m');
-    if ($year === null)  $year  = date('Y');
+    public function get_monthly_attendance($staff_id, $month = null, $year = null)
+    {
+        if ($month === null) $month = date('m');
+        if ($year === null)  $year  = date('Y');
 
-    $start_date = date('Y-m-01', strtotime("$year-$month-01"));
-    $end_date   = date('Y-m-t', strtotime($start_date));
+        $start_date = date('Y-m-01', strtotime("$year-$month-01"));
+        $end_date   = date('Y-m-t', strtotime($start_date));
 
-    $this->db->select('
+        $this->db->select('
         d.date AS punch_date,
         s.staff_id,
         s.emp_name,
@@ -27,31 +27,31 @@ class Work_model extends CI_Model
         w.duration
     ');
 
-    $this->db->from('dates d');
+        $this->db->from('dates d');
 
-    // ✅ JOIN works ON DATE + STAFF (SAFE & CORRECT)
-    $this->db->join(
-        'works w',
-        'DATE(w.date) = d.date AND w.staff_id = ' . $this->db->escape($staff_id),
-        'left',
-        false
-    );
+        // ✅ JOIN works ON DATE + STAFF (SAFE & CORRECT)
+        $this->db->join(
+            'works w',
+            'DATE(w.date) = d.date AND w.staff_id = ' . $this->db->escape($staff_id),
+            'left',
+            false
+        );
 
-    // staff info (single row join)
-    $this->db->join(
-        'staffs s',
-        's.staff_id = ' . $this->db->escape($staff_id),
-        'left',
-        false
-    );
+        // staff info (single row join)
+        $this->db->join(
+            'staffs s',
+            's.staff_id = ' . $this->db->escape($staff_id),
+            'left',
+            false
+        );
 
-    $this->db->where('d.date >=', $start_date);
-    $this->db->where('d.date <=', $end_date);
+        $this->db->where('d.date >=', $start_date);
+        $this->db->where('d.date <=', $end_date);
 
-    $this->db->order_by('d.date', 'ASC');
+        $this->db->order_by('d.date', 'ASC');
 
-    return $this->db->get()->result();
-}
+        return $this->db->get()->result();
+    }
 
 
     // =====================================================
@@ -161,5 +161,30 @@ class Work_model extends CI_Model
                 'date'     => $data['date']
             ]
         );
+    }
+    // ===============================
+    // EMP LIST (ADMIN TABLE VIEW)
+    // ===============================
+    public function get_monthly_punches($staff_id, $month, $year)
+    {
+        return $this->db
+            ->select('
+            w.date AS punch_date,
+            w.staff_id,
+            s.emp_name,
+            w.staff_st,
+            w.remark,
+            w.cin_time,
+            w.cout_time,
+            w.duration
+        ')
+            ->from('works w')
+            ->join('staffs s', 's.staff_id = w.staff_id')
+            ->where('w.staff_id', $staff_id)
+            ->where('MONTH(w.date)', (int)$month)
+            ->where('YEAR(w.date)', (int)$year)
+            ->order_by('w.date', 'ASC')
+            ->get()
+            ->result();
     }
 }
