@@ -17,39 +17,47 @@ class Work_model extends CI_Model
         $end_date   = date('Y-m-t', strtotime($start_date));
 
         $this->db->select('
-            dates.date AS punch_date,
-            staffs.staff_id,
-            staffs.emp_name,
-            works.staff_st,
-            works.remark,
-            works.cin_time,
-            works.cout_time,
-            works.duration
-        ');
+        d.date AS punch_date,
+        s.staff_id,
+        s.emp_name,
+        w.staff_st,
+        w.remark,
+        w.cin_time,
+        w.cout_time,
+        w.duration
+    ');
 
-        $this->db->from('dates');
+        $this->db->from('dates d');
 
+        // ✅ LEFT JOIN ONLY ON DATE
         $this->db->join(
-            'works',
-            'works.date = dates.date 
-             AND works.staff_id = ' . $this->db->escape($staff_id),
+            'works w',
+            'DATE(w.date) = d.date',
+            'left'
+        );
+
+        // ✅ STAFF FILTER ALWAYS IN WHERE
+        $this->db->join(
+            'staffs s',
+            's.staff_id = ' . $this->db->escape($staff_id),
             'left',
             false
         );
 
-        $this->db->join(
-            'staffs',
-            'staffs.staff_id = ' . $this->db->escape($staff_id),
-            'left',
-            false
-        );
+        $this->db->where('d.date >=', $start_date);
+        $this->db->where('d.date <=', $end_date);
 
-        $this->db->where('dates.date >=', $start_date);
-        $this->db->where('dates.date <=', $end_date);
-        $this->db->order_by('dates.date', 'ASC');
+        // ✅ THIS IS THE KEY LINE
+        $this->db->group_start();
+        $this->db->where('w.staff_id', $staff_id);
+        $this->db->or_where('w.staff_id IS NULL', null, false);
+        $this->db->group_end();
+
+        $this->db->order_by('d.date', 'ASC');
 
         return $this->db->get()->result();
     }
+
 
     // =====================================================
     // GET STATUS (single date)
