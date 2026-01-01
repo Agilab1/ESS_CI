@@ -194,14 +194,24 @@ class Staff extends CI_Controller
                 );
             }
 
-            redirect('Staff/punch_details/' . $staff_id);
-            return;
+            redirect(
+                'Staff/punch_details/' . $staff_id .
+                    '?month=' . date('m', strtotime($today)) .
+                    '&year=' . date('Y', strtotime($today))
+            );
         }
 
 
         // ================= NORMAL MONTH VIEW =================
-        $month = $this->input->get('month') ?? date('m');
-        $year  = $this->input->get('year') ?? date('Y');
+        if ($this->input->get('date')) {
+            $d = $this->input->get('date');
+            $month = date('m', strtotime($d));
+            $year  = date('Y', strtotime($d));
+        } else {
+            $month = $this->input->get('month') ?? date('m');
+            $year  = $this->input->get('year') ?? date('Y');
+        }
+
 
         // PREV / NEXT LOGIC
         $prevM = $month - 1;
@@ -226,6 +236,7 @@ class Staff extends CI_Controller
         $data['nextY'] = $nextY;
 
         $data['works'] = $this->Work_model->get_monthly_attendance($staff_id, $month, $year);
+
         $data['holiday_model'] = $this->Holiday_model;
         $data['counts'] = $this->Dashboard_model->counts();
 
