@@ -1,15 +1,19 @@
-<div class="d-flex justify-content-center align-items-center" style="min-height:100vh; background:#f4f6f9;">
+<div class="d-flex justify-content-center align-items-center"
+    style="min-height:100vh; background:#f4f6f9;">
 
     <div class="container" style="max-width:1100px;">
         <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
 
+            <!-- HEADER -->
             <div class="card-header bg-primary text-white py-3">
                 <h4 class="m-0">BOM – Bill of Material</h4>
             </div>
 
+            <!-- BODY -->
             <div class="card-body p-4">
+
                 <a href="<?= base_url('Bom/add_child/' . $material->material_id) ?>"
-                    class="btn btn-primary mb-3">
+                    class="btn btn-primary mb-4">
                     <i class="fa fa-plus"></i> Add Child BOM
                 </a>
 
@@ -17,70 +21,104 @@
                 <div class="row mb-4">
                     <div class="col-md-6">
                         <label class="fw-bold">Material ID</label>
-                        <input type="text" class="form-control"
-                            value="<?= $material->material_id ?>" readonly>
+                        <input type="text"
+                            class="form-control"
+                            value="<?= $material->material_id ?>"
+                            readonly>
                     </div>
 
                     <div class="col-md-6">
                         <label class="fw-bold">Material Code</label>
-                        <input type="text" class="form-control"
-                            value="<?= $material->material_code ?>" readonly>
+                        <input type="text"
+                            class="form-control"
+                            value="<?= $material->material_code ?>"
+                            readonly>
                     </div>
                 </div>
 
                 <!-- CHILD BOM TABLE -->
                 <div class="table-responsive">
-                    <table class="table table-bordered text-center">
+                    <table class="table table-bordered text-center align-middle">
 
-                        <thead class="table-primary">
-                            <form action="">
-                                <tr>
-                                   
-                                    <th><input type="text" value="#" readonly></th>
-                                    <th><input type="text" value="BOM ID" readonly></th>
-                                    <th> <input type="text" value="Child Material" readonly> </th>
-                                    <th><input type="text" value="UOM" readonly></th>
-                                    <th><input type="text" value="QTY" readonly> </th>
-                                    <th><input type="text" value="Action" readonly> </th>
-                                </tr>
-                            </form>
-                          
+                        <!-- TABLE HEADER -->
+                        <thead style="background:#b6d4fe;">
+                            <tr >
+                                <th ><input class="form-control  text-center fw-bold " value="#"  readonly ></th>
+                                <th><input class="form-control text-center fw-bold" value="BOM ID" readonly></th>
+                                <th><input class="form-control text-center fw-bold" value="Child Material" readonly></th>
+                                <th><input class="form-control text-center fw-bold" value="UOM" readonly></th>
+                                <th><input class="form-control text-center fw-bold" value="QTY" readonly></th>
+                                <th><input class="form-control text-center fw-bold" value="Action" readonly></th>
+                            </tr>
                         </thead>
 
+                        <!-- TABLE BODY -->
                         <tbody>
                             <?php if (!empty($boms)): ?>
                                 <?php $i = 1;
                                 foreach ($boms as $b): ?>
-                                    <form action="">
-                                        
-                                        <!-- <form action="">
-                                            <tr>
-                                                <td><input type="text" value=""></td>
-                                            </tr>
-                                        </form> -->
-                                        <tr>
-                                           
-                                            <td> <input type="text" value="<?= $i++ ?>" readonly ></td>
-                                            <td><input type="text" value="<?= $b->bom_id ?>" readonly></td>
-                                            <td><input type="text" value="<?= $b->child_name ?>" readonly></td>
-                                            <td><input type="text" value="<?= $b->uom ?>" readonly> </td>
-                                            <td><input type="text" value="<?= $b->qty ?>" readonly></td>
-                                           
-                                            <td>
-                                                <a href="<?= base_url('bom/view/' . $b->bom_id) ?>"><i class="fa fa-eye"></i></a>
-                                                <a href="<?= base_url('bom/edit/' . $b->bom_id) ?>"><i class="fa fa-edit text-primary"></i></a>
-                                                <a href="<?= base_url('bom/delete/' . $b->bom_id) ?>"
-                                                    onclick="return confirm('Delete BOM?')">
-                                                    <i class="fa fa-trash text-danger"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
+                                    <tr>
+                                        <td>
+                                            <input class="form-control bg-light text-center"
+                                                value="<?= $i++ ?>" readonly>
+                                        </td>
 
-                                    </form>
+                                        <td>
+                                            <input class="form-control bg-light text-center"
+                                                value="<?= $b->bom_id ?>" readonly>
+                                        </td>
+
+                                        <td>
+                                            <input class="form-control bg-light text-center"
+                                                value="<?= $b->child_name ?>" readonly>
+                                        </td>
+
+                                        <td>
+                                            <input class="form-control bg-light text-center"
+                                                value="<?= $b->uom ?>" readonly>
+                                        </td>
+
+                                        <td>
+                                            <input class="form-control bg-light text-center"
+                                                value="<?= $b->qty ?>" readonly>
+                                        </td>
+
+                                        <!-- ACTIONS AS INPUT STYLE -->
+                                        <td>
+                                            <div class="d-flex justify-content-center gap-2">
+
+                                                <!-- VIEW -->
+                                                <span class="form-control text-center"
+                                                    style="width:42px; cursor:pointer"
+                                                    title="View"
+                                                    onclick="location.href='<?= base_url('bom/view/' . $b->bom_id) ?>'">
+                                                    <i class="fa fa-eye text-secondary"></i>
+                                                </span>
+
+                                                <!-- EDIT -->
+                                                <span class="form-control text-center"
+                                                    style="width:42px; cursor:pointer"
+                                                    title="Edit"
+                                                    onclick="location.href='<?= base_url('bom/edit/' . $b->bom_id) ?>'">
+                                                    <i class="fa fa-edit text-primary"></i>
+                                                </span>
+
+                                                <!-- DELETE -->
+                                                <span class="form-control text-center"
+                                                    style="width:42px; cursor:pointer"
+                                                    title="Delete"
+                                                    onclick="if(confirm('Delete BOM?')) location.href='<?= base_url('bom/delete/' . $b->bom_id) ?>'">
+                                                    <i class="fa fa-trash text-danger"></i>
+                                                </span>
+
+                                            </div>
+                                        </td>
+
+                                    </tr>
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <tr>
-                                    <td colspan="6" class="text-muted py-3">
+                                    <td colspan="6" class="text-muted py-4">
                                         No BOM found for this material
                                     </td>
                                 </tr>
@@ -90,6 +128,7 @@
                     </table>
                 </div>
 
+                <!-- BACK -->
                 <div class="text-center mt-4">
                     <a href="<?= base_url('Material'); ?>" class="btn btn-secondary">
                         ← Back to Material List
