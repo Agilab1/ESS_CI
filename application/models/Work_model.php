@@ -8,12 +8,9 @@ class Work_model extends CI_Model
     // =====================================================
     // MONTHLY ATTENDANCE (emp_details & punch_details)
     // =====================================================
-    public function get_monthly_attendance($staff_id, $month = null, $year = null)
+    public function get_monthly_attendance($staff_id, $month, $year)
     {
-        if ($month === null) $month = date('m');
-        if ($year === null)  $year  = date('Y');
-
-        $start_date = date('Y-m-01', strtotime("$year-$month-01"));
+        $start_date = "$year-$month-01";
         $end_date   = date('Y-m-t', strtotime($start_date));
 
         $this->db->select('
@@ -29,14 +26,14 @@ class Work_model extends CI_Model
 
         $this->db->from('dates d');
 
-        // ✅ FINAL CORRECT JOIN
+        // ✅ JOIN ONLY ON DATE
         $this->db->join(
             'works w',
-            'w.date = d.date AND w.staff_id = ' . $this->db->escape($staff_id),
-            'left',
-            false
+            'w.date = d.date',
+            'left'
         );
 
+        // ✅ STAFF FILTER SAFE
         $this->db->join(
             'staffs s',
             's.staff_id = ' . $this->db->escape($staff_id),
@@ -44,13 +41,21 @@ class Work_model extends CI_Model
             false
         );
 
+        // ✅ DATE RANGE
         $this->db->where('d.date >=', $start_date);
         $this->db->where('d.date <=', $end_date);
+
+        // ✅ VERY IMPORTANT (staff OR NULL)
+        $this->db->group_start();
+        $this->db->where('w.staff_id', $staff_id);
+        $this->db->or_where('w.staff_id IS NULL', null, false);
+        $this->db->group_end();
 
         $this->db->order_by('d.date', 'ASC');
 
         return $this->db->get()->result();
     }
+
 
 
     // =====================================================
