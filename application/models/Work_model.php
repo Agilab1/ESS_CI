@@ -8,12 +8,12 @@ class Work_model extends CI_Model
     // =====================================================
     // MONTHLY ATTENDANCE (emp_details & punch_details)
     // =====================================================
- public function get_monthly_attendance($staff_id, $month, $year)
-{
-    $start_date = date('Y-m-01', strtotime("$year-$month-01"));
-    $end_date   = date('Y-m-t', strtotime($start_date));
+    public function get_monthly_attendance($staff_id, $month, $year)
+    {
+        $start_date = date('Y-m-01', strtotime("$year-$month-01"));
+        $end_date   = date('Y-m-t', strtotime($start_date));
 
-    $this->db->select('
+        $this->db->select('
         d.date AS punch_date,
         s.staff_id,
         s.emp_name,
@@ -24,32 +24,45 @@ class Work_model extends CI_Model
         w.duration
     ');
 
-    $this->db->from('dates d');
+        $this->db->from('dates d');
 
-    // ✅ LEFT JOIN works ON date + staff
-    $this->db->join(
-        'works w',
-        'w.date = d.date AND w.staff_id = ' . $this->db->escape($staff_id),
-        'left',
-        false
-    );
+        // ✅ LEFT JOIN works ON date + staff
+        $this->db->join(
+            'works w',
+            'w.date = d.date AND w.staff_id = ' . $this->db->escape($staff_id),
+            'left',
+            false
+        );
 
-    // ✅ employee name ALWAYS from staffs
-    $this->db->join(
-        'staffs s',
-        's.staff_id = ' . $this->db->escape($staff_id),
-        'inner',
-        false
-    );
+        // ✅ employee name ALWAYS from staffs
+        $this->db->join(
+            'staffs s',
+            's.staff_id = ' . $this->db->escape($staff_id),
+            'inner',
+            false
+        );
 
-    // ✅ date range filter
-    $this->db->where('d.date >=', $start_date);
-    $this->db->where('d.date <=', $end_date);
+        // ✅ date range filter
+        $this->db->where('d.date >=', $start_date);
+        $this->db->where('d.date <=', $end_date);
 
-    $this->db->order_by('d.date', 'ASC');
+        $this->db->order_by('d.date', 'ASC');
 
-    return $this->db->get()->result();
-}
+        return $this->db->get()->result();
+    }
+    // =====================================================
+    // GET STATUS (single date)
+    // =====================================================
+    public function get_status($staff_id, $date)
+    {
+        $row = $this->db->get_where('works', [
+            'staff_id' => $staff_id,
+            'date'     => $date
+        ])->row();
+
+        return $row ? $row->staff_st : null;
+    }
+
 
 
 
