@@ -8,48 +8,51 @@ class Work_model extends CI_Model
     // =====================================================
     // MONTHLY ATTENDANCE (emp_details & punch_details)
     // =====================================================
-    public function get_monthly_attendance($staff_id, $month = null, $year = null)
-    {
-        if ($month === null) $month = date('m');
-        if ($year === null)  $year  = date('Y');
+   public function get_monthly_attendance($staff_id, $month = null, $year = null)
+{
+    if ($month === null) $month = date('m');
+    if ($year === null)  $year  = date('Y');
 
-        $start_date = date('Y-m-01', strtotime("$year-$month-01"));
-        $end_date   = date('Y-m-t', strtotime($start_date));
+    $start_date = date('Y-m-01', strtotime("$year-$month-01"));
+    $end_date   = date('Y-m-t', strtotime($start_date));
 
-        $this->db->select('
-            dates.date AS punch_date,
-            staffs.staff_id,
-            staffs.emp_name,
-            works.staff_st,
-            works.remark,
-            works.cin_time,
-            works.cout_time,
-            works.duration
-        ');
+    $this->db->select('
+        d.date AS punch_date,
+        s.staff_id,
+        s.emp_name,
+        w.staff_st,
+        w.remark,
+        w.cin_time,
+        w.cout_time,
+        w.duration
+    ');
 
-        $this->db->from('dates');
+    $this->db->from('dates d');
 
-        $this->db->join(
-            'works',
-            'works.date = dates.date 
-             AND works.staff_id = ' . $this->db->escape($staff_id),
-            'left',
-            false
-        );
+    // ✅ JOIN works ON DATE + STAFF (SAFE & CORRECT)
+    $this->db->join(
+        'works w',
+        'DATE(w.date) = d.date AND w.staff_id = ' . $this->db->escape($staff_id),
+        'left',
+        false
+    );
 
-        $this->db->join(
-            'staffs',
-            'staffs.staff_id = ' . $this->db->escape($staff_id),
-            'left',
-            false
-        );
+    // staff info (single row join)
+    $this->db->join(
+        'staffs s',
+        's.staff_id = ' . $this->db->escape($staff_id),
+        'left',
+        false
+    );
 
-        $this->db->where('dates.date >=', $start_date);
-        $this->db->where('dates.date <=', $end_date);
-        $this->db->order_by('dates.date', 'ASC');
+    $this->db->where('d.date >=', $start_date);
+    $this->db->where('d.date <=', $end_date);
 
-        return $this->db->get()->result();
-    }
+    $this->db->order_by('d.date', 'ASC');
+
+    return $this->db->get()->result();
+}
+
 
     // =====================================================
     // GET STATUS (single date)
