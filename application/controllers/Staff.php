@@ -194,8 +194,11 @@ class Staff extends CI_Controller
                 );
             }
 
-            redirect('Staff/punch_details/' . $staff_id);
-            return;
+            redirect(
+                'Staff/punch_details/' . $staff_id .
+                    '?month=' . date('m', strtotime($today)) .
+                    '&year=' . date('Y', strtotime($today))
+            );
         }
 
 
