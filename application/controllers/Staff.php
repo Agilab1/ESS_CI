@@ -203,8 +203,15 @@ class Staff extends CI_Controller
 
 
         // ================= NORMAL MONTH VIEW =================
-        $month = $this->input->get('month') ?? date('m');
-        $year  = $this->input->get('year') ?? date('Y');
+        if ($this->input->get('date')) {
+            $d = $this->input->get('date');
+            $month = date('m', strtotime($d));
+            $year  = date('Y', strtotime($d));
+        } else {
+            $month = $this->input->get('month') ?? date('m');
+            $year  = $this->input->get('year') ?? date('Y');
+        }
+
 
         // PREV / NEXT LOGIC
         $prevM = $month - 1;
