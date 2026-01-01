@@ -29,15 +29,14 @@ class Work_model extends CI_Model
 
         $this->db->from('dates d');
 
-        // ✅ JOIN works ON DATE + STAFF (SAFE & CORRECT)
+        // ✅ FINAL CORRECT JOIN
         $this->db->join(
             'works w',
-            'DATE(w.date) = d.date AND w.staff_id = ' . $this->db->escape($staff_id),
+            'w.date = d.date AND w.staff_id = ' . $this->db->escape($staff_id),
             'left',
             false
         );
 
-        // staff info (single row join)
         $this->db->join(
             'staffs s',
             's.staff_id = ' . $this->db->escape($staff_id),
@@ -53,19 +52,6 @@ class Work_model extends CI_Model
         return $this->db->get()->result();
     }
 
-
-    // =====================================================
-    // GET STATUS (single date)
-    // =====================================================
-    public function get_status($staff_id, $date)
-    {
-        $row = $this->db->get_where('works', [
-            'staff_id' => $staff_id,
-            'date'     => $date
-        ])->row();
-
-        return $row ? $row->staff_st : null;
-    }
 
     // =====================================================
     // DELETE RECORD
