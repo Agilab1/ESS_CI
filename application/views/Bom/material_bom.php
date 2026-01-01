@@ -1,141 +1,153 @@
 <div class="d-flex justify-content-center align-items-center"
-    style="min-height:100vh; background:#f4f6f9;">
+     style="min-height:100vh; background:#f4f6f9;">
 
-    <div class="container" style="max-width:1100px;">
-        <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+<div class="container" style="max-width:1100px;">
+<div class="card shadow-lg border-0 rounded-4 overflow-hidden">
 
-            <!-- HEADER -->
-            <div class="card-header bg-primary text-white py-3">
-                <h4 class="m-0">BOM – Bill of Material</h4>
-            </div>
+<!-- HEADER -->
+<div class="card-header bg-primary text-white py-3">
+    <h4 class="m-0">BOM – Bill of Material</h4>
+</div>
 
-            <!-- BODY -->
-            <div class="card-body p-4">
+<!-- BODY -->
+<div class="card-body p-4">
 
-                <a href="<?= base_url('Bom/add_child/' . $material->material_id) ?>"
-                    class="btn btn-primary mb-4">
-                    <i class="fa fa-plus"></i> Add Child BOM
-                </a>
+<!-- ================= PARENT MATERIAL ================= -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <label class="fw-bold">Material ID</label>
+        <input class="form-control bg-light"
+               value="<?= $material->material_id ?>" readonly>
+    </div>
 
-                <!-- PARENT MATERIAL -->
-                <div class="row mb-4">
-                    <div class="col-md-6">
-                        <label class="fw-bold">Material ID</label>
-                        <input type="text"
-                            class="form-control"
-                            value="<?= $material->material_id ?>"
-                            readonly>
-                    </div>
-
-                    <div class="col-md-6">
-                        <label class="fw-bold">Material Code</label>
-                        <input type="text"
-                            class="form-control"
-                            value="<?= $material->material_code ?>"
-                            readonly>
-                    </div>
-                </div>
-
-                <!-- CHILD BOM TABLE -->
-                <div class="table-responsive">
-                    <table class="table table-bordered text-center align-middle">
-
-                        <!-- TABLE HEADER -->
-                        <thead style="background:#b6d4fe;">
-                            <tr >
-                                <th ><input class="form-control  text-center fw-bold " value="#"  readonly ></th>
-                                <th><input class="form-control text-center fw-bold" value="BOM ID" readonly></th>
-                                <th><input class="form-control text-center fw-bold" value="Child Material" readonly></th>
-                                <th><input class="form-control text-center fw-bold" value="UOM" readonly></th>
-                                <th><input class="form-control text-center fw-bold" value="QTY" readonly></th>
-                                <th><input class="form-control text-center fw-bold" value="Action" readonly></th>
-                            </tr>
-                        </thead>
-
-                        <!-- TABLE BODY -->
-                        <tbody>
-                            <?php if (!empty($boms)): ?>
-                                <?php $i = 1;
-                                foreach ($boms as $b): ?>
-                                    <tr>
-                                        <td>
-                                            <input class="form-control bg-light text-center"
-                                                value="<?= $i++ ?>" readonly>
-                                        </td>
-
-                                        <td>
-                                            <input class="form-control bg-light text-center"
-                                                value="<?= $b->bom_id ?>" readonly>
-                                        </td>
-
-                                        <td>
-                                            <input class="form-control bg-light text-center"
-                                                value="<?= $b->child_name ?>" readonly>
-                                        </td>
-
-                                        <td>
-                                            <input class="form-control bg-light text-center"
-                                                value="<?= $b->uom ?>" readonly>
-                                        </td>
-
-                                        <td>
-                                            <input class="form-control bg-light text-center"
-                                                value="<?= $b->qty ?>" readonly>
-                                        </td>
-
-                                        <!-- ACTIONS AS INPUT STYLE -->
-                                        <td>
-                                            <div class="d-flex justify-content-center gap-2">
-
-                                                <!-- VIEW -->
-                                                <span class="form-control text-center"
-                                                    style="width:42px; cursor:pointer"
-                                                    title="View"
-                                                    onclick="location.href='<?= base_url('bom/view/' . $b->bom_id) ?>'">
-                                                    <i class="fa fa-eye text-secondary"></i>
-                                                </span>
-
-                                                <!-- EDIT -->
-                                                <span class="form-control text-center"
-                                                    style="width:42px; cursor:pointer"
-                                                    title="Edit"
-                                                    onclick="location.href='<?= base_url('bom/edit/' . $b->bom_id) ?>'">
-                                                    <i class="fa fa-edit text-primary"></i>
-                                                </span>
-
-                                                <!-- DELETE -->
-                                                <span class="form-control text-center"
-                                                    style="width:42px; cursor:pointer"
-                                                    title="Delete"
-                                                    onclick="if(confirm('Delete BOM?')) location.href='<?= base_url('bom/delete/' . $b->bom_id) ?>'">
-                                                    <i class="fa fa-trash text-danger"></i>
-                                                </span>
-
-                                            </div>
-                                        </td>
-
-                                    </tr>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <tr>
-                                    <td colspan="6" class="text-muted py-4">
-                                        No BOM found for this material
-                                    </td>
-                                </tr>
-                            <?php endif; ?>
-                        </tbody>
-
-                    </table>
-                </div>
-
-                <!-- BACK -->
-                <div class="text-center mt-4">
-                    <a href="<?= base_url('Material'); ?>" class="btn btn-secondary">
-                        ← Back to Material List
-                    </a>
-                </div>
-
-            </div>
-        </div>
+    <div class="col-md-6">
+        <label class="fw-bold">Material Code</label>
+        <input class="form-control bg-light"
+               value="<?= $material->material_code ?>" readonly>
     </div>
 </div>
+
+<!-- ================= BOM LIST ================= -->
+<div class="border rounded p-3">
+
+<!-- TABLE HEADER -->
+<div class="row g-2 align-items-center fw-bold bg-light text-center border-bottom pb-2 mb-3">
+    <div class="col-md-1">#</div>
+    <div class="col-md-2">BOM ID</div>
+    <div class="col-md-3">Child Material</div>
+    <div class="col-md-2">UOM</div>
+    <div class="col-md-2">Qty</div>
+    <div class="col-md-2">Action</div>
+</div>
+
+<?php
+$usedMaterials = [];
+if (!empty($boms)) {
+    foreach ($boms as $b) {
+        $usedMaterials[] = trim($b->child_name);
+    }
+}
+?>
+
+<!-- ADD ROW -->
+<form id="addForm" method="post" action="<?= base_url('Bom/save_child') ?>">
+<div class="row g-2 align-items-center border-bottom pb-3 mb-3">
+
+    <div class="col-md-1 text-center fw-bold text-primary">+</div>
+
+    <div class="col-md-2">
+        <input class="form-control" value="Auto" readonly>
+        <input type="hidden" name="parent_material_id"
+               value="<?= $material->material_id ?>">
+    </div>
+
+    <div class="col-md-3">
+        <select name="child_material_id" class="form-control" required>
+            <option value="">Select</option>
+            <?php foreach ($materials as $m): ?>
+                <?php if (!in_array(trim($m->material_code), $usedMaterials)): ?>
+                    <option value="<?= $m->material_id ?>">
+                        <?= $m->material_code ?>
+                    </option>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </select>
+    </div>
+
+    <div class="col-md-2">
+        <input type="text" name="uom"
+               class="form-control" placeholder="UOM" required>
+    </div>
+
+    <div class="col-md-2">
+        <input type="number" name="qty"
+               class="form-control" placeholder="Qty" required>
+    </div>
+
+    <div class="col-md-2 text-center">
+        <button class="btn btn-primary">
+            <i class="fa fa-plus"></i>
+        </button>
+    </div>
+
+</div>
+</form>
+
+<!-- DATA ROWS -->
+<?php if (!empty($boms)): ?>
+<?php $i=1; foreach ($boms as $b): ?>
+
+<div class="row g-2 align-items-center border-bottom py-2 text-center">
+
+    <div class="col-md-1 fw-semibold"><?= $i++ ?></div>
+
+    <div class="col-md-2">
+        <input class="form-control bg-light" value="<?= $b->bom_id ?>" readonly>
+    </div>
+
+    <div class="col-md-3">
+        <input class="form-control bg-light" value="<?= $b->child_name ?>" readonly>
+    </div>
+
+    <div class="col-md-2">
+        <input class="form-control bg-light" value="<?= $b->uom ?>" readonly>
+    </div>
+
+    <div class="col-md-2">
+        <input class="form-control bg-light" value="<?= $b->qty ?>" readonly>
+    </div>
+
+    <div class="col-md-2">
+        <a href="<?= base_url('bom/view/'.$b->bom_id) ?>" class="mx-1 text-secondary"><i class="fa fa-eye"></i></a>
+        <a href="<?= base_url('bom/edit/'.$b->bom_id) ?>" class="mx-1 text-primary"><i class="fa fa-edit"></i></a>
+        <a href="<?= base_url('bom/delete/'.$b->bom_id) ?>"
+           onclick="return confirm('Delete BOM?')" class="mx-1 text-danger"><i class="fa fa-trash"></i></a>
+    </div>
+
+</div>
+
+<?php endforeach; else: ?>
+
+<div class="text-center text-muted py-4">No BOM found</div>
+
+<?php endif; ?>
+
+</div>
+
+<!-- BACK -->
+<div class="text-center mt-4">
+    <a href="<?= base_url('Material'); ?>" class="btn btn-secondary px-4">
+        ← Back to Material List
+    </a>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+
+<script>
+document.getElementById('addForm').addEventListener('submit', function(){
+    setTimeout(() => this.reset(), 200);
+});
+</script>

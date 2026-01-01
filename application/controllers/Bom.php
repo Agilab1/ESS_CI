@@ -33,25 +33,29 @@ class Bom extends CI_Controller
 
     // ================= MATERIAL WISE BOM VIEW =================
     public function material($material_id)
-    {
-        $data = new stdClass();
+{
+    $data = new stdClass();
 
-        // Parent material
-        $data->material = $this->Material_model->get_by_id($material_id);
-        if (!$data->material) show_404();
+    // Parent material
+    $data->material = $this->Material_model->get_by_id($material_id);
+    if (!$data->material) show_404();
 
-        // Child BOM list
-        $data->boms = $this->Bom_model->get_by_parent_material($material_id);
+    // Child BOM list
+    $data->boms = $this->Bom_model->get_by_parent_material($material_id);
 
-        $data->counts = $this->Dashboard_model->counts();
+    // 🔴 THIS LINE WAS MISSING
+    $data->materials = $this->Material_model->get_all();
 
-        $this->load->view('incld/header');
-        $this->load->view('incld/top_menu');
-        $this->load->view('incld/side_menu');
-        $this->load->view('user/dashboard', $data);
-        $this->load->view('Bom/material_bom', $data); // 👈 NEW VIEW
-        $this->load->view('incld/footer');
-    }
+    $data->counts = $this->Dashboard_model->counts();
+
+    $this->load->view('incld/header');
+    $this->load->view('incld/top_menu');
+    $this->load->view('incld/side_menu');
+    $this->load->view('user/dashboard', $data);
+    $this->load->view('Bom/material_bom', $data);
+    $this->load->view('incld/footer');
+}
+
 
 
     // ================= DASH / LIST =================
