@@ -81,11 +81,17 @@ $readonly = ($action === 'view') ? 'disabled' : '';
                     <!-- UOM -->
                     <div class="mb-3">
                         <label class="fw-bold">UOM *</label>
-                        <input type="text"
-                            name="uom"
-                            class="form-control"
-                            value="<?= $bom->uom ?? '' ?>"
-                            required <?= $readonly ?>>
+                        <label>UOM *</label>
+                        <select name="uom" class="form-control" required <?= ($action == 'view') ? 'disabled' : '' ?>>
+                            <option value="">Select UOM</option>
+                            <?php foreach ($uoms as $u): ?>
+                                <option value="<?= $u->uom_code ?>"
+                                    <?= ($bom->uom == $u->uom_code) ? 'selected' : '' ?>>
+                                    <?= $u->uom_name ?> (<?= $u->uom_code ?>)
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+
                     </div>
 
                     <!-- QUANTITY -->
