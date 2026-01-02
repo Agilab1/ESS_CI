@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 class Material_model extends CI_Model
 {
@@ -26,9 +26,9 @@ class Material_model extends CI_Model
     // INSERT
     public function insert($data)
     {
-        //  SAFETY: asset_id null handling
-        if (!isset($data['asset_id']) || $data['asset_id'] === '') {
-            $data['asset_id'] = null;
+        // IMPORTANT FIX
+        if (empty($data['asset_id'])) {
+            unset($data['asset_id']); // ⬅️ THIS IS THE KEY FIX
         }
 
         return $this->db->insert($this->table, $data);
