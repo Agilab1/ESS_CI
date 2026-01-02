@@ -48,6 +48,11 @@
         color: #212529;
         border: 1px solid #ced4da;
     }
+
+    #addForm input.form-control,
+    #addForm select.form-control {
+        background-color: #f8f9fa;
+    }
 </style>
 
 <div class="d-flex justify-content-center align-items-center"
@@ -92,7 +97,7 @@
                     foreach ($boms as $b) $usedMaterials[] = trim($b->child_name);
                     ?>
 
-                    <form id="addForm" method="post" action="<?= base_url('Bom/save_child') ?>">
+                    <form id="addForm" method="post" action="<?= base_url('Bom/save_child') ?>" class="bg-light p-3 rounded">
                         <div class="row g-2 align-items-center border-bottom pb-3 mb-3">
 
                             <div class="col-md-1 text-center fw-bold text-primary">+</div>
