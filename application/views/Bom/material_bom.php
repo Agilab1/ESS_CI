@@ -1,3 +1,40 @@
+<style>
+   input[readonly],
+input[disabled],
+select[disabled] {
+    background-color: #e9ecef !important;
+    color: #495057 !important;
+    border: 1px solid #ced4da !important;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+.bom-form .row { margin: 0; }
+
+.bom-form .row > div {
+    border-right: 1px solid #dee2e6;
+    border-bottom: 1px solid #dee2e6;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+.bom-form .row > div:first-child {
+    border-left: 1px solid #dee2e6;
+}
+
+.bom-form .header-row > div {
+    background: #f8f9fa;
+    font-weight: 600;
+    border-top: 2px solid #ced4da;
+    border-bottom: 2px solid #ced4da;
+}
+
+.bom-form {
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    overflow: hidden;
+}
+</style>
+
 <div class="d-flex justify-content-center align-items-center"
      style="min-height:100vh; background:#f4f6f9;">
 
@@ -28,10 +65,10 @@
 </div>
 
 <!-- ================= BOM LIST ================= -->
-<div class="border rounded p-3">
+<div class="border rounded p-3 bom-form">
 
 <!-- TABLE HEADER -->
-<div class="row g-2 align-items-center fw-bold bg-light text-center border-bottom pb-2 mb-3">
+<div class="row g-2 align-items-center fw-bold bg-light text-center border-bottom pb-2 mb-3 header-row">
     <div class="col-md-1">#</div>
     <div class="col-md-2">BOM ID</div>
     <div class="col-md-3">Child Material</div>
@@ -49,7 +86,6 @@ if (!empty($boms)) {
 }
 ?>
 
-<!-- ADD ROW -->
 <form id="addForm" method="post" action="<?= base_url('Bom/save_child') ?>">
 <div class="row g-2 align-items-center border-bottom pb-3 mb-3">
 
@@ -62,21 +98,39 @@ if (!empty($boms)) {
     </div>
 
     <div class="col-md-3">
-        <select name="child_material_id" class="form-control" required>
-            <option value="">Select</option>
-            <?php foreach ($materials as $m): ?>
-                <?php if (!in_array(trim($m->material_code), $usedMaterials)): ?>
-                    <option value="<?= $m->material_id ?>">
-                        <?= $m->material_code ?>
-                    </option>
-                <?php endif; ?>
-            <?php endforeach; ?>
-        </select>
+       <select name="child_material_id" class="form-control" required>
+    <option value="">Select</option>
+    <?php foreach ($materials as $m): ?>
+
+        <?php
+            // Exclude parent material & already used child materials
+            if (
+                $m->material_id == $material->material_id ||
+                in_array(trim($m->material_code), $usedMaterials)
+            ) {
+                continue;
+            }
+        ?>
+
+        <option value="<?= $m->material_id ?>">
+            <?= $m->material_code ?>
+        </option>
+
+    <?php endforeach; ?>
+</select>
+
+
     </div>
 
     <div class="col-md-2">
-        <input type="text" name="uom"
-               class="form-control" placeholder="UOM" required>
+        <select name="uom_id" class="form-control" required>
+            <option value="">Select UOM</option>
+            <?php foreach ($uoms as $u): ?>
+                <option value="<?= $u->uom_id ?>">
+                    <?= $u->uom_name ?> (<?= $u->uom_code ?>)
+                </option>
+            <?php endforeach; ?>
+        </select>
     </div>
 
     <div class="col-md-2">
@@ -93,7 +147,6 @@ if (!empty($boms)) {
 </div>
 </form>
 
-<!-- DATA ROWS -->
 <?php if (!empty($boms)): ?>
 <?php $i=1; foreach ($boms as $b): ?>
 
@@ -110,7 +163,8 @@ if (!empty($boms)) {
     </div>
 
     <div class="col-md-2">
-        <input class="form-control bg-light" value="<?= $b->uom ?>" readonly>
+        <input class="form-control bg-light"
+               value="<?= $b->uom_name ?> (<?= $b->uom_code ?>)" readonly>
     </div>
 
     <div class="col-md-2">
@@ -134,7 +188,6 @@ if (!empty($boms)) {
 
 </div>
 
-<!-- BACK -->
 <div class="text-center mt-4">
     <a href="<?= base_url('Material'); ?>" class="btn btn-secondary px-4">
         ← Back to Material List

@@ -7,7 +7,6 @@ class Asset_model extends CI_Model
 
     /* ================= ASSET MASTER ================= */
 
-    // GET ASSET BY ID
     public function getById($asset_id)
     {
         return $this->db
@@ -16,13 +15,11 @@ class Asset_model extends CI_Model
             ->row();
     }
 
-    // INSERT
     public function insertAsset($data)
     {
         return $this->db->insert($this->table, $data);
     }
 
-    // UPDATE
     public function updateAsset($asset_id, $data)
     {
         return $this->db
@@ -30,13 +27,11 @@ class Asset_model extends CI_Model
             ->update($this->table, $data);
     }
 
-    // DELETE
     public function deleteAsset($asset_id)
     {
         return $this->db->delete($this->table, ['asset_id' => $asset_id]);
     }
 
-    // CHECK IF ASSET EXISTS
     public function exists($asset_no)
     {
         return $this->db
@@ -47,29 +42,28 @@ class Asset_model extends CI_Model
     /* ================= ASSET LIST ================= */
 
     // GET ALL ASSETS (LIST PAGE)
- public function getAll()
-{
-    return $this->db
-        ->select('
-            a.asset_id,
-            a.asset_no,
-            a.asset_name,
-            MAX(m.material_code) AS material_code,
-            c.cat_no,
-            c.cat_name,
-            COUNT(ad.assdet_id) AS quantity
-        ')
-        ->from('assets a')
-        ->join('material m', 'm.asset_id = a.asset_id', 'left')
-        ->join('categories c', 'c.cat_id = a.type_id', 'left')
-        ->join('assdet ad', 'ad.asset_id = a.asset_id', 'left')
-        ->group_by('a.asset_id')
-        ->order_by('a.asset_id', 'DESC')
-        ->get()
-        ->result();
-}
-
-
+    public function getAll()
+    {
+        return $this->db
+            ->select('
+                a.asset_id,
+                a.asset_no,
+                a.asset_name,
+                MAX(m.material_code) AS material_code,
+                MAX(m.material_id) AS material_id,
+                c.cat_no,
+                c.cat_name,
+                COUNT(ad.assdet_id) AS quantity
+            ')
+            ->from('assets a')
+            ->join('material m', 'm.asset_id = a.asset_id', 'left')
+            ->join('categories c', 'c.cat_id = a.type_id', 'left')
+            ->join('assdet ad', 'ad.asset_id = a.asset_id', 'left')
+            ->group_by('a.asset_id')
+            ->order_by('a.asset_id', 'DESC')
+            ->get()
+            ->result();
+    }
 
     public function getCategories()
     {
@@ -114,10 +108,8 @@ class Asset_model extends CI_Model
                 ad.serial_no,
                 ad.site_id,
                 ad.staff_id,
-
                 a.asset_name,
                 a.asset_no,
-
                 s.site_name,
                 s.site_no
             ')
@@ -140,16 +132,14 @@ class Asset_model extends CI_Model
                 'verified' => (int)$verified
             ]);
     }
+
     public function get_asset_count_by_site()
     {
         return $this->db
             ->select('site_id, COUNT(*) AS total')
-            ->from('assdet')   // 👉 asset detail table
+            ->from('assdet')
             ->group_by('site_id')
             ->get()
             ->result();
-
     }
-
-
 }

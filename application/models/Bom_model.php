@@ -68,20 +68,23 @@ class Bom_model extends CI_Model
             ->row();
     }
     // Material wise BOM (child list)
-    public function get_by_parent_material($material_id)
-    {
-        return $this->db
-            ->select('
+   public function get_by_parent_material($material_id)
+{
+    return $this->db
+        ->select('
             b.bom_id,
-            b.uom,
             b.qty,
+            u.uom_name,
+            u.uom_code,
             m.material_code AS child_name
         ')
-            ->from('bom b')
-            ->join('material m', 'm.material_id = b.child_material_id')
-            ->where('b.parent_material_id', $material_id)
-            ->order_by('b.bom_id', 'ASC')
-            ->get()
-            ->result();
-    }
+        ->from('bom b')
+        ->join('material m', 'm.material_id = b.child_material_id')
+        ->join('uom_master u', 'u.uom_code = b.uom', 'left')
+        ->where('b.parent_material_id', $material_id)
+        ->order_by('b.bom_id', 'ASC')
+        ->get()
+        ->result();
+}
+
 }

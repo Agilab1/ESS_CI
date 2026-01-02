@@ -59,7 +59,16 @@
                                 <!-- <td></td> -->
 
 
-                                <td><?= $a->material_code ?: '<span class="text-muted">N/A</span>' ?></td>
+                                <td>
+<?php if (!empty($a->material_code)): ?>
+    <a href="<?= site_url('Bom/material/' . $a->material_id); ?>"
+       style="color:#0d6efd; text-decoration:underline;">
+        <?= $a->material_code ?>
+    </a>
+<?php else: ?>
+    <span class="text-muted">N/A</span>
+<?php endif; ?>
+</td>
 
 
                                 <td><?= $a->cat_no ?> – <?= $a->cat_name ?></td>
