@@ -8,6 +8,6 @@
 <li class="nav-item">
     <a href="<?= base_url('Bom/bom_dash') ?>" class="nav-link">
         <i class="fa fa-sitemap"></i>
-       &nbsp; <p>Bom</p>
+       &nbsp;&nbsp; <p>Bom</p>
     </a>
 </li>
