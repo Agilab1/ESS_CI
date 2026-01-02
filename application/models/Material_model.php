@@ -26,12 +26,22 @@ class Material_model extends CI_Model
     // INSERT
     public function insert($data)
     {
+        //  SAFETY: asset_id null handling
+        if (!isset($data['asset_id']) || $data['asset_id'] === '') {
+            $data['asset_id'] = null;
+        }
+
         return $this->db->insert($this->table, $data);
     }
 
     // UPDATE
     public function update($id, $data)
     {
+        //  SAFETY: asset_id null handling
+        if (!isset($data['asset_id']) || $data['asset_id'] === '') {
+            $data['asset_id'] = null;
+        }
+
         return $this->db
             ->where('material_id', $id)
             ->update($this->table, $data);
