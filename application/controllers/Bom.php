@@ -32,27 +32,27 @@ class Bom extends CI_Controller
     }
 
     // ================= MATERIAL WISE BOM VIEW =================
-    public function material($material_id)
-    {
-        $data = new stdClass();
+   public function material($material_id)
+{
+    $data = new stdClass();
 
-        // Parent material
-        $data->material = $this->Material_model->get_by_id($material_id);
-        if (!$data->material) show_404();
+    $data->material = $this->Material_model->get_by_id($material_id);
+    if (!$data->material) show_404();
 
-        // Child BOM list
-        $data->boms = $this->Bom_model->get_by_parent_material($material_id);
+    // 🔥 THIS LINE WAS MISSING
+    $data->materials = $this->Material_model->get_all();
 
-        $data->counts = $this->Dashboard_model->counts();
+    $data->boms  = $this->Bom_model->get_by_parent_material($material_id);
+    $data->uoms  = $this->db->get('uom_master')->result();
+    $data->counts = $this->Dashboard_model->counts();
 
-        $this->load->view('incld/header');
-        $this->load->view('incld/top_menu');
-        $this->load->view('incld/side_menu');
-        $this->load->view('user/dashboard', $data);
-        $this->load->view('Bom/material_bom', $data); // 👈 NEW VIEW
-        $this->load->view('incld/footer');
-    }
-
+    $this->load->view('incld/header');
+    $this->load->view('incld/top_menu');
+    $this->load->view('incld/side_menu');
+    $this->load->view('user/dashboard', $data);
+    $this->load->view('Bom/material_bom', $data);
+    $this->load->view('incld/footer');
+}
 
     // ================= DASH / LIST =================
     public function bom_dash()
@@ -203,31 +203,45 @@ class Bom extends CI_Controller
         }
     }
     public function save_child()
-    {
-        $data = [
-            'parent_material_id' => $this->input->post('parent_material_id'),
-            'child_material_id'  => $this->input->post('child_material_id'),
-            'uom'                => $this->input->post('uom'),
-            'qty'                => $this->input->post('qty'),
-            'status'             => 1
-        ];
+{
+    $uom_id = $this->input->post('uom_id');
 
-        //  prevent duplicate child
-        $exists = $this->db
-            ->where('parent_material_id', $data['parent_material_id'])
-            ->where('child_material_id', $data['child_material_id'])
-            ->get('bom')
-            ->row();
+    $data = [
+        'parent_material_id' => $this->input->post('parent_material_id'),
+        'child_material_id'  => $this->input->post('child_material_id'),
+        'uom'                => $uom_id,
+        'qty'                => $this->input->post('qty'),
+        'status'             => 1
+    ];
 
-        if ($exists) {
-            $this->session->set_flashdata('error', 'Child already exists in BOM');
-            redirect('Bom/material/' . $data['parent_material_id']);
-            return;
-        }
+    $exists = $this->db
+        ->where('parent_material_id', $data['parent_material_id'])
+        ->where('child_material_id', $data['child_material_id'])
+        ->get('bom')
+        ->row();
 
-        $this->Bom_model->insert($data);
-        $this->session->set_flashdata('success', 'Child BOM added successfully');
-
+    if ($exists) {
+        $this->session->set_flashdata('error', 'Child already exists in BOM');
         redirect('Bom/material/' . $data['parent_material_id']);
+        return;
     }
+
+    $this->Bom_model->insert($data);
+    $this->session->set_flashdata('success', 'Child BOM added successfully');
+
+    redirect('Bom/material/' . $data['parent_material_id']);
+}
+
+    public function create($material_id)
+{
+    $data['material']  = $this->Material_model->get($material_id);
+    $data['materials'] = $this->Material_model->get_all();
+    $data['boms']      = $this->Bom_model->get_by_parent($material_id);
+
+    // 🔽 ADD THIS
+    $data['uoms'] = $this->db->get('uom_master')->result();
+
+    $this->load->view('bom_form', $data);
+}
+
 }

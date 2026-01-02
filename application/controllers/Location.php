@@ -17,22 +17,35 @@ class Location extends CI_Controller
     // LIST LOCATIONS
     // ============================================================
     public function list()
-    {
-        $data = new stdClass();
-        $data->action = "";
-        $data->locations = $this->Location_model->getAll();
-        $data->counts = $this->Dashboard_model->counts();
+{
+    $data = new stdClass();
 
-        $this->load->view('incld/verify');
-        $this->load->view('incld/header');
-        $this->load->view('incld/top_menu');
-        $this->load->view('incld/side_menu');
-        $this->load->view('user/dashboard', $data);
-        $this->load->view('Location/list', $data);
-        $this->load->view('incld/jslib');
-        $this->load->view('incld/footer');
-        $this->load->view('incld/script');
+    // Locations
+    $data->locations = $this->Location_model->getAll();
+
+    // Dashboard counts
+    $data->counts = $this->Dashboard_model->counts();
+
+    // 🔥 Asset count by site
+    $assetCounts = $this->Asset_model->get_asset_count_by_site();
+
+    // Map: site_id => total
+    $assetMap = [];
+    foreach ($assetCounts as $row) {
+        $assetMap[$row->site_id] = $row->total;
     }
+
+    $data->assetMap = $assetMap;
+
+    $this->load->view('incld/verify');
+    $this->load->view('incld/header');
+    $this->load->view('incld/top_menu');
+    $this->load->view('incld/side_menu');
+    $this->load->view('user/dashboard', $data);
+    $this->load->view('Location/list', $data);
+    $this->load->view('incld/footer');
+}
+
 
     // ============================================================
     // ADD LOCATION
