@@ -251,4 +251,35 @@ class Bom extends CI_Controller
 
         $this->load->view('bom_form', $data);
     }
+    
+    
+// ================= INLINE UPDATE FROM MATERIAL PAGE =================
+public function update_child()
+{
+    $bom_id = $this->input->post('bom_id');
+
+    $data = [
+        'child_material_id' => $this->input->post('child_material_id'),
+        'uom'               => $this->input->post('uom_id'),
+        'qty'               => $this->input->post('qty')
+    ];
+
+    $this->Bom_model->update($bom_id, $data);
+
+    echo json_encode(['status' => 'success']);
+}
+
+// ================= INLINE DELETE FROM MATERIAL PAGE =================
+public function delete_child($bom_id)
+{
+    $bom = $this->Bom_model->get_by_id($bom_id);
+    if (!$bom) show_404();
+
+    $parent_id = $bom->parent_material_id;
+    $this->Bom_model->delete($bom_id);
+
+    $this->session->set_flashdata('success', 'BOM deleted successfully!');
+    redirect('Bom/material/' . $parent_id);
+}
+
 }
