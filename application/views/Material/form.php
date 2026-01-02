@@ -23,9 +23,9 @@ $disabled = $is_view ? 'disabled' : '';
                     <div class="card-body">
 
                         <form method="post"
-                              action="<?= (!$is_view && $is_edit && isset($material->material_id))
-                                    ? base_url('material/update/' . $material->material_id)
-                                    : (!$is_view ? base_url('material/store') : 'javascript:void(0)') ?>">
+                            action="<?= (!$is_view && $is_edit && isset($material->material_id))
+                                        ? base_url('material/update/' . $material->material_id)
+                                        : (!$is_view ? base_url('material/store') : 'javascript:void(0)') ?>">
 
                             <table class="table table-bordered">
 
@@ -34,9 +34,9 @@ $disabled = $is_view ? 'disabled' : '';
                                     <td colspan="2">
                                         <label>Material ID</label>
                                         <input class="form-control"
-                                               type="text"
-                                               value="<?= isset($material) ? $material->material_id : 'Auto Generated' ?>"
-                                               readonly>
+                                            type="text"
+                                            value="<?= isset($material) ? $material->material_id : 'Auto Generated' ?>"
+                                            readonly>
                                     </td>
                                 </tr>
 
@@ -45,20 +45,27 @@ $disabled = $is_view ? 'disabled' : '';
                                     <td>
                                         <label>Material Code</label>
                                         <input class="form-control"
-                                               type="text"
-                                               name="material_code"
-                                               value="<?= isset($material) ? $material->material_code : '' ?>"
-                                               <?= $readonly ?>>
+                                            type="text"
+                                            name="material_code"
+                                            value="<?= isset($material) ? $material->material_code : '' ?>"
+                                            <?= $readonly ?>>
                                     </td>
 
                                     <td>
                                         <label>UOM</label>
-                                        <input class="form-control"
-                                               type="text"
-                                               name="uom"
-                                               value="<?= isset($material) ? $material->uom : 'Nos' ?>"
-                                               <?= $readonly ?>>
+                                        <select name="uom" class="form-control" <?= $disabled ?> required>
+                                            <option value="">Select UOM</option>
+
+                                            <?php foreach ($uoms as $u): ?>
+                                                <option value="<?= $u->uom_code ?>"
+                                                    <?= (isset($material) && $material->uom == $u->uom_code) ? 'selected' : '' ?>>
+                                                    <?= $u->uom_name ?> (<?= $u->uom_code ?>)
+                                                </option>
+                                            <?php endforeach; ?>
+
+                                        </select>
                                     </td>
+
                                 </tr>
 
                                 <!-- ROW 3 : ASSET NAME | QUANTITY -->
@@ -66,19 +73,20 @@ $disabled = $is_view ? 'disabled' : '';
                                     <td>
                                         <label>Asset ID</label>
                                         <input class="form-control"
-                                               type="text"
-                                               name="asset_name"
-                                               value="<?= isset($material) ? $material->asset_name : '' ?>"
-                                               <?= $readonly ?>>
+                                            type="text"
+                                            name="asset_id"
+                                            value="<?= isset($material) ? $material->asset_id : '' ?>"
+                                            <?= $readonly ?>>
                                     </td>
+
 
                                     <td>
                                         <label>Quantity</label>
                                         <input class="form-control"
-                                               type="number"
-                                               name="quantity"
-                                               value="<?= isset($material) ? $material->quantity : '' ?>"
-                                               <?= $readonly ?>>
+                                            type="number"
+                                            name="quantity"
+                                            value="<?= isset($material) ? $material->quantity : '' ?>"
+                                            <?= $readonly ?>>
                                     </td>
                                 </tr>
 
@@ -87,11 +95,11 @@ $disabled = $is_view ? 'disabled' : '';
                                     <td>
                                         <label>Unit Price</label>
                                         <input class="form-control"
-                                               type="number"
-                                               step="0.01"
-                                               name="unit_price"
-                                               value="<?= isset($material) ? $material->unit_price : '' ?>"
-                                               <?= $readonly ?>>
+                                            type="number"
+                                            step="0.01"
+                                            name="unit_price"
+                                            value="<?= isset($material) ? $material->unit_price : '' ?>"
+                                            <?= $readonly ?>>
                                     </td>
 
                                     <td>
@@ -99,7 +107,7 @@ $disabled = $is_view ? 'disabled' : '';
 
                                         <?php if ($is_view): ?>
                                             <input type="hidden" name="status"
-                                                   value="<?= $material->status ?? 1 ?>">
+                                                value="<?= $material->status ?? 1 ?>">
                                         <?php endif; ?>
 
                                         <select name="status" class="form-control" <?= $disabled ?>>

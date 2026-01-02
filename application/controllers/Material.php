@@ -27,10 +27,13 @@ class Material extends CI_Controller
     // ADD FORM
     public function create()
     {
+        $data['uoms'] = $this->db->get('uom_master')->result();
+
         $this->load->view('incld/header');
-        $this->load->view('Material/form');
+        $this->load->view('Material/form', $data);
         $this->load->view('incld/footer');
     }
+
 
     // SAVE
     public function store()
@@ -52,6 +55,7 @@ class Material extends CI_Controller
     public function edit($id)
     {
         $data['material'] = $this->Material_model->get_by_id($id);
+        $data['uoms']     = $this->db->get('uom_master')->result();
 
         if (!$data['material']) show_404();
 
@@ -59,6 +63,7 @@ class Material extends CI_Controller
         $this->load->view('Material/form', $data);
         $this->load->view('incld/footer');
     }
+
 
     // 🔒 VIEW FORM (READ ONLY)
     public function view($id)
