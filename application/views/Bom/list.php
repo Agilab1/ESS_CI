@@ -1,13 +1,12 @@
 <div class="card">
-    <div class="card-header d-flex justify-content-between align-items-center">
+    <div class="card-header d-flex align-items-center">
         <h4 class="mb-0">BOM – Bill of Material</h4>
 
-        <a href="<?= base_url('bom/add'); ?>" class="btn btn-primary">
+        <a href="<?= base_url('bom/add'); ?>"
+            class="btn btn-primary ml-auto">
             <i class="fa fa-plus"></i> Add BOM
         </a>
     </div>
-
-
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-bordered table-striped text-center">
