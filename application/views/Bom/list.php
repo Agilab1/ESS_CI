@@ -1,3 +1,24 @@
+<style>
+    .table input.form-control,
+    .table select.form-control {
+        background-color: #f8f9fa;
+        /* light grey */
+        border-color: #ced4da;
+    }
+
+    .table input.form-control[readonly],
+    .table input.form-control:disabled {
+        background-color: #e9ecef;
+        cursor: not-allowed;
+
+        .table input.form-control,
+        .table select.form-control {
+            background-color: #f8f9fa;
+            border-radius: 6px;
+        }
+
+    }
+</style>
 <div class="card">
     <div class="card-header d-flex align-items-center">
         <h4 class="mb-0">BOM – Bill of Material</h4>
