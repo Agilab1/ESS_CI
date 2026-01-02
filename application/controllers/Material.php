@@ -38,6 +38,7 @@ class Material extends CI_Controller
         $data = [
             'material_code' => $this->input->post('material_code'),
             'uom'           => $this->input->post('uom'),
+            'asset_id'      => $this->input->post('asset_id'),
             'unit_price'    => $this->input->post('unit_price'),
             'quantity'      => $this->input->post('quantity'),
             'status'        => $this->input->post('status'),
@@ -78,6 +79,7 @@ class Material extends CI_Controller
         $data = [
             'material_code' => $this->input->post('material_code'),
             'uom'           => $this->input->post('uom'),
+            'asset_id'      => $this->input->post('asset_id'),
             'unit_price'    => $this->input->post('unit_price'),
             'quantity'      => $this->input->post('quantity'),
             'status'        => $this->input->post('status'),
