@@ -67,8 +67,8 @@ $disabled = $is_view ? 'disabled' : '';
                                         <label>Asset ID</label>
                                         <input class="form-control"
                                                type="text"
-                                               name="asset_name"
-                                               value="<?= isset($material) ? $material->asset_name : '' ?>"
+                                               name="asset_ID"
+                                               value="<?= isset($material) ? $material->$id : '' ?>"
                                                <?= $readonly ?>>
                                     </td>
 
