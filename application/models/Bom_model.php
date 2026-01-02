@@ -80,11 +80,12 @@ class Bom_model extends CI_Model
         ')
         ->from('bom b')
         ->join('material m', 'm.material_id = b.child_material_id')
-        ->join('uom_master u', 'u.uom_code = b.uom', 'left')
+        ->join('uom_master u', 'u.uom_id = b.uom', 'left')  // ✅ FIXED
         ->where('b.parent_material_id', $material_id)
         ->order_by('b.bom_id', 'ASC')
         ->get()
         ->result();
 }
+
 
 }
