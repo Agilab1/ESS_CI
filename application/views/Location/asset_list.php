@@ -76,7 +76,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                                         <!-- VERIFIED FLAG FROM assdet TABLE -->
                                         <td class="text-center">
-                                            <input type="checkbox"
+                                            <input type="checkbox" class="form-control"
                                                 <?= ((int)($asset->verified ?? 0) === 1) ? 'checked' : '' ?>
                                                 disabled>
                                         </td>
