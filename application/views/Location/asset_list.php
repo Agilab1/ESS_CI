@@ -5,6 +5,7 @@
         transform: scale(1.3);
     }
 </style>
+
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
@@ -29,20 +30,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div class="row mb-4">
                     <div class="col-md-4">
                         <label class="form-label fw-bold">Site ID</label>
-                        <input type="text" class="form-control"
-                            value="<?= $site->site_id ?? '' ?>" readonly>
+                        <input type="text" class="form-control" value="<?= $site->site_id ?? '' ?>" readonly>
                     </div>
 
                     <div class="col-md-4">
                         <label class="form-label fw-bold">Site No</label>
-                        <input type="text" class="form-control"
-                            value="<?= $site->site_no ?? '' ?>" readonly>
+                        <input type="text" class="form-control" value="<?= $site->site_no ?? '' ?>" readonly>
                     </div>
 
                     <div class="col-md-4">
                         <label class="form-label fw-bold">Site Name</label>
-                        <input type="text" class="form-control"
-                            value="<?= $site->site_name ?? '' ?>" readonly>
+                        <input type="text" class="form-control" value="<?= $site->site_name ?? '' ?>" readonly>
                     </div>
                 </div>
 
@@ -73,20 +71,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <td><?= $asset->asset_id ?? '-' ?></td>
 
                                         <td><?= $asset->assdet_id ?? '-' ?></td>
-                                       <td><?= !empty($asset->serial_no) ? $asset->serial_no : '-' ?></td>
+                                        <td><?= !empty($asset->serial_no) ? $asset->serial_no : '-' ?></td>
 
-                                       
+
                                         <td><?= !empty($asset->staff_id) ? $asset->staff_id : '-' ?></td>
-                                         <td><?= !empty($asset->emp_name) ? $asset->emp_name : '-' ?></td>
+                                        <td><?= !empty($asset->emp_name) ? $asset->emp_name : '-' ?></td>
 
                                         <td class="text-start"><?= $asset->asset_name ?? '-' ?></td>
 
                                         <!-- VERIFIED FLAG FROM assdet TABLE -->
                                         <td class="text-center">
-                                            <input type="checkbox" class="form-control"
-                                                <?= ((int)($asset->verified ?? 0) === 1) ? 'checked' : '' ?>
-                                                disabled>
+                                            <input type="checkbox" class="big-checkbox" <?= ((int) ($asset->verified ?? 0) === 1) ? 'checked' : '' ?> disabled>
                                         </td>
+
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else: ?>
@@ -104,8 +101,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                 <!-- BACK BUTTON -->
                 <div class="text-center mt-4">
-                    <a href="<?= base_url('Location/list'); ?>"
-                        class="btn btn-secondary px-4 py-2">
+                    <a href="<?= base_url('Location/list'); ?>" class="btn btn-secondary px-4 py-2">
                         <i class="fa fa-arrow-left me-1"></i>
                         Back to Location List
                     </a>
@@ -119,22 +115,22 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 <!-- ================= VERIFY AJAX ================= -->
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
 
-        document.querySelectorAll('.verify-checkbox').forEach(function(checkbox) {
+        document.querySelectorAll('.verify-checkbox').forEach(function (checkbox) {
 
-            checkbox.addEventListener('change', function() {
+            checkbox.addEventListener('change', function () {
 
                 const assdetId = this.dataset.assdetId;
                 const verify = this.checked ? 1 : 0;
 
                 fetch("<?= base_url('Asset/verify_assdet'); ?>", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/x-www-form-urlencoded"
-                        },
-                        body: "assdet_id=" + assdetId + "&verify=" + verify
-                    })
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    body: "assdet_id=" + assdetId + "&verify=" + verify
+                })
                     .then(res => res.json())
                     .then(resp => {
                         if (!resp.success) {
