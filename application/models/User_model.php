@@ -76,11 +76,14 @@ class User_model extends CI_Model
             users.user_ty,
             users.user_st,
             users.asset_no,
+            users.serial_no,      
             users.role_id,
             staffs.staff_id,
             staffs.emp_name,
-            sites.site_no
-        ');
+            sites.site_no'
+        );
+
+
         $this->db->from('users');
         $this->db->join('staffs', 'staffs.staff_id = users.staff_id', 'left');
         $this->db->join('sites', 'sites.site_no = users.site_no', 'left');
