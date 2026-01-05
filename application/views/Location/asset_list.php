@@ -1,3 +1,10 @@
+<style>
+    .big-checkbox {
+        width: 22px;
+        height: 22px;
+        transform: scale(1.3);
+    }
+</style>
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
