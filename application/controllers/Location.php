@@ -219,11 +219,7 @@ class Location extends CI_Controller
 
 
     //============================================================
-    // ASSET LIST FORM (QR PAGE)
-
-    
-
-}
+    // ASSET LIST FORM (QR PAGE
 
 
 public function asset_list($site_id)
@@ -260,4 +256,5 @@ public function asset_list($site_id)
     $this->load->view('incld/header');
     $this->load->view('Location/asset_list', $data);
     $this->load->view('incld/footer');
+}
 }
