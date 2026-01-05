@@ -1,17 +1,26 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+
 <style>
     .big-checkbox {
         width: 22px;
         height: 22px;
         transform: scale(1.3);
+        cursor: not-allowed;
+    }
+
+    .verify-status {
+        font-size: 18px;
+        font-weight: 600;
+    }
+    .verify-ok {
+        color: #0b0e0bff; /* green */
+    }
+    .verify-no {
+        color: #0f0d0dff; /* red */
     }
 </style>
 
-<?php
-defined('BASEPATH') or exit('No direct script access allowed');
-?>
-
 <div class="d-flex justify-content-center align-items-center" style="min-height:100vh; background:#f4f6f9;">
-
     <div class="container" style="max-width:1100px;">
         <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
 
@@ -23,28 +32,45 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </h4>
             </div>
 
-            <!-- BODY -->
             <div class="card-body p-4">
 
-                <!-- SITE DETAILS -->
+                <!-- ================= SITE DETAILS ================= -->
                 <div class="row mb-4">
                     <div class="col-md-4">
                         <label class="form-label fw-bold">Site ID</label>
-                        <input type="text" class="form-control" value="<?= $site->site_id ?? '' ?>" readonly>
+                        <input type="text" class="form-control"
+                               value="<?= $site->site_id ?? '-' ?>" readonly>
                     </div>
 
                     <div class="col-md-4">
                         <label class="form-label fw-bold">Site No</label>
-                        <input type="text" class="form-control" value="<?= $site->site_no ?? '' ?>" readonly>
+                        <input type="text" class="form-control"
+                               value="<?= $site->site_no ?? '-' ?>" readonly>
                     </div>
 
                     <div class="col-md-4">
                         <label class="form-label fw-bold">Site Name</label>
-                        <input type="text" class="form-control" value="<?= $site->site_name ?? '' ?>" readonly>
+                        <input type="text" class="form-control"
+                               value="<?= $site->site_name ?? '-' ?>" readonly>
                     </div>
                 </div>
 
-                <!-- ASSET TABLE -->
+                <!-- ================= VERIFIED / UNVERIFIED COUNT ================= -->
+                <div class="row mb-4">
+                    <div class="col-md-6 text-center">
+                        <span class="verify-status verify-ok">
+                            Verified Assets ✅ : <?= $verify_count['verified'] ?? 0 ?>
+                        </span>
+                    </div>
+
+                    <div class="col-md-6 text-center">
+                        <span class="verify-status verify-no">
+                             Unverified Assets ❌ : <?= $verify_count['unverified'] ?? 0 ?>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- ================= ASSET TABLE ================= -->
                 <div class="table-responsive">
                     <table class="table table-bordered align-middle">
 
@@ -53,99 +79,57 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <th style="width:60px;">#</th>
                                 <th>Asset ID</th>
                                 <th>Assdet ID</th>
-                                <th>Serial Name</th>
+                                <th>Serial No</th>
                                 <th>Staff ID</th>
                                 <th>Staff Name</th>
                                 <th>Asset Name</th>
-                                <!-- <th style="width:150px;">Quantity</th> -->
                                 <th style="width:120px;">Verify</th>
                             </tr>
                         </thead>
+
                         <tbody>
-                            <?php if (!empty($assets)): ?>
-                                <?php $i = 1;
-                                foreach ($assets as $asset): ?>
-                                    <tr>
-                                        <td class="text-center"><?= $i++; ?></td>
-
-                                        <td><?= $asset->asset_id ?? '-' ?></td>
-
-                                        <td><?= $asset->assdet_id ?? '-' ?></td>
-                                        <td><?= !empty($asset->serial_no) ? $asset->serial_no : '-' ?></td>
-
-
-                                        <td><?= !empty($asset->staff_id) ? $asset->staff_id : '-' ?></td>
-                                        <td><?= !empty($asset->emp_name) ? $asset->emp_name : '-' ?></td>
-
-                                        <td class="text-start"><?= $asset->asset_name ?? '-' ?></td>
-
-                                        <!-- VERIFIED FLAG FROM assdet TABLE -->
-                                        <td class="text-center">
-                                            <input type="checkbox" class="big-checkbox" <?= ((int) ($asset->verified ?? 0) === 1) ? 'checked' : '' ?> disabled>
-                                        </td>
-
-                                    </tr>
-                                <?php endforeach; ?>
-                            <?php else: ?>
+                        <?php if (!empty($assets)): ?>
+                            <?php $i = 1; foreach ($assets as $asset): ?>
                                 <tr>
-                                    <td colspan="6" class="text-center text-muted py-4">
-                                        No assets found for this site
+                                    <td class="text-center"><?= $i++; ?></td>
+                                    <td><?= $asset->asset_id ?? '-' ?></td>
+                                    <td><?= $asset->assdet_id ?? '-' ?></td>
+                                    <td><?= $asset->serial_no ?? '-' ?></td>
+                                    <td><?= $asset->staff_id ?? '-' ?></td>
+                                    <td><?= $asset->emp_name ?? '-' ?></td>
+                                    <td><?= $asset->asset_name ?? '-' ?></td>
+
+                                    <!-- VERIFIED FLAG -->
+                                    <td class="text-center">
+                                        <input type="checkbox"
+                                               class="big-checkbox"
+                                               <?= ((int)($asset->verified ?? 0) === 1) ? 'checked' : '' ?>
+                                               disabled>
                                     </td>
                                 </tr>
-                            <?php endif; ?>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="8" class="text-center text-muted py-4">
+                                    No assets found for this site
+                                </td>
+                            </tr>
+                        <?php endif; ?>
                         </tbody>
-
 
                     </table>
                 </div>
 
-                <!-- BACK BUTTON -->
+                <!-- ================= BACK BUTTON ================= -->
                 <div class="text-center mt-4">
-                    <a href="<?= base_url('Location/list'); ?>" class="btn btn-secondary px-4 py-2">
+                    <a href="<?= base_url('Location/list'); ?>"
+                       class="btn btn-secondary px-4 py-2">
                         <i class="fa fa-arrow-left me-1"></i>
-                        Back 
+                        Back to Location List
                     </a>
                 </div>
 
             </div>
         </div>
     </div>
-
 </div>
-
-<!-- ================= VERIFY AJAX ================= -->
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-
-        document.querySelectorAll('.verify-checkbox').forEach(function (checkbox) {
-
-            checkbox.addEventListener('change', function () {
-
-                const assdetId = this.dataset.assdetId;
-                const verify = this.checked ? 1 : 0;
-
-                fetch("<?= base_url('Asset/verify_assdet'); ?>", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded"
-                    },
-                    body: "assdet_id=" + assdetId + "&verify=" + verify
-                })
-                    .then(res => res.json())
-                    .then(resp => {
-                        if (!resp.success) {
-                            //alert('Verification failed!');
-                            this.checked = !this.checked;
-                        }
-                    })
-                    .catch(() => {
-                        //alert('Server error!');
-                        this.checked = !this.checked;
-                    });
-
-            });
-
-        });
-
-    });
-</script>

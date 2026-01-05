@@ -219,26 +219,42 @@ class Location extends CI_Controller
 
 
     //============================================================
-    // ASSET LIST FORM (QR PAGE)
+    // ASSET LIST FORM (QR PAGE
 
-    public function asset_list($site_id)
-    {
-        $site = $this->Location_model->get_site_by_id($site_id);
-        $assets = $this->Location_model->get_assets_by_site($site_id);
 
-        if (!$site)
-            show_404();
+public function asset_list($site_id)
+{
+    // SITE (fields unchanged)
+    $site = $this->Location_model->getById($site_id);
+    $assets = $this->Location_model->get_assets_by_site($site_id);
 
-        $data = [
-            'site' => $site,
-            'assets' => $assets
-        ];
-
-        $this->load->view('incld/header');
-        $this->load->view('Location/asset_list', $data);
-        $this->load->view('incld/footer');
+    if (!$site) {
+        show_404();
     }
 
+    // ✅ ONLY COUNT LOGIC (NO FIELD CHANGE)
+    $verified = 0;
+    $unverified = 0;
+
+    foreach ($assets as $a) {
+        if (isset($a->verified) && (int)$a->verified === 1) {
+            $verified++;
+        } else {
+            $unverified++;
+        }
+    }
+
+    $data = [
+        'site' => $site,
+        'assets' => $assets,
+        'verify_count' => [
+            'verified'   => $verified,
+            'unverified' => $unverified
+        ]
+    ];
+
+    $this->load->view('incld/header');
+    $this->load->view('Location/asset_list', $data);
+    $this->load->view('incld/footer');
 }
-
-
+}
