@@ -103,7 +103,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div class="text-center mt-4">
                     <a href="<?= base_url('Location/list'); ?>" class="btn btn-secondary px-4 py-2">
                         <i class="fa fa-arrow-left me-1"></i>
-                        Back to Location List
+                        Back 
                     </a>
                 </div>
 
