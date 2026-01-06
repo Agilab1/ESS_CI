@@ -17,6 +17,7 @@
             <thead class="btn-primary text-white">
                 <tr>
                     <th>#</th>
+                    <th>Department ID</th>
                     <th>Department Name</th>
                     <th>Site</th>
 
@@ -29,6 +30,7 @@
                     <?php foreach ($department as $i => $d): ?>
                         <tr>
                             <td><?= $i + 1 ?></td>
+                            <td><?= $d->department_id ?></td>
                             <td><?= $d->department_name ?></td>
                             <td><?= $d->site_no ?> - <?= $d->site_name ?></td>
 

@@ -11,7 +11,7 @@ class Department_model extends CI_Model
             ->select('department.*, sites.site_no, sites.site_name')
             ->from('department')
             ->join('sites', 'sites.site_id = department.site_id', 'left')
-            ->order_by('department.department_id', 'DESC')
+            ->order_by('department.department_id', 'ASC')
             ->get()
             ->result();
     }
