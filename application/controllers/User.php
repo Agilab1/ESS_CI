@@ -7,7 +7,7 @@ class User extends CI_Controller
     {
         parent::__construct();
 
-        // ✅ LOADS (FIXED)
+        //  LOADS (FIXED)
         $this->load->model('User_model');
         $this->load->model('Dashboard_model');
         $this->load->library(['session', 'form_validation']);
@@ -41,7 +41,7 @@ class User extends CI_Controller
             redirect('user');
         }
 
-        // ✅ SESSION SET
+        //  SESSION SET
         $this->session->set_userdata([
             'user_id'   => $user->user_id,
             'user_nm'   => $user->user_nm,
@@ -50,7 +50,7 @@ class User extends CI_Controller
             'logged_in' => true
         ]);
 
-        // 🔀 ROLE BASED REDIRECT
+        //  ROLE BASED REDIRECT
         if ((int)$user->role_id === 1) {
             redirect('Admin');
         } else {
@@ -213,4 +213,5 @@ class User extends CI_Controller
             'user_ad' => $this->input->post('user_ad') ?? 0
         ];
     }
+    
 }

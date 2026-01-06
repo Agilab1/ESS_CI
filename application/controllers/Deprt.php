@@ -8,6 +8,7 @@ class Deprt extends CI_Controller
         parent::__construct();
         $this->load->model('Department_model');
         $this->load->model('Dashboard_model');
+        $this->load->model('User_model');
         $this->load->library(['session', 'form_validation']);
 
         if (!$this->session->userdata('logged_in')) {
@@ -107,33 +108,67 @@ class Deprt extends CI_Controller
     }
 
 
-   public function view($id)
-{
-    $data['action'] = 'view';
-    $data['counts'] = $this->Dashboard_model->counts();
+    //    public function view($id)
+    // {
+    //     $data['action'] = 'view';
+    //     $data['counts'] = $this->Dashboard_model->counts();
 
-    // 🔹 Department DB 
-    $data['department'] = $this->Department_model->getById($id);
+    //     // 🔹 Department DB 
+    //     $data['department'] = $this->Department_model->getById($id);
 
-    if (!$data['department']) {
-        show_404();
-    }
+    //     if (!$data['department']) {
+    //         show_404();
+    //     }
 
-    // 🔹 Sites dropdown
-    $data['sites'] = $this->db->get('sites')->result();
+    //     //  Sites dropdown
+    //     $data['sites'] = $this->db->get('sites')->result();
 
-    $this->load->view('incld/verify');
-    $this->load->view('incld/header');
-    $this->load->view('incld/top_menu');
-    $this->load->view('incld/side_menu');
-    $this->load->view('user/dashboard', $data);
-    $this->load->view('dept/form', $data);
-    $this->load->view('incld/footer');
-}
+    //     $this->load->view('incld/verify');
+    //     $this->load->view('incld/header');
+    //     $this->load->view('incld/top_menu');
+    //     $this->load->view('incld/side_menu');
+    //     $this->load->view('user/dashboard', $data);
+    //     $this->load->view('dept/form', $data);
+    //     $this->load->view('incld/footer');
+    // }
 
 
     // updated save code 
-        public function save()
+    public function view($id)
+    {
+        $data['action'] = 'view';
+        $data['counts'] = $this->Dashboard_model->counts();
+
+        // department
+        $data['department'] = $this->Department_model->getById($id);
+        if (!$data['department']) show_404();
+
+        // NFC SCAN LOGIC
+        if ($this->input->get('nfc') == 1) {
+
+            $user_id = $this->session->userdata('user_id');
+
+            if ($user_id) {
+                // user department assign
+                $this->db->where('user_id', $user_id)
+                    ->update('users', [
+                        'department_id' => $id
+                    ]);
+            }
+        }
+
+        $data['sites'] = $this->db->get('sites')->result();
+
+        $this->load->view('incld/verify');
+        $this->load->view('incld/header');
+        $this->load->view('incld/top_menu');
+        $this->load->view('incld/side_menu');
+        $this->load->view('user/dashboard', $data);
+        $this->load->view('dept/form', $data);
+        $this->load->view('incld/footer');
+    }
+
+    public function save()
     {
         $this->form_validation->set_rules(
             'department_name',
@@ -171,5 +206,4 @@ class Deprt extends CI_Controller
 
         redirect('deprt/list');
     }
-
 }
