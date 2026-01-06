@@ -142,4 +142,31 @@ class Asset_model extends CI_Model
             ->get()
             ->result();
     }
+    public function get_asset_by_assdet($assdet_id)
+    {
+        return $this->db
+            ->select('
+            ad.assdet_id,
+            ad.asset_id,
+            ad.serial_no,
+            ad.staff_id,
+            a.asset_name,
+            s.site_no,
+            s.site_name
+        ')
+            ->from('assdet ad')
+            ->join('assets a', 'a.asset_id = ad.asset_id', 'left')
+            ->join('sites s', 's.site_id = ad.site_id', 'left')
+            ->where('ad.assdet_id', $assdet_id)
+            ->get()
+            ->row();
+    }
+    public function update_asset_owner($assdet_id, $staff_id)
+    {
+        return $this->db
+            ->where('assdet_id', $assdet_id)
+            ->update('assdet', [
+                'staff_id' => $staff_id
+            ]);
+    }
 }

@@ -303,53 +303,49 @@ class Asset extends CI_Controller
                 $data->asset = $this->Asset_model->getById($data->detail->asset_id);
                 break;
 
-            // 
-            // updated code view str here 
             case "view":
-
                 $data->action = "view";
-
-                // 1️ assdet row
                 $data->detail = $this->db
                     ->get_where('assdet', ['assdet_id' => $id])
                     ->row();
 
                 if (!$data->detail) show_404();
 
-                // 2️ asset
                 $data->asset = $this->Asset_model->getById($data->detail->asset_id);
 
-                // ===== NFC SCAN (INVENTORY + USER ASSIGN) =====
-                if ($this->input->get('nfc') == 1) {
+                // NFC SCAN HANDLER (ONLY ONE SERIAL VERIFIED)
+                // NFC SCAN HANDLER (ONLY WHEN INVENTORY IS ON)
+                if ($this->input->get('nfc') == 1 && $type === 'view') {
 
-                    $user_id = $this->session->userdata('user_id');
+                    $assdet_id = (int) $id;
 
-                    // 3️ get site
-                    $site = $this->db
-                        ->get_where('sites', ['site_id' => $data->detail->site_id])
+                    // 1️ get assdet row
+                    $assdet = $this->db
+                        ->get_where('assdet', ['assdet_id' => $assdet_id])
                         ->row();
 
-                    // 4️inventory ON?
-                    if ($site && (int)$site->inventory_checked === 1) {
+                    if ($assdet) {
 
-                        // inventory verify
-                        $this->db
-                            ->where('assdet_id', $data->detail->assdet_id)
-                            ->limit(1)
-                            ->update('assdet', ['verified' => 1]);
+                        // 2️ get site inventory status
+                        $site = $this->db
+                            ->get_where('sites', ['site_id' => $assdet->site_id])
+                            ->row();
 
-                        //  user serial assign
-                        if ($user_id) {
-                            $this->User_model->edit_user($user_id, [
-                                'serial_no' => $data->detail->serial_no
-                            ]);
+                        // 3️ ONLY if inventory checkbox is TICKED
+                        if ($site && (int)$site->inventory_checked === 1) {
+
+                            //  verify only this assdet
+                            $this->db
+                                ->where('assdet_id', $assdet_id)
+                                ->limit(1)
+                                ->update('assdet', ['verified' => 1]);
                         }
+                        //  inventory OFF → NFC ignored
                     }
-                    // inventory OFF → nothing happens
                 }
 
-                break;
 
+                break;
 
             case "delete":
                 $row = $this->db->get_where('assdet', ['assdet_id' => $id])->row();
@@ -414,5 +410,21 @@ class Asset extends CI_Controller
             ->update('assdet', ['verified' => $verified]);
 
         echo json_encode(['success' => true]);
+    }
+    public function change_owner()
+    {
+        $assdet_id = $this->input->post('assdet_id');
+        $staff_id  = $this->input->post('staff_id');
+
+        if (!$assdet_id || !$staff_id) {
+            show_error('Invalid data');
+        }
+
+        $this->db->where('assdet_id', $assdet_id)
+            ->update('assdet', [
+                'staff_id' => $staff_id
+            ]);
+
+        echo json_encode(['status' => 'success']);
     }
 }

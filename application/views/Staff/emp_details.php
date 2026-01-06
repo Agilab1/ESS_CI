@@ -1,3 +1,7 @@
+<?php
+$isAdmin = ((int)$this->session->userdata('role_id') === 1);
+?>
+
 <style>
     th,
     td {
@@ -15,15 +19,22 @@
 
     form select.form-control {
         min-width: 160px;
-        
     }
+
     form select[name="year"] {
-    min-width: 100px;
-}
+        min-width: 100px;
+    }
 
     form {
         gap: 10px;
+    }
 
+    /* Disabled icons (USER) */
+    .disabled-action {
+        pointer-events: none;
+        opacity: 0.4;
+        filter: blur(0.6px);
+        cursor: not-allowed;
     }
 </style>
 
@@ -40,6 +51,7 @@
             $curMonth = $month;
             $curYear  = $year;
             ?>
+
             <div class="d-flex justify-content-between mt-3">
 
                 <!-- FILTER -->
@@ -70,7 +82,6 @@
 
                 <!-- MONTH NAVIGATION -->
                 <div class="d-flex gap-2">
-
                     <a class="btn btn-outline-primary"
                         href="<?= base_url('Staff/emp_list/' . $staff->staff_id . '?month=' . $prevM . '&year=' . $prevY) ?>">
                         ⬅ Previous Month
@@ -85,7 +96,6 @@
                         href="<?= base_url('Staff/emp_list/' . $staff->staff_id . '?month=' . $nextM . '&year=' . $nextY) ?>">
                         Next Month ➡
                     </a>
-
                 </div>
 
             </div>
@@ -121,20 +131,15 @@
 
                             $status = !empty($item->staff_st) ? $item->staff_st : "No Punch";
 
-                            if (!empty($dbHoliday)) {
+                            if ($isHoliday) {
                                 $status = $dbHoliday->day_txt;
-                            } elseif ($dayName == 'Saturday') {
+                            } elseif ($dayName === 'Saturday') {
                                 $status = "Saturday Off";
-                            } elseif ($dayName == 'Sunday') {
+                            } elseif ($dayName === 'Sunday') {
                                 $status = "Sunday Off";
                             }
 
-                            $statusClass = '';
-                            if ($status == "Saturday Off" || $status == "Sunday Off") {
-                                $statusClass = 'text-danger font-weight-bold';
-                            } elseif ($isHoliday) {
-                                $statusClass = 'text-danger';
-                            }
+                            $isWeekOff = in_array($status, ['Saturday Off', 'Sunday Off']);
                             ?>
 
                             <tr class="<?= ($isHoliday ? 'table-danger' : '') ?>">
@@ -142,53 +147,54 @@
                                 <td><?= $item->punch_date ?></td>
                                 <td><?= $item->staff_id ?></td>
                                 <td><?= $item->emp_name ?></td>
-
-                                <td class="<?= $statusClass ?>"><?= $status ?></td>
-
+                                <td><?= $status ?></td>
                                 <td><?= $item->remark ?: '-' ?></td>
 
-                                <!-- ✅ 12-HOUR C-IN -->
                                 <td>
                                     <?= !empty($item->cin_time)
                                         ? date('h:i A', strtotime($item->cin_time))
                                         : '-' ?>
                                 </td>
 
-                                <!-- ✅ 12-HOUR C-OUT -->
                                 <td>
                                     <?= !empty($item->cout_time)
                                         ? date('h:i A', strtotime($item->cout_time))
                                         : '-' ?>
                                 </td>
 
-                                <!-- DURATION -->
                                 <td><?= $item->duration ?: '-' ?></td>
 
+                                <!-- ACTION -->
                                 <td class="text-center">
 
-                                    <?php if (!in_array(strtolower($status), ['saturday off', 'sunday off'])): ?>
+                                    <?php if (!$isWeekOff && !$isHoliday): ?>
 
+                                        <!-- 👁 VIEW -->
                                         <a href="<?= base_url('Staff/status/' . $item->staff_id . '?date=' . $item->punch_date . '&mode=view') ?>">
                                             <i class="fa fa-eye"></i>
                                         </a>
+
                                         &nbsp;
 
-                                        <?php if (!$isHoliday): ?>
-
-                                            <?php if ($status == "No Punch"): ?>
-                                                <a href="<?= base_url('Staff/status/' . $item->staff_id . '?date=' . $item->punch_date . '&mode=create') ?>">
-                                                    <i class="fa fa-plus"></i>
-                                                </a>
-                                            <?php else: ?>
-                                                <a href="<?= base_url('Staff/status/' . $item->staff_id . '?date=' . $item->punch_date . '&mode=edit') ?>">
-                                                    <i class="fa fa-edit"></i>
-                                                </a>
-                                            <?php endif; ?>
-
+                                        <!-- ➕ / ✏️ -->
+                                        <?php if ($status === "No Punch"): ?>
+                                            <a href="<?= base_url('Staff/status/' . $item->staff_id . '?date=' . $item->punch_date . '&mode=create') ?>"
+                                                class="<?= !$isAdmin ? 'disabled-action' : '' ?>">
+                                                <i class="fa fa-plus"></i>
+                                            </a>
+                                        <?php else: ?>
+                                            <a href="<?= base_url('Staff/status/' . $item->staff_id . '?date=' . $item->punch_date . '&mode=edit') ?>"
+                                                class="<?= !$isAdmin ? 'disabled-action' : '' ?>">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
                                         <?php endif; ?>
 
+                                        &nbsp;
+
+                                        <!-- 🗑 DELETE -->
                                         <a href="<?= base_url('Staff/delete_status/' . $item->staff_id . '/' . $item->punch_date) ?>"
-                                            onclick="return confirm('Delete this record?');">
+                                            class="<?= !$isAdmin ? 'disabled-action' : '' ?>"
+                                            <?= $isAdmin ? "onclick=\"return confirm('Delete this record?');\"" : '' ?>>
                                             <i class="fa fa-trash text-danger"></i>
                                         </a>
 

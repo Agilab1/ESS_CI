@@ -12,6 +12,11 @@ class Staff extends CI_Controller
         $this->load->model('Work_model');
         $this->load->model('Holiday_model');
     }
+    private function is_admin()
+    {
+        return ((int)$this->session->userdata('role_id') === 1);
+    }
+
     public function status($staff_id)
     {
         $date = $this->input->get('date');
@@ -59,6 +64,9 @@ class Staff extends CI_Controller
 
     public function save_status()
     {
+        if (!$this->is_admin()) {
+            show_error('Unauthorized access', 403);
+        }
         $staff_id = $this->input->post('staff_id');
         $date     = $this->input->post('date');
         $status   = $this->input->post('staff_st');
@@ -87,6 +95,9 @@ class Staff extends CI_Controller
 
     public function delete_status($staff_id, $date)
     {
+        if (!$this->is_admin()) {
+            show_error('Unauthorized access', 403);
+        }
         $this->Work_model->delete_status($staff_id, $date);
         $this->session->set_flashdata('success', 'Record deleted!');
         redirect('Staff/emp_list/' . $staff_id);
@@ -255,6 +266,10 @@ class Staff extends CI_Controller
 
     public function update_status_inline()
     {
+        if (!$this->is_admin()) {
+            echo json_encode(["status" => "unauthorized"]);
+            return;
+        }
         $data = [
             'staff_id' => $this->input->post('staff_id'),
             'date'     => $this->input->post('date'),
@@ -287,6 +302,7 @@ class Staff extends CI_Controller
 
     public function add()
     {
+        if (!$this->is_admin()) show_error('Unauthorized', 403);
         $data = new stdClass();
         $data->action = 'add';
         $data->staff = (object)[
@@ -310,6 +326,7 @@ class Staff extends CI_Controller
 
     public function edit($staff_id)
     {
+        if (!$this->is_admin()) show_error('Unauthorized', 403);
         $data = new stdClass();
         $data->action = 'edit';
         $data->staff  = $this->Staff_model->get_user($staff_id);
@@ -362,6 +379,7 @@ class Staff extends CI_Controller
 
     public function delete($staff_id)
     {
+        if (!$this->is_admin()) show_error('Unauthorized', 403);
         $data = new stdClass();
         $data->action = 'delete';
         $data->staff = $this->Staff_model->get_user($staff_id);
@@ -402,6 +420,7 @@ class Staff extends CI_Controller
     }
     public function save()
     {
+        if (!$this->is_admin()) show_error('Unauthorized', 403);
         $action = strtolower($this->input->post('action'));
         $staff_id = $this->input->post('old_staff_id');
 
@@ -453,10 +472,32 @@ class Staff extends CI_Controller
         $data['staff'] = $this->Staff_model->get_by_id($staff_id);
         $data['assets'] = $this->Asset_model->get_assets_with_site_by_staff($staff_id);
 
+        // 🔥 ALL STAFF LIST (for dropdown)
+        $data['all_staff'] = $this->Staff_model->get_user();
+
         $this->load->view('incld/header');
         $this->load->view('Staff/asset_form', $data);
         $this->load->view('incld/footer');
     }
+    public function change_asset_owner()
+    {
+        $assdet_id = $this->input->post('assdet_id');
+        $staff_id  = $this->input->post('staff_id');
+
+        $this->load->model('Asset_model');
+
+        // update ownership
+        $this->Asset_model->update_asset_owner($assdet_id, $staff_id);
+
+        // 🔥 fetch updated asset row (new owner ke liye)
+        $asset = $this->Asset_model->get_asset_by_assdet($assdet_id);
+
+        echo json_encode([
+            'status' => 'success',
+            'asset'  => $asset
+        ]);
+    }
+
 
 
 
