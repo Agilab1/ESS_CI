@@ -1,55 +1,85 @@
-<div class="card">
-    <div class="card-header">
-        <h4><?= ucfirst($action) ?> Department</h4>
+<?php
+$isView = ($action === 'view');
+$disabled = $isView ? 'disabled' : '';
+?>
+
+<body class="p-4" style="background:#f5f7fa;">
+    <div class="d-flex justify-content-center align-items-center" style="min-height:80vh;">
+        <div class="container" style="width:60%; max-width:700px;">
+
+            <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h4 class="m-0"><?= ucfirst($action) ?> Department</h4>
+                </div>
+
+                <div class="card-body p-4">
+
+                    <?php if ($this->session->flashdata('error')): ?>
+                        <div class="alert alert-danger"><?= $this->session->flashdata('error'); ?></div>
+                    <?php endif; ?>
+
+                    <?php if (!$isView): ?>
+                        <form method="post" action="<?= base_url('deprt/save'); ?>" autocomplete="off">
+                            <input type="hidden" name="action" value="<?= $action ?>">
+
+                            <?php if ($action === 'edit'): ?>
+                                <input type="hidden" name="department_id" value="<?= $department->department_id ?>">
+                            <?php endif; ?>
+                        <?php endif; ?>
+
+                        <table class="table table-bordered">
+
+                            <tr>
+                                <td>
+                                    <label class="fw-semibold">Department Name</label>
+                                    <input type="text"
+                                        name="department_name"
+                                        class="form-control"
+                                        value="<?= $department->department_name ?? '' ?>"
+                                        <?= $disabled ?> required>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <label class="fw-semibold">Site</label>
+                                    <select name="site_id" class="form-control" <?= $disabled ?> required>
+                                        <option value="">Select Site</option>
+
+                                        <?php foreach ($sites as $s): ?>
+                                            <option value="<?= $s->site_id ?>"
+                                                <?= (isset($department->site_id) && $department->site_id == $s->site_id) ? 'selected' : '' ?>>
+                                                <?= $s->site_no ?> - <?= $s->site_name ?>
+                                            </option>
+                                        <?php endforeach; ?>
+
+                                    </select>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text-center pt-3">
+
+                                    <?php if (!$isView): ?>
+                                        <button type="submit" class="btn btn-primary me-3">
+                                            <i class="fas fa-save me-1"></i> Save
+                                        </button>
+                                    <?php endif; ?>
+
+                                    <a href="<?= base_url('deprt/list'); ?>" class="btn btn-secondary">Back</a>
+
+                                </td>
+                            </tr>
+
+                        </table>
+
+                        <?php if (!$isView): ?>
+                        </form>
+                    <?php endif; ?>
+
+                </div>
+            </div>
+        </div>
     </div>
-
-    <div class="card-body">
-
-        <?php if ($this->session->flashdata('error')): ?>
-            <div class="alert alert-danger">
-                <?= $this->session->flashdata('error') ?>
-            </div>
-        <?php endif; ?>
-
-        <form method="post" action="<?= base_url('deprt/save') ?>">
-
-            <input type="hidden" name="action" value="<?= $action ?>">
-            <input type="hidden" name="department_id" value="<?= $department->department_id ?? '' ?>">
-
-            <!-- Department Name -->
-            <div class="mb-3">
-                <label class="form-label">Department Name</label>
-                <input type="text"
-                       name="department_name"
-                       class="form-control"
-                       value="<?= $department->department_name ?? '' ?>"
-                       <?= ($action === 'view') ? 'readonly' : 'required' ?>>
-            </div>
-
-            <!-- Site -->
-            <div class="mb-3">
-                <label class="form-label">Site</label>
-                <select name="site_id"
-                        class="form-control"
-                        <?= ($action === 'view') ? 'disabled' : 'required' ?>>
-
-                    <option value="">Select Site</option>
-                    <?php foreach ($sites as $s): ?>
-                        <option value="<?= $s->site_id ?>"
-                            <?= (isset($department->site_id) && $department->site_id == $s->site_id) ? 'selected' : '' ?>>
-                            <?= $s->site_no ?> - <?= $s->site_name ?>
-                        </option>
-                    <?php endforeach; ?>
-
-                </select>
-            </div>
-
-            <?php if ($action !== 'view'): ?>
-                <button type="submit" class="btn btn-success">Save</button>
-            <?php endif; ?>
-
-            <a href="<?= base_url('deprt/list') ?>" class="btn btn-secondary">Back</a>
-
-        </form>
-    </div>
-</div>
+</body>
