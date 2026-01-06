@@ -20,6 +20,24 @@
                 <label class="form-label">Department Name</label>
                 <input type="text" name="department_name" class="form-control" required value="<?= $department->department_name ?? '' ?>">
             </div>
+            <div class="mb-3">
+                <label class="form-label">Site</label>
+                <select name="site_id"
+                    class="form-control"
+                    <?= ($action === 'view') ? 'disabled' : 'required' ?>>
+
+                    <option value="">Select Site</option>
+
+                    <?php foreach ($sites as $s): ?>
+                        <option value="<?= $s->site_id ?>"
+                            <?= (isset($department->site_id) && $department->site_id == $s->site_id) ? 'selected' : '' ?>>
+                            <?= $s->site_no ?> - <?= $s->site_name ?>
+                        </option>
+                    <?php endforeach; ?>
+
+                </select>
+            </div>
+
 
             <?php if ($action !== 'view'): ?>
                 <button type="submit" class="btn btn-success">Save</button>

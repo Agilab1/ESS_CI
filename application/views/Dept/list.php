@@ -18,29 +18,33 @@
                 <tr>
                     <th>#</th>
                     <th>Department Name</th>
+                    <th>Site</th>
+
                     <th class="text-center">Action</th>
                 </tr>
             </thead>
 
             <tbody>
-                <?php if (!empty($departments)): ?>
-                    <?php foreach ($departments as $i => $d): ?>
+                <?php if (!empty($department)): ?>
+                    <?php foreach ($department as $i => $d): ?>
                         <tr>
                             <td><?= $i + 1 ?></td>
                             <td><?= $d->department_name ?></td>
+                            <td><?= $d->site_no ?> - <?= $d->site_name ?></td>
+
                             <td class="text-center" style="white-space: nowrap;">
                                 <!-- VIEW -->
-                                <a href="<?= base_url('department/view/' . $d->department_id); ?>" class="mx-1">
+                                <a href="<?= base_url('deprt/view/' . $d->department_id); ?>" class="mx-1">
                                     <i class="fa fa-eye"></i>
                                 </a>
 
                                 <!-- EDIT -->
-                                <a href="<?= base_url('department/edit/' . $d->department_id); ?>" class="mx-1">
+                                <a href="<?= base_url('deprt/edit/' . $d->department_id); ?>" class="mx-1">
                                     <i class="fa fa-edit text-primary"></i>
                                 </a>
 
                                 <!-- DELETE -->
-                                <a href="<?= base_url('department/delete/' . $d->department_id); ?>"
+                                <a href="<?= base_url('deprt/delete/' . $d->department_id); ?>"
                                     class="mx-1"
                                     onclick="return confirm('Delete this department?');">
                                     <i class="fa fa-trash text-danger"></i>

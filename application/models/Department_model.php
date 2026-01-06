@@ -8,15 +8,18 @@ class Department_model extends CI_Model
     public function getAll()
     {
         return $this->db
-            ->order_by('department_id', 'DESC')
-            ->get($this->table)
+            ->select('department.*, sites.site_no, sites.site_name')
+            ->from('department')
+            ->join('sites', 'sites.site_id = department.site_id', 'left')
+            ->order_by('department.department_id', 'DESC')
+            ->get()
             ->result();
     }
 
     public function getById($id)
     {
         return $this->db
-            ->get_where($this->table, ['department_id' => $id])
+            ->get_where('department', ['department_id' => $id])
             ->row();
     }
 
@@ -38,4 +41,5 @@ class Department_model extends CI_Model
             'department_id' => $id
         ]);
     }
+    
 }
