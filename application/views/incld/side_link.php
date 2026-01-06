@@ -5,9 +5,17 @@
     </a>
 </li>
 
-<!-- <li class="nav-item">
-    <a href="<?= base_url('Bom/bom_dash') ?>" class="nav-link">
+<li class="nav-item">
+    <a href="<?= base_url('deprt/list') ?>" class="nav-link">
         <i class="fa fa-sitemap"></i>
-       &nbsp;&nbsp; <p>Bom</p>
+       &nbsp;&nbsp; <p>Deprt</p>
     </a>
-</li> -->
+</li>
+
+
+<li class="nav-item">
+    <a href="<?= base_url('deprt/add') ?>" class="nav-link">
+        <i class="fa fa-sitemap"></i>
+       &nbsp;&nbsp; <p>Deprt add</p>
+    </a>
+</li>
