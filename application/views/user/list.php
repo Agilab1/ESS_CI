@@ -55,8 +55,10 @@
                         <th class="text-nowrap">Type</th>
                         <th class="text-nowrap">Staff ID</th>
                         <th class="text-nowrap">Site No</th>
+                       
                         <!-- <th class="text-nowrap">Asset No</th> -->
                         <th class="text-nowrap"> Serial No </th>
+                         <th class="text-nowrap">Deprt Name</th>
                         <th style="width: 4vh;" class="text-nowrap">Status</th>
                         <th class="text-center text-nowrap">Action</th>
                     </tr>
@@ -80,7 +82,9 @@
                                 <td><?= $user->site_no ?? '' ?></td>
                                 <!-- <td><?= $user->asset_no ?? '' ?></td> -->
                                 <td><?= $user->serial_no ?? '' ?></td>
-          <!--this <td></td> for serial no data -->
+                                <td><?= !empty($user->department_name) ? $user->department_name : '-' ?></td>
+
+          
 
                                 <!-- Checkbox Status -->
                                 <td class="text-center">

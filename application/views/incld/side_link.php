@@ -13,9 +13,3 @@
 </li>
 
 
-<li class="nav-item">
-    <a href="<?= base_url('deprt/add') ?>" class="nav-link">
-        <i class="fa fa-sitemap"></i>
-       &nbsp;&nbsp; <p>Deprt add</p>
-    </a>
-</li>
