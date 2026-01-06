@@ -210,35 +210,44 @@ class Bom extends CI_Controller
                 show_error('Invalid Action');
         }
     }
-    public function save_child()
-    {
-        $uom_id = $this->input->post('uom_id');
+   public function save_child()
+{
+    $child_id = $this->input->post('child_material_id');
 
-        $data = [
-            'parent_material_id' => $this->input->post('parent_material_id'),
-            'child_material_id'  => $this->input->post('child_material_id'),
-            'uom'                => $uom_id,
-            'qty'                => $this->input->post('qty'),
-            'status'             => 1
-        ];
+    // Always derive UOM from selected material
+    $material = $this->db->where('material_id', $child_id)->get('material')->row();
 
-        $exists = $this->db
-            ->where('parent_material_id', $data['parent_material_id'])
-            ->where('child_material_id', $data['child_material_id'])
-            ->get('bom')
-            ->row();
+    $uom = $this->db
+        ->where('uom_name', $material->uom)
+        ->or_where('uom_code', strtolower($material->uom))
+        ->get('uom_master')
+        ->row();
 
-        if ($exists) {
-            $this->session->set_flashdata('error', 'Child already exists in BOM');
-            redirect('Bom/material/' . $data['parent_material_id']);
-            return;
-        }
+    $data = [
+        'parent_material_id' => $this->input->post('parent_material_id'),
+        'child_material_id'  => $child_id,
+        'uom'                => $uom ? $uom->uom_id : null,
+        'qty'                => $this->input->post('qty'),
+        'status'             => 1
+    ];
 
-        $this->Bom_model->insert($data);
-        $this->session->set_flashdata('success', 'Child BOM added successfully');
+    $exists = $this->db
+        ->where('parent_material_id', $data['parent_material_id'])
+        ->where('child_material_id', $child_id)
+        ->get('bom')
+        ->row();
 
+    if ($exists) {
+        $this->session->set_flashdata('error', 'Child already exists in BOM');
         redirect('Bom/material/' . $data['parent_material_id']);
+        return;
     }
+
+    $this->Bom_model->insert($data);
+    redirect('Bom/material/' . $data['parent_material_id']);
+}
+
+
 
     public function create($material_id)
     {
@@ -257,17 +266,13 @@ class Bom extends CI_Controller
 public function update_child()
 {
     $bom_id = $this->input->post('bom_id');
+    $qty    = $this->input->post('qty');
 
-    $data = [
-        'child_material_id' => $this->input->post('child_material_id'),
-        'uom'               => $this->input->post('uom_id'),
-        'qty'               => $this->input->post('qty')
-    ];
-
-    $this->Bom_model->update($bom_id, $data);
+    $this->Bom_model->update($bom_id, ['qty' => $qty]);
 
     echo json_encode(['status' => 'success']);
 }
+
 
 // ================= INLINE DELETE FROM MATERIAL PAGE =================
 public function delete_child($bom_id)

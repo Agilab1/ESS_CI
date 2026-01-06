@@ -80,19 +80,37 @@ class Material extends CI_Controller
 
     // UPDATE
     public function update($id)
-    {
-        $data = [
-            'material_code' => $this->input->post('material_code'),
-            'uom'           => $this->input->post('uom'),
-            'asset_id' => $this->input->post('asset_id'),
-            'unit_price'    => $this->input->post('unit_price'),
-            'quantity'      => $this->input->post('quantity'),
-            'status'        => $this->input->post('status'),
-        ];
+{
+    $new_uom = $this->input->post('uom');
 
-        $this->Material_model->update($id, $data);
-        redirect('material');
+    $data = [
+        'material_code' => $this->input->post('material_code'),
+        'uom'           => $new_uom,
+        'asset_id'      => $this->input->post('asset_id'),
+        'unit_price'    => $this->input->post('unit_price'),
+        'quantity'      => $this->input->post('quantity'),
+        'status'        => $this->input->post('status'),
+    ];
+
+    // Update material
+    $this->Material_model->update($id, $data);
+
+    // 🔥 Auto-update all BOM rows using this material
+    $uomRow = $this->db
+        ->where('uom_name', $new_uom)
+        ->or_where('uom_code', strtolower($new_uom))
+        ->get('uom_master')
+        ->row();
+
+    if ($uomRow) {
+        $this->db
+            ->where('child_material_id', $id)
+            ->update('bom', ['uom' => $uomRow->uom_id]);
     }
+
+    redirect('material');
+}
+
 
     // DELETE
     public function delete($id)
@@ -100,4 +118,51 @@ class Material extends CI_Controller
         $this->Material_model->delete($id);
         redirect('material');
     }
+    public function get_material_uom($material_id)
+{
+    $material = $this->Material_model->get_by_id($material_id);
+
+    if (!$material) {
+        echo json_encode([]);
+        return;
+    }
+
+    $uom = $this->db
+        ->where('uom_code', strtolower($material->uom))
+        ->or_where('uom_name', $material->uom)
+        ->get('uom_master')
+        ->row();
+
+    if (!$uom) {
+        echo json_encode([]);
+        return;
+    }
+
+    echo json_encode([
+        'uom_id'   => $uom->uom_id,
+        'uom_name' => $uom->uom_name,
+        'uom_code' => $uom->uom_code
+    ]);
+}
+public function get_material_details($id)
+{
+    $mat = $this->db->where('material_id', $id)->get('material')->row();
+
+    if(!$mat){
+        echo json_encode([]);
+        return;
+    }
+
+    $uom = $this->db
+        ->where('uom_name', $mat->uom)
+        ->or_where('uom_code', strtolower($mat->uom))
+        ->get('uom_master')
+        ->row();
+
+    echo json_encode([
+        'uom_id'   => $uom ? $uom->uom_id : '',
+        'qty'      => $mat->quantity
+    ]);
+}
+
 }
