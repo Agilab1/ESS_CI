@@ -27,7 +27,7 @@ class Deprt extends CI_Controller
         $this->load->view('incld/top_menu');
         $this->load->view('incld/side_menu');
         $this->load->view('user/dashboard', $data);
-        $this->load->view('dept/list', $data);
+        $this->load->view('Dept/list', $data);
         $this->load->view('incld/jslib');
         $this->load->view('incld/footer');
         $this->load->view('incld/script');
@@ -47,7 +47,7 @@ class Deprt extends CI_Controller
         $this->load->view('incld/top_menu');
         $this->load->view('incld/side_menu');
         $this->load->view('user/dashboard', $data);
-        $this->load->view('dept/form', $data);
+        $this->load->view('Dept/form', $data);
         $this->load->view('incld/footer');
     }
 
@@ -62,7 +62,7 @@ class Deprt extends CI_Controller
 
         $this->load->view('incld/verify');
         $this->load->view('incld/header');
-        $this->load->view('dept/form', $data);
+        $this->load->view('Dept/form', $data);
         $this->load->view('incld/footer');
     }
 
@@ -104,7 +104,7 @@ class Deprt extends CI_Controller
     {
         $this->Department_model->delete($id);
         $this->session->set_flashdata('success', 'Department deleted successfully!');
-        redirect('deprt/list');
+        redirect('Deprt/list');
     }
 
 
@@ -164,7 +164,7 @@ class Deprt extends CI_Controller
         $this->load->view('incld/top_menu');
         $this->load->view('incld/side_menu');
         $this->load->view('user/dashboard', $data);
-        $this->load->view('dept/form', $data);
+        $this->load->view('Dept/form', $data);
         $this->load->view('incld/footer');
     }
 
@@ -204,6 +204,6 @@ class Deprt extends CI_Controller
             $this->session->set_flashdata('success', 'Department updated successfully!');
         }
 
-        redirect('deprt/list');
+        redirect('Deprt/list');
     }
 }
