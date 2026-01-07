@@ -40,7 +40,7 @@
 
     <!-- LOCATION TABLE -->
     <div class="table-responsive">
-      <table id="dtbl" class="table table-bordered table-striped">
+      <table id="dtbl" class="table table-bordered table-striped mb-0 table-hover">
 
         <thead class="btn-primary text-white">
           <tr>
