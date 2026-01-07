@@ -46,16 +46,19 @@ $isAdmin = ((int)$this->session->userdata('role_id') === 1);
 </style>
 
 <div class="card">
-    <div class="card-header d-flex flex-wrap justify-content-between align-items-center">
-        <h4 class="mb-2 mb-md-0">Staff Details</h4>
+    <div class="card-header">
+        <div class="d-flex justify-content-between align-items-center w-100">
+            <h4 class="mb-0">Staff Details</h4>
 
-        <!-- Add Staff sirf ADMIN ko -->
-        <?php if ($isAdmin): ?>
-            <a href="<?= base_url('Staff/add'); ?>" style="margin-right:-83%;" class="btn btn-primary mt-2 mt-md-0">
-                Add Staff
-            </a>
-        <?php endif; ?>
+            <?php if ($isAdmin): ?>
+                <a href="<?= base_url('Staff/add'); ?>" class="btn btn-primary">
+                    Add Staff
+                </a>
+            <?php endif; ?>
+        </div>
     </div>
+
+
 
     <div class="card-body">
 

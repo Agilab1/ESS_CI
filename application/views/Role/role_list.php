@@ -30,8 +30,11 @@
     <!--  HEADER SAME + MOBILE FIX ADDED  -->
     <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
         <h4 class="mb-0">Role Details</h4>
-        <a href="<?= base_url('Role/add'); ?>" class="btn btn-primary mt-2 mt-md-0 ms-md-auto"> Add Role</a>
+        <a href="<?= base_url('Role/add'); ?>" class="btn btn-primary mt-2 mt-md-0 ms-md-auto">
+            Add Role
+        </a>
     </div>
+
 
 
 
