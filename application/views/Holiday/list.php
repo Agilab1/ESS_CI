@@ -28,6 +28,40 @@
   form.d-flex {
     gap: 10px;
   }
+
+  /* MOBILE ONLY FIX — DESKTOP UNTOUCHED */
+  @media (max-width: 767px) {
+
+    /* Filter + navigation stack */
+    .card-body>.d-flex.justify-content-between {
+      flex-direction: column !important;
+      gap: 12px;
+    }
+
+    /* Filter form full width */
+    .card-body form.d-flex {
+      width: 100%;
+      flex-wrap: wrap;
+    }
+
+    /* Select & button full width */
+    .card-body form.d-flex select,
+    .card-body form.d-flex button {
+      width: 100%;
+    }
+
+    /* Navigation buttons stack */
+    .card-body>.d-flex.justify-content-between>div {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .card-body>.d-flex.justify-content-between>div a {
+      width: 100%;
+      text-align: center;
+    }
+  }
 </style>
 
 
@@ -96,8 +130,6 @@
 
       </form>
 
-
-
       <!-- MONTH NAVIGATION -->
       <div>
         <a class="btn btn-outline-primary" href="<?= base_url('Holiday/list/' . $prevM . '/' . $prevY) ?>">⬅ Previous Month</a>
@@ -109,8 +141,6 @@
       </div>
 
     </div>
-
-
 
     <!-- HOLIDAY TABLE -->
     <div class="table-responsive">
