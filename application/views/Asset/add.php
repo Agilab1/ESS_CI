@@ -1,3 +1,59 @@
+<style>
+    /* ===== MOBILE VIEW FIX FOR ASSET FORM ===== */
+    @media (max-width: 767px) {
+
+        .container {
+            width: 100% !important;
+            padding: 0 10px;
+        }
+
+        .card-body {
+            padding: 1rem !important;
+        }
+
+        table.table {
+            border: 0;
+        }
+
+        table.table tr {
+            display: block;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        table.table td {
+            display: block;
+            width: 100%;
+            border: none;
+            padding: 6px 0;
+        }
+
+        table.table td label {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        input.form-control,
+        select.form-control {
+            width: 100%;
+        }
+
+        /* Buttons */
+        .btn {
+            width: 100%;
+            margin-bottom: 8px;
+        }
+
+        .btn.me-3 {
+            margin-right: 0 !important;
+        }
+
+        td.text-center {
+            text-align: center !important;
+        }
+    }
+</style>
+
 <?php
 $isView = ($action === 'view');
 $disabled = $isView ? 'disabled' : '';
