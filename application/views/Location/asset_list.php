@@ -17,13 +17,13 @@
         position: relative;
     }
 
-    /* ✅ Checked state = blue box */
+    /*  Checked state = blue box */
     .big-checkbox:checked {
         background-color: #0d6efd;
         border-color: #0d6efd;
     }
 
-    /* ✅ White tick */
+    /* white tick */
     .big-checkbox:checked::after {
         content: "";
         position: absolute;
@@ -36,7 +36,7 @@
         transform: rotate(45deg);
     }
 
-    /* ✅ Disabled but still visible */
+    /* Disabled but still visible */
     .big-checkbox:disabled {
         opacity: 1 !important;
     }
@@ -100,11 +100,15 @@
                             <tr class="text-center">
                                 <th style="width:60px;">#</th>
                                 <th style="width:100px;">Asset ID</th>
-                                <th style="width:100px;">Assdet ID</th>
                                 <th>Serial No</th>
-                                <th style="width:100px;">Staff ID</th>
-                                <th>Staff Name</th>
                                 <th>Asset Name</th>
+                                
+                                <th>Staff Name</th>
+                                <th style="width:100px;">Assdet ID</th>
+                                
+                                <!-- <th style="width:100px;">Staff ID</th> -->
+                                
+                                
                                 <th style="width:100px;">Verify</th>
                             </tr>
                         </thead>
@@ -116,11 +120,15 @@
                                     <tr>
                                         <td class="text-center"><?= $i++; ?></td>
                                         <td><?= $asset->asset_id ?? '-' ?></td>
-                                        <td><?= $asset->assdet_id ?? '-' ?></td>
                                         <td><?= $asset->serial_no ?? '-' ?></td>
-                                        <td><?= $asset->staff_id ?? '-' ?></td>
-                                        <td><?= $asset->emp_name ?? '-' ?></td>
                                         <td><?= $asset->asset_name ?? '-' ?></td>
+                                        
+                                        <td><?= $asset->emp_name ?? '-' ?></td>
+                                        <td><?= $asset->assdet_id ?? '-' ?></td>
+                                        
+                                        <!-- <td><?= $asset->staff_id ?? '-' ?></td> -->
+                                        
+                                       
 
                                         <!-- VERIFIED FLAG -->
                                         <td class="text-center">
