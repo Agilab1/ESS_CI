@@ -77,13 +77,13 @@
                         <thead style="background:#bcdcff;">
                             <tr class="text-center">
                                 <th style="width:60px;">#</th>
-                                <th>Asset ID</th>
-                                <th>Assdet ID</th>
+                                <th style="width:100px;">Asset ID</th>
+                                <th style="width:100px;">Assdet ID</th>
                                 <th>Serial No</th>
-                                <th>Staff ID</th>
+                                <th style="width:100px;">Staff ID</th>
                                 <th>Staff Name</th>
                                 <th>Asset Name</th>
-                                <th style="width:120px;">Verify</th>
+                                <th style="width:100px;">Verify</th>
                             </tr>
                         </thead>
 

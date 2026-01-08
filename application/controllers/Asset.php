@@ -71,14 +71,21 @@ class Asset extends CI_Controller
                 break;
 
             case "view":
+
+                // ✅ NFC TAP
+                if ($this->input->get('nfc') == 1 && $id) {
+
+                    // Model se verify update
+                    $this->Asset_model->update_assdet_verify($id, 1);
+                }
+
                 $data->action = "view";
-                $data->asset  = $this->Asset_model->getById($id);
-                if (!$data->asset) show_404();
-                $data->loginUser = $this->User_model->get_user(
-                    $this->session->userdata('user_id')
-                );
-                $this->load_page($data);
+                $data->detail = $this->db->get_where('assdet', ['assdet_id' => $id])->row();
+                if (!$data->detail) show_404();
+
+                $data->asset = $this->Asset_model->getById($data->detail->asset_id);
                 break;
+
 
             case "delete":
                 $this->Asset_model->deleteAsset($id);
@@ -140,34 +147,34 @@ class Asset extends CI_Controller
     }
 
     public function serials($asset_id)
-{
-    $data = new stdClass();
-    $data->counts = $this->Dashboard_model->counts();
-    $data->asset = $this->Asset_model->getById($asset_id);
-    if (!$data->asset) show_404();
+    {
+        $data = new stdClass();
+        $data->counts = $this->Dashboard_model->counts();
+        $data->asset = $this->Asset_model->getById($asset_id);
+        if (!$data->asset) show_404();
 
-    $data->departments = $this->db->get('department')->result();
-    $this->attachLoginUser($data);
+        $data->departments = $this->db->get('department')->result();
+        $this->attachLoginUser($data);
 
-    $data->serials = $this->db
-        ->select('assdet.*, sites.site_name, staffs.emp_name, department.department_name')
-        ->from('assdet')
-        ->join('sites', 'sites.site_id = assdet.site_id', 'left')
-        ->join('staffs', 'staffs.staff_id = assdet.staff_id', 'left')
-        ->join('department', 'department.department_id = assdet.department_id', 'left')
-        ->where('assdet.asset_id', $asset_id)
-        ->get()
-        ->result();
+        $data->serials = $this->db
+            ->select('assdet.*, sites.site_name, staffs.emp_name, department.department_name')
+            ->from('assdet')
+            ->join('sites', 'sites.site_id = assdet.site_id', 'left')
+            ->join('staffs', 'staffs.staff_id = assdet.staff_id', 'left')
+            ->join('department', 'department.department_id = assdet.department_id', 'left')
+            ->where('assdet.asset_id', $asset_id)
+            ->get()
+            ->result();
 
-    $this->load->view('incld/header');
-    $this->load->view('incld/top_menu');
-    $this->load->view('incld/side_menu');
-    $this->load->view('user/dashboard', $data);
-    $this->load->view('Asset/serial_list', $data);
-    $this->load->view('incld/jslib');
-    $this->load->view('incld/footer');
-    $this->load->view('incld/script');
-}
+        $this->load->view('incld/header');
+        $this->load->view('incld/top_menu');
+        $this->load->view('incld/side_menu');
+        $this->load->view('user/dashboard', $data);
+        $this->load->view('Asset/serial_list', $data);
+        $this->load->view('incld/jslib');
+        $this->load->view('incld/footer');
+        $this->load->view('incld/script');
+    }
 
 
     public function update_serials()
@@ -191,139 +198,123 @@ class Asset extends CI_Controller
         redirect($_SERVER['HTTP_REFERER']);
     }
 
-   public function add_detail($asset_id)
-{
-    $data = new stdClass();
-    $data->counts = $this->Dashboard_model->counts();
-    $data->asset  = $this->Asset_model->getById($asset_id);
-    $data->sites  = $this->db->get('sites')->result();
-    $data->staffs = $this->db->get('staffs')->result();
-    $data->departments = $this->db->get('department')->result();
-    $data->action = 'add';
-    $data->detail = null;
+    public function add_detail($asset_id)
+    {
+        $data = new stdClass();
+        $data->counts = $this->Dashboard_model->counts();
+        $data->asset  = $this->Asset_model->getById($asset_id);
+        $data->sites  = $this->db->get('sites')->result();
+        $data->staffs = $this->db->get('staffs')->result();
+        $data->departments = $this->db->get('department')->result();
+        $data->action = 'add';
+        $data->detail = null;
 
-    $this->attachLoginUser($data);
+        $this->attachLoginUser($data);
 
-    $this->load->view('incld/header');
-    $this->load->view('incld/top_menu');
-    $this->load->view('incld/side_menu');
-    $this->load->view('user/dashboard', $data);
-    $this->load->view('Asset/detail_form', $data);
-    $this->load->view('incld/footer');
-}
+        $this->load->view('incld/header');
+        $this->load->view('incld/top_menu');
+        $this->load->view('incld/side_menu');
+        $this->load->view('user/dashboard', $data);
+        $this->load->view('Asset/detail_form', $data);
+        $this->load->view('incld/footer');
+    }
 
 
     public function edit_detail($assdet_id)
-{
-    $data = new stdClass();
-    $data->counts = $this->Dashboard_model->counts();
-    $data->detail = $this->db->get_where('assdet', ['assdet_id' => $assdet_id])->row();
-    $data->asset  = $this->Asset_model->getById($data->detail->asset_id);
-    $data->sites  = $this->db->get('sites')->result();
-    $data->staffs = $this->db->get('staffs')->result();
-    $data->departments = $this->db->get('department')->result();
-    $data->action = 'edit';
+    {
+        $data = new stdClass();
+        $data->counts = $this->Dashboard_model->counts();
+        $data->detail = $this->db->get_where('assdet', ['assdet_id' => $assdet_id])->row();
+        $data->asset  = $this->Asset_model->getById($data->detail->asset_id);
+        $data->sites  = $this->db->get('sites')->result();
+        $data->staffs = $this->db->get('staffs')->result();
+        $data->departments = $this->db->get('department')->result();
+        $data->action = 'edit';
 
-    $this->attachLoginUser($data);
+        $this->attachLoginUser($data);
 
-    $this->load->view('incld/header');
-    $this->load->view('incld/top_menu');
-    $this->load->view('incld/side_menu');
-    $this->load->view('user/dashboard', $data);
-    $this->load->view('Asset/detail_form', $data);
-    $this->load->view('incld/footer');
-}
-
-   public function save_detail()
-{
-    $asset_id = $this->input->post('asset_id');
-
-    $data = [
-        'asset_id'       => $asset_id,
-        'serial_no'      => $this->input->post('serial_no'),
-        'site_id'        => $this->input->post('site_id'),
-        'staff_id'       => $this->input->post('staff_id'),
-        'department_id'  => $this->input->post('department_id'),
-        'net_val'        => $this->input->post('net_val'),
-        'status'         => $this->input->post('status')
-    ];
-
-    // 🔹 Get ownership type from asset
-    $asset = $this->Asset_model->getById($asset_id);
-
-    if ($asset->ownership_type === 'department') {
-        // Department owns it → wipe staff
-        $data['staff_id'] = null;
-    } else {
-        // Staff owns it → wipe department
-        $data['department_id'] = null;
+        $this->load->view('incld/header');
+        $this->load->view('incld/top_menu');
+        $this->load->view('incld/side_menu');
+        $this->load->view('user/dashboard', $data);
+        $this->load->view('Asset/detail_form', $data);
+        $this->load->view('incld/footer');
     }
 
-    if ($this->input->post('action') === 'add') {
-        $this->db->insert('assdet', $data);
-    } else {
-        $this->db->where('assdet_id', $this->input->post('assdet_id'))
-                 ->update('assdet', $data);
+    public function save_detail()
+    {
+        $asset_id = $this->input->post('asset_id');
+
+        $data = [
+            'asset_id'       => $asset_id,
+            'serial_no'      => $this->input->post('serial_no'),
+            'site_id'        => $this->input->post('site_id'),
+            'staff_id'       => $this->input->post('staff_id'),
+            'department_id'  => $this->input->post('department_id'),
+            'net_val'        => $this->input->post('net_val'),
+            'status'         => $this->input->post('status')
+        ];
+
+        // 🔹 Get ownership type from asset
+        $asset = $this->Asset_model->getById($asset_id);
+
+        if ($asset->ownership_type === 'department') {
+            // Department owns it → wipe staff
+            $data['staff_id'] = null;
+        } else {
+            // Staff owns it → wipe department
+            $data['department_id'] = null;
+        }
+
+        if ($this->input->post('action') === 'add') {
+            $this->db->insert('assdet', $data);
+        } else {
+            $this->db->where('assdet_id', $this->input->post('assdet_id'))
+                ->update('assdet', $data);
+        }
+
+        redirect('asset/serials/' . $asset_id);
     }
 
-    redirect('asset/serials/' . $asset_id);
-}
 
+    public function detail($type = 'add', $id = null)
+    {
+        $data = new stdClass();
+        $data->counts = $this->Dashboard_model->counts();
 
- public function detail($type = 'add', $id = null)
-{
-    $data = new stdClass();
-    $data->counts = $this->Dashboard_model->counts();
-    $data->sites  = $this->db->get('sites')->result();
-    $data->staffs = $this->db->get('staffs')->result();
-    $data->departments = $this->db->get('department')->result(); // ⭐ REQUIRED
+        switch ($type) {
 
-    switch ($type) {
+            case "view":
 
-        case "add":
-            $data->action = "add";
-            $data->asset  = $this->Asset_model->getById($id);
-            $data->detail = (object)[
-                'assdet_id' => '',
-                'serial_no' => '',
-                'site_id'   => '',
-                'staff_id'  => '',
-                'department_id' => '',
-                'net_val'   => '',
-                'status'    => 1
-            ];
-            break;
+                // 🔥 NFC TAP DETECT (YAHI MAIN FIX HAI)
+                if ($this->input->get('nfc') == '1' && $id) {
 
-        case "edit":
-            $data->action = "edit";
-            $data->detail = $this->db->get_where('assdet', ['assdet_id' => $id])->row();
-            if (!$data->detail) show_404();
-            $data->asset = $this->Asset_model->getById($data->detail->asset_id);
-            break;
+                    // 🔥 UPDATE VERIFIED FLAG
+                    $this->Asset_model->update_assdet_verify($id, 1);
+                }
 
-        case "view":
-            $data->action = "view";
-            $data->detail = $this->db->get_where('assdet', ['assdet_id' => $id])->row();
-            if (!$data->detail) show_404();
-            $data->asset = $this->Asset_model->getById($data->detail->asset_id);
-            break;
+                $data->action = "view";
+                $data->detail = $this->db
+                    ->get_where('assdet', ['assdet_id' => $id])
+                    ->row();
 
-        case "delete":
-            $row = $this->db->get_where('assdet', ['assdet_id' => $id])->row();
-            $this->db->delete('assdet', ['assdet_id' => $id]);
-            redirect('asset/serials/' . $row->asset_id);
-            return;
+                if (!$data->detail) show_404();
 
-        default:
-            show_404();
+                $data->asset = $this->Asset_model
+                    ->getById($data->detail->asset_id);
+                break;
+
+            default:
+                show_404();
+        }
+
+        $this->attachLoginUser($data);
+
+        $this->load->view('incld/header');
+        $this->load->view('Asset/detail_form', $data);
+        $this->load->view('incld/footer');
     }
 
-    $this->attachLoginUser($data);
-
-    $this->load->view('incld/header');
-    $this->load->view('Asset/detail_form', $data);
-    $this->load->view('incld/footer');
-}
 
 
     public function updateStaff()
