@@ -69,19 +69,21 @@ class User_model extends CI_Model
     public function getAllUsers()
     {
         $this->db->select('
-            users.user_id,
-            users.user_nm,
-            users.mail_id,
-            users.user_ph,
-            users.user_ty,
-            users.user_st,
-            users.asset_no,
-            users.role_id,
-            staffs.staff_id,
-            staffs.emp_name,
-            sites.site_no,
-            department.department_name
-        ');
+    users.user_id,
+    users.user_nm,
+    users.mail_id,
+    users.user_ph,
+    users.user_ty,
+    users.user_st,
+    users.asset_no,
+    users.serial_no,   
+    users.role_id,
+    staffs.staff_id,
+    staffs.emp_name,
+    sites.site_no,
+    department.department_name
+');
+
 
         $this->db->from('users');
         $this->db->join('staffs', 'staffs.staff_id = users.staff_id', 'left');

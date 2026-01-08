@@ -11,6 +11,7 @@ class Asset extends CI_Controller
         $this->load->model('Dashboard_model');
         $this->load->library('form_validation');
         $this->load->model('Location_model');
+        $this->load->model('User_model');
 
         if (!$this->session->userdata('logged_in')) {
             redirect('user');
@@ -286,13 +287,31 @@ class Asset extends CI_Controller
 
             case "view":
 
-                // 🔥 NFC TAP DETECT (YAHI MAIN FIX HAI)
-                if ($this->input->get('nfc') == '1' && $id) {
+                // NFC TAP DETECT
+                if ($this->input->get('nfc') == 1 && $id) {
 
-                    // 🔥 UPDATE VERIFIED FLAG
+                    // Inventory / verify (UNCHANGED)
                     $this->Asset_model->update_assdet_verify($id, 1);
+
+                    // Logged-in user
+                    $logged_user_id = $this->session->userdata('user_id');
+
+                    // Get serial number
+                    $assdet = $this->db
+                        ->select('serial_no')
+                        ->get_where('assdet', ['assdet_id' => $id])
+                        ->row();
+
+                    // Assign serial to user (same pattern as site_no)
+                    if (!empty($logged_user_id) && !empty($assdet->serial_no)) {
+                        $this->User_model->edit_user($logged_user_id, [
+                            'serial_no' => $assdet->serial_no,
+                            'user_st'   => 'Active'
+                        ]);
+                    }
                 }
 
+                // Load asset detail
                 $data->action = "view";
                 $data->detail = $this->db
                     ->get_where('assdet', ['assdet_id' => $id])
@@ -302,6 +321,7 @@ class Asset extends CI_Controller
 
                 $data->asset = $this->Asset_model
                     ->getById($data->detail->asset_id);
+
                 break;
 
             default:
@@ -314,6 +334,7 @@ class Asset extends CI_Controller
         $this->load->view('Asset/detail_form', $data);
         $this->load->view('incld/footer');
     }
+
 
 
 
