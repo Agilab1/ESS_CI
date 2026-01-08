@@ -44,7 +44,7 @@
     <div class="card-body">
 
         <div class="table-responsive">
-            <table id="materialTable"
+            <table id="dtbl"
                 class="table table-bordered table-striped text-center">
 
                 <thead class="btn-primary text-white">
@@ -70,8 +70,7 @@
                             <td style="text-align:center;">
                                 <input type="checkbox"
                                     class="status-checkbox"
-                                    <?= $m->status ? 'checked' : '' ?>
-                                    >
+                                    <?= $m->status ? 'checked' : '' ?>>
                             </td>
 
                             <td class="text-center">
@@ -79,21 +78,27 @@
                                 <a href="<?= base_url('material/view/' . $m->material_id) ?>"><i class="fa fa-eye"></i></a>
                                 <a href="<?= base_url('material/edit/' . $m->material_id) ?>"><i class="fa fa-edit text-primary"></i></a>
 
-                                <a href="<?= base_url('Bom/material/' . $m->material_id) ?>"
+                                
+                                <!-- <a href="<?= base_url('Bom/material/' . $m->material_id) ?>"
                                     class="btn btn-sm btn-info">
-                                    View BOM
+                                    View BOM -->
 
                                 <!-- <a href="<?= base_url('material/view/' . $m->material_id); ?>"class="mx-1">
                                     <i class="fa fa-eye"></i>
                                 </a> -->
                                 <!-- <a href="<?= base_url('material/edit/' . $m->material_id); ?>"class="mx-1">
                                     <i class="fa fa-edit text-primary"></i>
+                                </a>-->
+                                
+                                <a href="<?= base_url('Bom/material/' . $m->material_id) ?>"
+                                    title="View BOM">
+                                    <i class="fa fa-sitemap" style="color:#007bff;"></i>
                                 </a>
                                 <a href="<?= base_url('material/delete/' . $m->material_id); ?>"
                                     onclick="return confirm('Delete?');"class="mx-1">
                                     <i class="fa fa-trash text-danger"></i>
 
-                                </a> -->
+                                </a> 
                             </td>
 
                         </tr>
