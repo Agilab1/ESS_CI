@@ -4,19 +4,41 @@
     .big-checkbox {
         width: 22px;
         height: 22px;
-        transform: scale(1.3);
+        transform: scale(1.2);
         cursor: not-allowed;
+
+        /* remove native checkbox */
+        appearance: none;
+        -webkit-appearance: none;
+
+        border-radius: 4px;
+        border: 1px solid grey;
+        background-color: #ffffff;
+        position: relative;
     }
 
-    .verify-status {
-        font-size: 18px;
-        font-weight: 600;
+    /* ✅ Checked state = blue box */
+    .big-checkbox:checked {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
     }
-    .verify-ok {
-        color: #0b0e0bff; /* green */
+
+    /* ✅ White tick */
+    .big-checkbox:checked::after {
+        content: "";
+        position: absolute;
+        left: 6px;
+        top: 2px;
+        width: 6px;
+        height: 12px;
+        border: solid #ffffff;
+        border-width: 0 3px 3px 0;
+        transform: rotate(45deg);
     }
-    .verify-no {
-        color: #0f0d0dff; /* red */
+
+    /* ✅ Disabled but still visible */
+    .big-checkbox:disabled {
+        opacity: 1 !important;
     }
 </style>
 
@@ -39,19 +61,19 @@
                     <div class="col-md-4">
                         <label class="form-label fw-bold">Site ID</label>
                         <input type="text" class="form-control"
-                               value="<?= $site->site_id ?? '-' ?>" readonly>
+                            value="<?= $site->site_id ?? '-' ?>" readonly>
                     </div>
 
                     <div class="col-md-4">
                         <label class="form-label fw-bold">Site No</label>
                         <input type="text" class="form-control"
-                               value="<?= $site->site_no ?? '-' ?>" readonly>
+                            value="<?= $site->site_no ?? '-' ?>" readonly>
                     </div>
 
                     <div class="col-md-4">
                         <label class="form-label fw-bold">Site Name</label>
                         <input type="text" class="form-control"
-                               value="<?= $site->site_name ?? '-' ?>" readonly>
+                            value="<?= $site->site_name ?? '-' ?>" readonly>
                     </div>
                 </div>
 
@@ -59,13 +81,13 @@
                 <div class="row mb-4">
                     <div class="col-md-6 text-center">
                         <span class="verify-status verify-ok">
-                            Verified Assets ✅ : <?= $verify_count['verified'] ?? 0 ?>
+                            Verified Assets <i class="bi bi-check-square-fill text-primary"></i> : <?= $verify_count['verified'] ?? 0 ?>
                         </span>
                     </div>
 
                     <div class="col-md-6 text-center">
                         <span class="verify-status verify-no">
-                             Unverified Assets ❌ : <?= $verify_count['unverified'] ?? 0 ?>
+                            Unverified Assets ❌ : <?= $verify_count['unverified'] ?? 0 ?>
                         </span>
                     </div>
                 </div>
@@ -88,33 +110,34 @@
                         </thead>
 
                         <tbody>
-                        <?php if (!empty($assets)): ?>
-                            <?php $i = 1; foreach ($assets as $asset): ?>
-                                <tr>
-                                    <td class="text-center"><?= $i++; ?></td>
-                                    <td><?= $asset->asset_id ?? '-' ?></td>
-                                    <td><?= $asset->assdet_id ?? '-' ?></td>
-                                    <td><?= $asset->serial_no ?? '-' ?></td>
-                                    <td><?= $asset->staff_id ?? '-' ?></td>
-                                    <td><?= $asset->emp_name ?? '-' ?></td>
-                                    <td><?= $asset->asset_name ?? '-' ?></td>
+                            <?php if (!empty($assets)): ?>
+                                <?php $i = 1;
+                                foreach ($assets as $asset): ?>
+                                    <tr>
+                                        <td class="text-center"><?= $i++; ?></td>
+                                        <td><?= $asset->asset_id ?? '-' ?></td>
+                                        <td><?= $asset->assdet_id ?? '-' ?></td>
+                                        <td><?= $asset->serial_no ?? '-' ?></td>
+                                        <td><?= $asset->staff_id ?? '-' ?></td>
+                                        <td><?= $asset->emp_name ?? '-' ?></td>
+                                        <td><?= $asset->asset_name ?? '-' ?></td>
 
-                                    <!-- VERIFIED FLAG -->
-                                    <td class="text-center">
-                                        <input type="checkbox"
-                                               class="big-checkbox"
-                                               <?= ((int)($asset->verified ?? 0) === 1) ? 'checked' : '' ?>
-                                               disabled>
+                                        <!-- VERIFIED FLAG -->
+                                        <td class="text-center">
+                                            <input type="checkbox"
+                                                class="big-checkbox"
+                                                <?= ((int)($asset->verified ?? 0) === 1) ? 'checked' : '' ?>
+                                                disabled>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="8" class="text-center text-muted py-4">
+                                        No assets found for this site
                                     </td>
                                 </tr>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <tr>
-                                <td colspan="8" class="text-center text-muted py-4">
-                                    No assets found for this site
-                                </td>
-                            </tr>
-                        <?php endif; ?>
+                            <?php endif; ?>
                         </tbody>
 
                     </table>
@@ -123,7 +146,7 @@
                 <!-- ================= BACK BUTTON ================= -->
                 <div class="text-center mt-4">
                     <a href="<?= base_url('Location/list'); ?>"
-                       class="btn btn-secondary px-4 py-2">
+                        class="btn btn-secondary px-4 py-2">
                         <i class="fa fa-arrow-left me-1"></i>
                         Back to Location List
                     </a>
