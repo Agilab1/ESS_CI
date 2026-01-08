@@ -24,7 +24,7 @@
     <h4 class="mb-0">Location Details</h4>
 
     <a href="<?= base_url('Location/add'); ?>" class="btn btn-primary">
-      <i class="fa fa-plus"></i> Add Location
+      Add Location
     </a>
   </div>
 

@@ -9,7 +9,7 @@ class Material_model extends CI_Model
     public function get_all()
     {
         return $this->db
-            ->order_by('material_id', 'DESC')
+            ->order_by('material_id', 'ASC')
             ->get($this->table)
             ->result();
     }

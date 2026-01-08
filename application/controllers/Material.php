@@ -21,6 +21,8 @@ class Material extends CI_Controller
         $this->load->view('incld/side_menu');
         $this->load->view('user/dashboard', $data);
         $this->load->view('Material/list', $data);
+        $this->load->view('incld/jslib');
+         $this->load->view('incld/script');
         $this->load->view('incld/footer');
     }
 
@@ -65,7 +67,7 @@ class Material extends CI_Controller
     }
 
 
-    // 🔒 VIEW FORM (READ ONLY)
+    //  VIEW FORM (READ ONLY) 
     public function view($id)
     {
         $data['material']  = $this->Material_model->get_by_id($id);

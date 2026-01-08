@@ -70,7 +70,7 @@
   <div class="card-header d-flex justify-content-between align-items-center">
     <h4 class="mb-0">Holiday Details</h4>
     <a href="<?= base_url('Holiday/add'); ?>" class="btn btn-primary">
-      <i class="fa fa-plus"></i> Add Holiday
+      Add Holiday
     </a>
   </div>
 
