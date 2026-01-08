@@ -9,7 +9,8 @@ $detail = $detail ?? (object)[
     'assdet_id' => '',
     'serial_no' => '',
     'site_id'   => '',
-    'allocation_to' => '',
+    'staff_id'  => '',
+    'department_id' => '',
     'net_val'   => '',
     'status'    => 1
 ];
@@ -65,7 +66,6 @@ value="<?= $detail->net_val ?>" <?= $disabledView ?>>
 </td>
 </tr>
 
-<!-- Site + Department/Staff (Same Row) -->
 <tr>
 <td>
 <label class="fw-semibold">Site</label>
@@ -78,30 +78,29 @@ value="<?= $detail->net_val ?>" <?= $disabledView ?>>
 </select>
 </td>
 
-<td>
-<label class="fw-semibold">Department / Staff</label>
-<select name="allocation_to" class="form-control" <?= $disabledView ?>>
-
-<option value="">Select</option>
-
-<optgroup label="Departments">
+<td id="deptCell">
+<label class="fw-semibold">Department</label>
+<select name="department_id" class="form-control" <?= $disabledView ?>>
+<option value="">Select Department</option>
 <?php foreach($departments as $d): ?>
-<option value="dept_<?= $d->department_id ?>"
-<?= $detail->allocation_to == 'dept_'.$d->department_id ? 'selected' : '' ?>>
+<option value="<?= $d->department_id ?>" <?= $detail->department_id==$d->department_id?'selected':'' ?>>
 <?= $d->department_name ?>
 </option>
 <?php endforeach; ?>
-</optgroup>
+</select>
+</td>
+</tr>
 
-<optgroup label="Staff">
+<tr id="staffRow">
+<td colspan="2">
+<label class="fw-semibold">Staff</label>
+<select name="staff_id" class="form-control" <?= $disabledView ?>>
+<option value="">Select Staff</option>
 <?php foreach($staffs as $s): ?>
-<option value="staff_<?= $s->staff_id ?>"
-<?= $detail->allocation_to == 'staff_'.$s->staff_id ? 'selected' : '' ?>>
+<option value="<?= $s->staff_id ?>" <?= $detail->staff_id==$s->staff_id?'selected':'' ?>>
 <?= $s->emp_name ?>
 </option>
 <?php endforeach; ?>
-</optgroup>
-
 </select>
 </td>
 </tr>
@@ -128,3 +127,15 @@ value="<?= $detail->net_val ?>" <?= $disabledView ?>>
 </div>
 </div>
 </body>
+
+<script>
+const ownership = "<?= $asset->ownership_type ?>";
+
+if (ownership === 'department') {
+    document.getElementById('staffRow').style.display = 'none';
+    document.getElementById('deptCell').style.display  = '';
+} else {
+    document.getElementById('staffRow').style.display = '';
+    document.getElementById('deptCell').style.display  = 'none';
+}
+</script>
