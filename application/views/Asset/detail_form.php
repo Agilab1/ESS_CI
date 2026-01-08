@@ -66,6 +66,7 @@ value="<?= $detail->net_val ?>" <?= $disabledView ?>>
 </td>
 </tr>
 
+<!-- Site + Staff -->
 <tr>
 <td>
 <label class="fw-semibold">Site</label>
@@ -78,27 +79,28 @@ value="<?= $detail->net_val ?>" <?= $disabledView ?>>
 </select>
 </td>
 
-<td id="deptCell">
-<label class="fw-semibold">Department</label>
-<select name="department_id" class="form-control" <?= $disabledView ?>>
-<option value="">Select Department</option>
-<?php foreach($departments as $d): ?>
-<option value="<?= $d->department_id ?>" <?= $detail->department_id==$d->department_id?'selected':'' ?>>
-<?= $d->department_name ?>
-</option>
-<?php endforeach; ?>
-</select>
-</td>
-</tr>
-
-<tr id="staffRow">
-<td colspan="2">
+<td id="staffCell">
 <label class="fw-semibold">Staff</label>
 <select name="staff_id" class="form-control" <?= $disabledView ?>>
 <option value="">Select Staff</option>
 <?php foreach($staffs as $s): ?>
 <option value="<?= $s->staff_id ?>" <?= $detail->staff_id==$s->staff_id?'selected':'' ?>>
 <?= $s->emp_name ?>
+</option>
+<?php endforeach; ?>
+</select>
+</td>
+</tr>
+
+<!-- Department -->
+<tr id="deptRow">
+<td colspan="2">
+<label class="fw-semibold">Department</label>
+<select name="department_id" class="form-control" <?= $disabledView ?>>
+<option value="">Select Department</option>
+<?php foreach($departments as $d): ?>
+<option value="<?= $d->department_id ?>" <?= $detail->department_id==$d->department_id?'selected':'' ?>>
+<?= $d->department_name ?>
 </option>
 <?php endforeach; ?>
 </select>
@@ -132,10 +134,10 @@ value="<?= $detail->net_val ?>" <?= $disabledView ?>>
 const ownership = "<?= $asset->ownership_type ?>";
 
 if (ownership === 'department') {
-    document.getElementById('staffRow').style.display = 'none';
-    document.getElementById('deptCell').style.display  = '';
+    document.getElementById('staffCell').style.display = 'none';
+    document.getElementById('deptRow').style.display  = '';
 } else {
-    document.getElementById('staffRow').style.display = '';
-    document.getElementById('deptCell').style.display  = 'none';
+    document.getElementById('staffCell').style.display = '';
+    document.getElementById('deptRow').style.display  = 'none';
 }
 </script>
