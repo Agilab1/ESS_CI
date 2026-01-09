@@ -71,31 +71,56 @@ class Asset extends CI_Controller
                 $this->load_page($data);
                 break;
 
+            // case "view":
+
+            //     // NFC TAP
+            //     if ($this->input->get('nfc') == 1 && $id) {
+            //         $this->Asset_model->update_assdet_verify($id, 1);
+            //     }
+
+            //     $data->action = "view";
+            //     $data->detail = $this->db
+            //         ->get_where('assdet', ['assdet_id' => $id])
+            //         ->row();
+
+            //     if (!$data->detail) show_404();
+
+            //     $data->asset = $this->Asset_model
+            //         ->getById($data->detail->asset_id);
+
+            //     // ✅ THIS IS MANDATORY
+            //     $this->load->view('incld/header');
+            //     $this->load->view('Asset/detail_form', $data);
+            //     $this->load->view('incld/footer');
+
+            //     break;
+
             case "view":
 
-                //  NFC TAP
                 if ($this->input->get('nfc') == 1 && $id) {
-
-                    // Model se verify update
                     $this->Asset_model->update_assdet_verify($id, 1);
                 }
 
                 $data->action = "view";
-                $data->detail = $this->db->get_where('assdet', ['assdet_id' => $id])->row();
-                if (!$data->detail) show_404();
 
-                $data->asset = $this->Asset_model->getById($data->detail->asset_id);
+                // 🔹 Get full assdet + asset in ONE query
+                $data->detail = $this->Asset_model->get_asset_by_assdet($id);
+
+                if (!$data->detail) {
+                    show_404();
+                }
+
+                // 🔹 Build asset object safely
+                $data->asset = (object)[
+                    'asset_id'   => $data->detail->asset_id,
+                    'asset_name' => $data->detail->asset_name ?? ''
+                ];
+
+                $this->load->view('incld/header');
+                $this->load->view('Asset/detail_form', $data);
+                $this->load->view('incld/footer');
+
                 break;
-
-
-            case "delete":
-                $this->Asset_model->deleteAsset($id);
-                $this->session->set_flashdata('success', "Asset deleted successfully!");
-                redirect('Asset/list');
-                break;
-
-            default:
-                show_404();
         }
     }
 
