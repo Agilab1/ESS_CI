@@ -422,7 +422,7 @@ class Asset extends CI_Controller
     }
 
 
-    // asset nfc scan using ajax
+    // asset nfc scan using ajax for location/asset_view .
     public function check_verify_ajax($assdet_id)
 {
     $row = $this->db

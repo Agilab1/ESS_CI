@@ -81,13 +81,15 @@
                 <div class="row mb-4">
                     <div class="col-md-6 text-center">
                         <span class="verify-status verify-ok">
-                            Verified Assets <i class="bi bi-check-square-fill text-primary"></i> : <?= $verify_count['verified'] ?? 0 ?>
+                            Verified Assets <i class="bi bi-check-square-fill text-primary"></i> :
+                            <span id="verified_count"><?= $verify_count['verified'] ?? 0 ?></span>
                         </span>
                     </div>
 
                     <div class="col-md-6 text-center">
                         <span class="verify-status verify-no">
-                            Unverified Assets ❌ : <?= $verify_count['unverified'] ?? 0 ?>
+                            Unverified Assets ❌ :
+                            <span id="unverified_count"><?= $verify_count['unverified'] ?? 0 ?></span>
                         </span>
                     </div>
                 </div>
@@ -183,11 +185,22 @@
                 }
             });
     }
+    // ajax through verfied couting 
+    function updateCounts() {
+        fetch("<?= base_url('Location/get_verify_count_ajax/' . $site->site_id) ?>")
+            .then(r => r.json())
+            .then(d => {
+                document.getElementById("verified_count").innerText = d.verified;
+                document.getElementById("unverified_count").innerText = d.unverified;
+            });
+    }
 
     // 
     setInterval(function() {
         <?php foreach ($assets as $a): ?>
             checkVerification(<?= $a->assdet_id ?>);
         <?php endforeach; ?>
+
+        updateCounts(); //  counts  auto update 
     }, 3000);
 </script>
