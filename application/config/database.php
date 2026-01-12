@@ -73,7 +73,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 $active_group = 'default';
 $query_builder = TRUE;
 
-
 // sqite3 database code
 
 // $db['default'] = array(
@@ -97,8 +96,6 @@ $query_builder = TRUE;
 // 	'failover' => array(),
 // 	'save_queries' => TRUE
 // );
-
-
 
 // mysqli database local code
 
@@ -124,7 +121,7 @@ $query_builder = TRUE;
 // 	'save_queries' => TRUE
 // );
 
-// //  cpanel mysqli database code
+//  cpanel mysqli database code
 
 $db['default'] = array(
 	'dsn'	=> '',

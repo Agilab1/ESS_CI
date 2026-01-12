@@ -64,11 +64,12 @@ $disabled = $isView ? 'disabled' : '';
 
                 <td>
                     <label class="fw-semibold">Ownership Type</label>
-                    <select name="ownership_type" class="form-control" required>
+                    <select name="ownership_type" class="form-control" <?= $disabled ?> required>
                         <option value="staff" <?= @$asset->ownership_type=='staff'?'selected':'' ?>>Staff</option>
                         <option value="department" <?= @$asset->ownership_type=='department'?'selected':'' ?>>Department</option>
                     </select>
                 </td>
+
             </tr>
 
             <!-- Buttons -->
