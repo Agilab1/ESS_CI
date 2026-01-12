@@ -107,7 +107,7 @@ $query_builder = TRUE;
 // 	'hostname' => 'localhost',
 // 	'username' => 'root',
 // 	'password' => '',
-// 	'database' => 'agiletwn_assets',
+// 	'database' => 'agiletwn_assets1',
 // 	'dbdriver' => 'mysqli',
 // 	'dbprefix' => '',
 // 	'pconnect' => FALSE,
@@ -124,7 +124,7 @@ $query_builder = TRUE;
 // 	'save_queries' => TRUE
 // );
 
-//  cpanel mysqli database code
+// //  cpanel mysqli database code
 
 $db['default'] = array(
 	'dsn'	=> '',
