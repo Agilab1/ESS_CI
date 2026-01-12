@@ -121,6 +121,9 @@ value="<?= $detail->net_val ?>" <?= $disabledView ?>>
 </td>
 
 <td>
+
+<?php if ($ownership_type === 'staff'): ?>
+
 <label class="fw-semibold">Staff</label>
 <select name="staff_id" class="form-control" <?= $disabledView ?>>
 <?php foreach($staffs as $st): ?>
@@ -129,11 +132,23 @@ value="<?= $detail->net_val ?>" <?= $disabledView ?>>
 </option>
 <?php endforeach; ?>
 </select>
-</td>
-</tr>
 
-<tr>
-<td>
+<?php else: ?>
+
+<label class="fw-semibold">Department</label>
+<select name="department_id" class="form-control" <?= $disabledView ?>>
+<?php foreach($departments as $d): ?>
+<option value="<?= $d->department_id ?>"
+    <?= $d->department_id == ($detail->department_id ?? '') ? 'selected' : '' ?>>
+    <?= $d->department_name ?>
+</option>
+<?php endforeach; ?>
+</select>
+
+<?php endif; ?>
+
+</td>
+
 <label class="fw-semibold">Status</label>
 <select name="status" class="form-control" <?= $disabledView ?>>
 <option value="1" <?= $detail->status == 1 ? 'selected' : '' ?>>Active</option>

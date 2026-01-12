@@ -199,6 +199,8 @@ class Asset extends CI_Controller
         $data = new stdClass();
         $data->counts = $this->Dashboard_model->counts();
         $data->asset  = $this->Asset_model->getById($asset_id);
+        $data->ownership_type = $data->asset->ownership_type;
+
         $data->sites  = $this->db->get('sites')->result();
         $data->staffs = $this->db->get('staffs')->result();
         $data->departments = $this->db->get('department')->result();
@@ -222,6 +224,7 @@ class Asset extends CI_Controller
         $data->counts = $this->Dashboard_model->counts();
         $data->detail = $this->db->get_where('assdet', ['assdet_id' => $assdet_id])->row();
         $data->asset  = $this->Asset_model->getById($data->detail->asset_id);
+        $data->ownership_type = $data->asset->ownership_type;
         $data->sites  = $this->db->get('sites')->result();
         $data->staffs = $this->db->get('staffs')->result();
         $data->departments = $this->db->get('department')->result();
@@ -293,7 +296,7 @@ class Asset extends CI_Controller
 
                 $data->asset = $this->Asset_model
                     ->getById($data->detail->asset_id);
-
+                $data->ownership_type = $data->asset->ownership_type;
                 $data->sites  = $this->db->get('sites')->result();
                 $data->staffs = $this->db->get('staffs')->result();
 
