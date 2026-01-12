@@ -17,37 +17,36 @@ class Location extends CI_Controller
     // LIST LOCATIONS
     // ============================================================
     public function list()
-{
-    $data = new stdClass();
+    {
+        $data = new stdClass();
 
-    // Locations
-    $data->locations = $this->Location_model->getAll();
+        // Locations
+        $data->locations = $this->Location_model->getAll();
 
-    // Dashboard counts
-    $data->counts = $this->Dashboard_model->counts();
+        // Dashboard counts
+        $data->counts = $this->Dashboard_model->counts();
 
-    // 🔥 Asset count by site
-    $assetCounts = $this->Asset_model->get_asset_count_by_site();
+        // 🔥 Asset count by site
+        $assetCounts = $this->Asset_model->get_asset_count_by_site();
 
-    // Map: site_id => total
-    $assetMap = [];
-    foreach ($assetCounts as $row) {
-        $assetMap[$row->site_id] = $row->total;
+        // Map: site_id => total
+        $assetMap = [];
+        foreach ($assetCounts as $row) {
+            $assetMap[$row->site_id] = $row->total;
+        }
+
+        $data->assetMap = $assetMap;
+
+        $this->load->view('incld/verify');
+        $this->load->view('incld/header');
+        $this->load->view('incld/top_menu');
+        $this->load->view('incld/side_menu');
+        $this->load->view('user/dashboard', $data);
+        $this->load->view('Location/list', $data);
+        $this->load->view('incld/script');
+        $this->load->view('incld/jslib');
+        $this->load->view('incld/footer');
     }
-
-    $data->assetMap = $assetMap;
-
-    $this->load->view('incld/verify');
-    $this->load->view('incld/header');
-    $this->load->view('incld/top_menu');
-    $this->load->view('incld/side_menu');
-    $this->load->view('user/dashboard', $data);
-    $this->load->view('Location/list', $data);
-    $this->load->view('incld/script');
-    $this->load->view('incld/jslib');
-    $this->load->view('incld/footer');
-    
-}
 
 
     // ============================================================
@@ -225,39 +224,58 @@ class Location extends CI_Controller
     // ASSET LIST FORM (QR PAGE
 
 
-public function asset_list($site_id)
-{
-    // SITE (fields unchanged)
-    $site = $this->Location_model->getById($site_id);
-    $assets = $this->Location_model->get_assets_by_site($site_id);
+    public function asset_list($site_id)
+    {
+        // SITE (fields unchanged)
+        $site = $this->Location_model->getById($site_id);
+        $assets = $this->Location_model->get_assets_by_site($site_id);
 
-    if (!$site) {
-        show_404();
-    }
-
-    // ✅ ONLY COUNT LOGIC (NO FIELD CHANGE)
-    $verified = 0;
-    $unverified = 0;
-
-    foreach ($assets as $a) {
-        if (isset($a->verified) && (int)$a->verified === 1) {
-            $verified++;
-        } else {
-            $unverified++;
+        if (!$site) {
+            show_404();
         }
+
+        // ✅ ONLY COUNT LOGIC (NO FIELD CHANGE)
+        $verified = 0;
+        $unverified = 0;
+
+        foreach ($assets as $a) {
+            if (isset($a->verified) && (int)$a->verified === 1) {
+                $verified++;
+            } else {
+                $unverified++;
+            }
+        }
+
+        $data = [
+            'site' => $site,
+            'assets' => $assets,
+            'verify_count' => [
+                'verified'   => $verified,
+                'unverified' => $unverified
+            ]
+        ];
+
+        $this->load->view('incld/header');
+        $this->load->view('Location/asset_list', $data);
+        $this->load->view('incld/footer');
     }
 
-    $data = [
-        'site' => $site,
-        'assets' => $assets,
-        'verify_count' => [
+// get_vetify count method for verfied_asset / unverified asset in location asset_list
+    public function get_verify_count_ajax($site_id)
+    {
+        $verified = $this->db
+            ->where('site_id', $site_id)
+            ->where('verified', 1)
+            ->count_all_results('assdet');
+
+        $unverified = $this->db
+            ->where('site_id', $site_id)
+            ->where('verified !=', 1)
+            ->count_all_results('assdet');
+
+        echo json_encode([
             'verified'   => $verified,
             'unverified' => $unverified
-        ]
-    ];
-
-    $this->load->view('incld/header');
-    $this->load->view('Location/asset_list', $data);
-    $this->load->view('incld/footer');
-}
+        ]);
+    }
 }
