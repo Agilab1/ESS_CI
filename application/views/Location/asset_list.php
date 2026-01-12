@@ -102,13 +102,13 @@
                                 <th style="width:100px;">Asset ID</th>
                                 <th>Serial No</th>
                                 <th>Asset Name</th>
-                                
+
                                 <th>Staff Name</th>
                                 <th style="width:100px;">Assdet ID</th>
-                                
+
                                 <!-- <th style="width:100px;">Staff ID</th> -->
-                                
-                                
+
+
                                 <th style="width:100px;">Verify</th>
                             </tr>
                         </thead>
@@ -122,20 +122,24 @@
                                         <td><?= $asset->asset_id ?? '-' ?></td>
                                         <td><?= $asset->serial_no ?? '-' ?></td>
                                         <td><?= $asset->asset_name ?? '-' ?></td>
-                                        
+
                                         <td><?= $asset->emp_name ?? '-' ?></td>
                                         <td><?= $asset->assdet_id ?? '-' ?></td>
-                                        
+
                                         <!-- <td><?= $asset->staff_id ?? '-' ?></td> -->
-                                        
-                                       
+
+
 
                                         <!-- VERIFIED FLAG -->
                                         <td class="text-center">
                                             <input type="checkbox"
                                                 class="big-checkbox"
+                                                id="verify_<?= $asset->assdet_id ?>"
                                                 <?= ((int)($asset->verified ?? 0) === 1) ? 'checked' : '' ?>
                                                 disabled>
+
+
+
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -164,3 +168,26 @@
         </div>
     </div>
 </div>
+
+<script>
+    function checkVerification(assdetId) {
+        fetch("<?= base_url('Asset/check_verify_ajax/') ?>" + assdetId)
+            .then(r => r.json())
+            .then(d => {
+                if (d.verified === 1) {
+                    let cb = document.getElementById("verify_" + assdetId);
+                    if (cb && !cb.checked) {
+                        cb.checked = true;
+                        cb.closest("tr").style.background = "#e6fffa";
+                    }
+                }
+            });
+    }
+
+    // 
+    setInterval(function() {
+        <?php foreach ($assets as $a): ?>
+            checkVerification(<?= $a->assdet_id ?>);
+        <?php endforeach; ?>
+    }, 3000);
+</script>

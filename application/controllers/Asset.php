@@ -71,30 +71,7 @@ class Asset extends CI_Controller
                 $this->load_page($data);
                 break;
 
-            // case "view":
-
-            //     // NFC TAP
-            //     if ($this->input->get('nfc') == 1 && $id) {
-            //         $this->Asset_model->update_assdet_verify($id, 1);
-            //     }
-
-            //     $data->action = "view";
-            //     $data->detail = $this->db
-            //         ->get_where('assdet', ['assdet_id' => $id])
-            //         ->row();
-
-            //     if (!$data->detail) show_404();
-
-            //     $data->asset = $this->Asset_model
-            //         ->getById($data->detail->asset_id);
-
-            //     // ✅ THIS IS MANDATORY
-            //     $this->load->view('incld/header');
-            //     $this->load->view('Asset/detail_form', $data);
-            //     $this->load->view('incld/footer');
-
-            //     break;
-
+         
             case "view":
 
                 if ($this->input->get('nfc') == 1 && $id) {
@@ -303,62 +280,7 @@ class Asset extends CI_Controller
     }
 
 
-    // public function detail($type = 'add', $id = null)
-    // {
-    //     $data = new stdClass();
-    //     $data->counts = $this->Dashboard_model->counts();
-
-    //     switch ($type) {
-
-    //         case "view":
-
-    //             // NFC TAP DETECT
-    //             if ($this->input->get('nfc') == 1 && $id) {
-
-    //                 // Inventory / verify (UNCHANGED)
-    //                 $this->Asset_model->update_assdet_verify($id, 1);
-
-    //                 // Logged-in user
-    //                 $logged_user_id = $this->session->userdata('user_id');
-
-    //                 // Get serial number
-    //                 $assdet = $this->db
-    //                     ->select('serial_no')
-    //                     ->get_where('assdet', ['assdet_id' => $id])
-    //                     ->row();
-
-    //                 // Assign serial to user (same pattern as site_no)
-    //                 if (!empty($logged_user_id) && !empty($assdet->serial_no)) {
-    //                     $this->User_model->edit_user($logged_user_id, [
-    //                         'serial_no' => $assdet->serial_no,
-    //                         'user_st'   => 'Active'
-    //                     ]);
-    //                 }
-    //             }
-
-    //             // Load asset detail
-    //             $data->action = "view";
-    //             $data->detail = $this->db
-    //                 ->get_where('assdet', ['assdet_id' => $id])
-    //                 ->row();
-
-    //             if (!$data->detail) show_404();
-
-    //             $data->asset = $this->Asset_model
-    //                 ->getById($data->detail->asset_id);
-
-    //             break;
-
-    //         default:
-    //             show_404();
-    //     }
-
-    //     $this->attachLoginUser($data);
-
-    //     $this->load->view('incld/header');
-    //     $this->load->view('Asset/detail_form', $data);
-    //     $this->load->view('incld/footer');
-    // }
+    // 
 
 
     public function detail($type = 'add', $id = null)
@@ -498,4 +420,20 @@ class Asset extends CI_Controller
 
         echo json_encode(['status' => 'success']);
     }
+
+
+    // asset nfc scan using ajax
+    public function check_verify_ajax($assdet_id)
+{
+    $row = $this->db
+        ->select('verified')
+        ->where('assdet_id', $assdet_id)
+        ->get('assdet')
+        ->row();
+
+    echo json_encode([
+        'verified' => $row ? (int)$row->verified : 0
+    ]);
+}
+
 }
