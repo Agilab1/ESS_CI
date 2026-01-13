@@ -130,14 +130,18 @@ if ($isView && empty($detail->site_id) && !empty($loginUser->site_no)) {
         <?php else: ?>
 
             <label class="fw-semibold">Department</label>
-            <select name="department_id" class="form-control" <?= $disabledView ?>>
-                <?php foreach($departments as $d): ?>
-                    <option value="<?= $d->department_id ?>"
-                        <?= $d->department_id == ($detail->department_id ?? '') ? 'selected' : '' ?>>
-                        <?= $d->department_name ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
+<select name="department_id" class="form-control" <?= $disabledView ?>>
+
+    <option value="">Select Department</option>
+
+    <?php foreach ($departments as $d): ?>
+        <option value="<?= $d->department_id ?>"
+            <?= ($detail->department_id ?? '') == $d->department_id ? 'selected' : '' ?>>
+            <?= $d->department_name ?>
+        </option>
+    <?php endforeach; ?>
+
+</select>
 
         <?php endif; ?>
     </td>
@@ -209,3 +213,4 @@ document.getElementById('siteBtn')?.addEventListener('click', function () {
     }
 });
 </script>
+ 
