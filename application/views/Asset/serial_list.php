@@ -30,10 +30,10 @@
 
         <div class="flex-grow-1"></div>
 
-        <a href="<?= base_url('asset/add_detail/'.$asset->asset_id) ?>" 
-           class="btn btn-primary">
-            <i class="fa fa-plus me-1"></i> Add Detail
-        </a>
+        <a href="<?= base_url('asset/detail/add/'.$asset->asset_id) ?>" class="btn btn-primary">
+    + Add Detail
+</a>
+
 
     </div>
 
