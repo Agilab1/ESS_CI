@@ -151,8 +151,8 @@ class Asset extends CI_Controller
         $data->departments = $this->db->get('department')->result();
         $this->attachLoginUser($data);
 
-       $data->serials = $this->db
-    ->select('
+        $data->serials = $this->db
+            ->select('
         assdet.*,
         sites.site_name,
         staffs.emp_name,
@@ -167,7 +167,7 @@ class Asset extends CI_Controller
             ->get()
             ->result();
 
-       
+
         $this->load->view('incld/header');
         $this->load->view('incld/top_menu');
         $this->load->view('incld/side_menu');
@@ -285,86 +285,114 @@ class Asset extends CI_Controller
     // 
 
 
-public function detail($type = 'view', $id = null)
-{
-    if (!$type || !$id) show_404();
+    public function detail($type = 'view', $id = null)
+    {
+        if (!$type || !$id) show_404();
 
-    $data = new stdClass();
-    $data->counts = $this->Dashboard_model->counts();
+        $data = new stdClass();
+        $data->counts = $this->Dashboard_model->counts();
 
-    switch ($type) {
+        switch ($type) {
 
-        case "add":
+            case "add":
 
-            $data->action = "add";
-            $data->asset  = $this->Asset_model->getById($id);
-            if (!$data->asset) show_404();
+                $data->action = "add";
+                $data->asset  = $this->Asset_model->getById($id);
+                if (!$data->asset) show_404();
 
-            $data->ownership_type = $data->asset->ownership_type;
+                $data->ownership_type = $data->asset->ownership_type;
 
-            $data->detail = (object)[
-                'assdet_id' => '',
-                'serial_no' => '',
-                'site_id'   => '',
-                'staff_id'  => '',
-                'department_id' => '',
-                'net_val'   => '',
-                'status'    => 1
-            ];
+                $data->detail = (object)[
+                    'assdet_id' => '',
+                    'serial_no' => '',
+                    'site_id'   => '',
+                    'staff_id'  => '',
+                    'department_id' => '',
+                    'net_val'   => '',
+                    'status'    => 1
+                ];
 
-            $data->sites  = $this->db->get('sites')->result();
-            $data->staffs = $this->db->get('staffs')->result();
-            $data->departments = $this->db->get('department')->result();
-            break;
-
-
-        case "edit":
-
-            $data->action = "edit";
-            $data->detail = $this->db->get_where('assdet', ['assdet_id' => $id])->row();
-            if (!$data->detail) show_404();
-
-            $data->asset = $this->Asset_model->getById($data->detail->asset_id);
-            $data->ownership_type = $data->asset->ownership_type;
-
-            $data->sites  = $this->db->get('sites')->result();
-            $data->staffs = $this->db->get('staffs')->result();
-            $data->departments = $this->db->get('department')->result();
-            break;
+                $data->sites  = $this->db->get('sites')->result();
+                $data->staffs = $this->db->get('staffs')->result();
+                $data->departments = $this->db->get('department')->result();
+                break;
 
 
-        case "view":
+            case "edit":
 
-            $data->action = "view";
-            $data->detail = $this->Asset_model->get_asset_by_assdet($id);
-            if (!$data->detail) show_404();
+                $data->action = "edit";
+                $data->detail = $this->db->get_where('assdet', ['assdet_id' => $id])->row();
+                if (!$data->detail) show_404();
 
-            $data->asset = $this->Asset_model->getById($data->detail->asset_id);
-            $data->ownership_type = $data->asset->ownership_type;
+                $data->asset = $this->Asset_model->getById($data->detail->asset_id);
+                $data->ownership_type = $data->asset->ownership_type;
 
-            $data->sites  = $this->db->get('sites')->result();
-            $data->staffs = $this->db->get('staffs')->result();
-            $data->departments = $this->db->get('department')->result();
-            break;
+                $data->sites  = $this->db->get('sites')->result();
+                $data->staffs = $this->db->get('staffs')->result();
+                $data->departments = $this->db->get('department')->result();
+                break;
 
 
-        case "delete":
+            case "view":
 
-            $this->db->where('assdet_id', $id)->delete('assdet');
-            $this->session->set_flashdata('success', 'Asset detail deleted successfully!');
-            redirect($_SERVER['HTTP_REFERER']);
-            return;
+                // ================= NFC TAP DETECT =================
+                if ($this->input->get('nfc') == 1 && $id) {
+
+                    // 1) Mark asset verified
+                    $this->Asset_model->update_assdet_verify($id, 1);
+
+                    // 2) Logged in user
+                    $logged_user_id = $this->session->userdata('user_id');
+
+                    // 3) Get serial from assdet
+                    $assdet = $this->db
+                        ->select('serial_no')
+                        ->get_where('assdet', ['assdet_id' => $id])
+                        ->row();
+
+                    // 4) Assign serial to user
+                    if (!empty($logged_user_id) && !empty($assdet->serial_no)) {
+                        $this->User_model->edit_user($logged_user_id, [
+                            'serial_no' => $assdet->serial_no,
+                            'user_st'   => 'Active'
+                        ]);
+                    }
+                }
+
+                // ================= MAIN DATA =================
+                $data->action = "view";
+                $data->detail = $this->Asset_model->get_asset_by_assdet($id);
+                if (!$data->detail) show_404();
+
+                $data->asset = $this->Asset_model->getById($data->detail->asset_id);
+                $data->ownership_type = $data->asset->ownership_type ?? '';
+
+                // Dropdown data
+                $data->sites  = $this->db->get('sites')->result();
+                $data->staffs = $this->db->get('staffs')->result();
+                $data->departments = $this->db->get('department')->result();
+
+                break;
+
+
+
+            case "delete":
+
+                $this->db->where('assdet_id', $id)->delete('assdet');
+                $this->session->set_flashdata('success', 'Asset detail deleted successfully!');
+                redirect($_SERVER['HTTP_REFERER']);
+                return;
+        }
+
+        $this->attachLoginUser($data);
+
+        $this->load->view('incld/header');
+
+
+        $this->load->view('Asset/detail_form', $data);
+        $this->load->view('incld/footer');
+        $this->load->view('incld/script');
     }
-
-    $this->attachLoginUser($data);
-
-    $this->load->view('incld/header');
- 
-   
-    $this->load->view('Asset/detail_form', $data);
-    $this->load->view('incld/footer');
-    $this->load->view('incld/script');
-}
 
 
 
@@ -434,16 +462,15 @@ public function detail($type = 'view', $id = null)
 
     // asset nfc scan using ajax for location/asset_view .
     public function check_verify_ajax($assdet_id)
-{
-    $row = $this->db
-        ->select('verified')
-        ->where('assdet_id', $assdet_id)
-        ->get('assdet')
-        ->row();
+    {
+        $row = $this->db
+            ->select('verified')
+            ->where('assdet_id', $assdet_id)
+            ->get('assdet')
+            ->row();
 
-    echo json_encode([
-        'verified' => $row ? (int)$row->verified : 0
-    ]);
-}
-
+        echo json_encode([
+            'verified' => $row ? (int)$row->verified : 0
+        ]);
+    }
 }
