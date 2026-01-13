@@ -282,7 +282,7 @@ class Asset extends CI_Controller
     }
 
 
-    // 
+    //
 
 
     public function detail($type = 'view', $id = null)
@@ -338,25 +338,49 @@ class Asset extends CI_Controller
                 // ================= NFC TAP DETECT =================
                 if ($this->input->get('nfc') == 1 && $id) {
 
-                    // 1) Mark asset verified
-                    $this->Asset_model->update_assdet_verify($id, 1);
-
-                    // 2) Logged in user
-                    $logged_user_id = $this->session->userdata('user_id');
-
-                    // 3) Get serial from assdet
+                    // Get assdet with asset name & verify status
                     $assdet = $this->db
-                        ->select('serial_no')
-                        ->get_where('assdet', ['assdet_id' => $id])
+                        ->select('a.asset_name, d.serial_no, d.verified')
+                        ->from('assdet d')
+                        ->join('assets a', 'a.asset_id = d.asset_id', 'left')
+                        ->where('d.assdet_id', $id)
+                        ->get()
                         ->row();
 
-                    // 4) Assign serial to user
-                    if (!empty($logged_user_id) && !empty($assdet->serial_no)) {
-                        $this->User_model->edit_user($logged_user_id, [
-                            'serial_no' => $assdet->serial_no,
-                            'user_st'   => 'Active'
-                        ]);
+                    if ($assdet) {
+
+                        // Already verified
+                        if ((int)$assdet->verified === 1) {
+
+                            $this->session->set_flashdata(
+                                'success',
+                                'Asset "' . $assdet->asset_name . '" already verified ✔️'
+                            );
+                        } else {
+
+                            // Mark verified
+                            $this->Asset_model->update_assdet_verify($id, 1);
+
+                            $this->session->set_flashdata(
+                                'success',
+                                'Asset "' . $assdet->asset_name . '" verified successfully via NFC ✅'
+                            );
+                        }
+
+                        // Assign serial to logged-in user
+                        $logged_user_id = $this->session->userdata('user_id');
+
+                        if (!empty($logged_user_id) && !empty($assdet->serial_no)) {
+                            $this->User_model->edit_user($logged_user_id, [
+                                'serial_no' => $assdet->serial_no,
+                                'user_st'   => 'Active'
+                            ]);
+                        }
                     }
+
+                    // Redirect to same page without nfc param
+                    redirect('asset/detail/view/' . $id);
+                    return;
                 }
 
                 // ================= MAIN DATA =================
@@ -367,13 +391,10 @@ class Asset extends CI_Controller
                 $data->asset = $this->Asset_model->getById($data->detail->asset_id);
                 $data->ownership_type = $data->asset->ownership_type ?? '';
 
-                // Dropdown data
                 $data->sites  = $this->db->get('sites')->result();
                 $data->staffs = $this->db->get('staffs')->result();
                 $data->departments = $this->db->get('department')->result();
-
                 break;
-
 
 
             case "delete":
@@ -387,12 +408,11 @@ class Asset extends CI_Controller
         $this->attachLoginUser($data);
 
         $this->load->view('incld/header');
-
-
         $this->load->view('Asset/detail_form', $data);
         $this->load->view('incld/footer');
         $this->load->view('incld/script');
     }
+
 
 
 
