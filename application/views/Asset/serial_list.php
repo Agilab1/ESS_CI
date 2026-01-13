@@ -31,7 +31,7 @@
         <div class="flex-grow-1"></div>
 
         <a href="<?= base_url('asset/detail/add/'.$asset->asset_id) ?>" class="btn btn-primary">
-    + Add Detail
+     Add Detail
 </a>
 
 
@@ -59,6 +59,8 @@
 <tr>
     <th>#</th>
     <th>Serial No</th>
+    <th>Model No</th>
+    <th>Description</th>
     <th>Site</th>
     <th>Department</th>
     <th>Staff</th>
@@ -73,6 +75,8 @@
 <tr>
     <td><?= $i + 1 ?></td>
     <td><?= $s->serial_no ?></td>
+    <td></td>
+    <td></td>
     <td><?= $s->site_name ?? '-' ?></td>
 
     <!-- Department -->

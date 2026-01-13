@@ -45,10 +45,10 @@
                                 </td>
                             </tr>
 
-                            <tr>
-                                <td class="p-3">
+                            <tr>    
+                                <td class="p-3 ">
                                     <label class="form-label">Description</label>
-                                    <textarea class="form-control" rows="4" name="day_txt" required
+                                    <textarea class="form-control" rows="1" name="day_txt" required
                                         placeholder="Enter holiday description..."
                                         <?= $readonly ?>><?= isset($holiday->day_txt) ? $holiday->day_txt : '' ?></textarea>
                                 </td>
