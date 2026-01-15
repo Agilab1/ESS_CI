@@ -139,9 +139,10 @@ value="<?= isset($detail->descr) ? $detail->descr : '' ?>" <?= $disabledView ?>>
 </select>
 </td>
 
-<td>
+<td id="staffBox">
 <label>Staff</label>
 <select name="staff_id" class="form-control" <?= $disabledSelect ?>>
+
 <?php foreach ($staffs as $st): ?>
 <option value="<?= $st->staff_id ?>" <?= $detail->staff_id == $st->staff_id ? 'selected' : '' ?>>
 <?= $st->emp_name ?>
@@ -185,12 +186,17 @@ value="<?= isset($detail->net_val) ? $detail->net_val : '' ?>" <?= $disabledView
 </div>
 
 <script>
-document.getElementById('staffBtn')?.addEventListener('click', function(){
-const s=document.getElementById('staffSelect');
-s.disabled ? s.disabled=false : s.form.submit();
-});
-document.getElementById('siteBtn')?.addEventListener('click', function(){
-const s=document.getElementById('siteSelect');
-s.disabled ? s.disabled=false : s.form.submit();
+document.addEventListener('DOMContentLoaded', function () {
+
+    var ownership = "<?= trim($asset->ownership_type ?? '') ?>";
+    var staffBox  = document.getElementById('staffBox');
+
+    if (!staffBox) return;
+
+    console.log('Ownership =', ownership); // <-- debug (you can remove later)
+
+    if (ownership === 'department') {
+        staffBox.style.display = 'none';
+    }
 });
 </script>
