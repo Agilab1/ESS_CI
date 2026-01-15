@@ -186,17 +186,26 @@ value="<?= isset($detail->net_val) ? $detail->net_val : '' ?>" <?= $disabledView
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
+document.getElementById('staffBtn')?.addEventListener('click', function(){
+    const s = document.getElementById('staffSelect');
 
-    var ownership = "<?= trim($asset->ownership_type ?? '') ?>";
-    var staffBox  = document.getElementById('staffBox');
+    if (s.disabled) {
+        s.disabled = false;          // enable first click
+        s.focus();
+    } else {
+        this.closest('form').submit();  // second click submits
+    }
+});
 
-    if (!staffBox) return;
+document.getElementById('siteBtn')?.addEventListener('click', function(){
+    const s = document.getElementById('siteSelect');
 
-    console.log('Ownership =', ownership); // <-- debug (you can remove later)
-
-    if (ownership === 'department') {
-        staffBox.style.display = 'none';
+    if (s.disabled) {
+        s.disabled = false;
+        s.focus();
+    } else {
+        this.closest('form').submit();
     }
 });
 </script>
+
