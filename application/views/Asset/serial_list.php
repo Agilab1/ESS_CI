@@ -1,4 +1,4 @@
-<style>
+<!-- <style>
 .table td, .table th { white-space: nowrap; }
 
 .status-switch {
@@ -8,6 +8,20 @@
 .card-header {
     display: flex !important;
 }
+</style> -->
+<style>
+    th,
+    td {
+        white-space: nowrap;
+    }
+
+    table {
+        table-layout: auto !important;
+    }
+
+    .card-header a.btn {
+        margin-left: auto !important;
+    }
 </style>
 
 <div class="container-fluid p-4">
@@ -33,7 +47,6 @@
         <a href="<?= base_url('asset/detail/add/'.$asset->asset_id) ?>" class="btn btn-primary">
      Add Detail
 </a>
-
 
     </div>
 
@@ -75,8 +88,9 @@
 <tr>
     <td><?= $i + 1 ?></td>
     <td><?= $s->serial_no ?></td>
-    <td></td>
-    <td></td>
+    <td><?= $s->model_no ?? '-' ?></td>
+<td><?= $s->descr ?? '-' ?></td>
+
     <td><?= $s->site_name ?? '-' ?></td>
 
     <!-- Department -->

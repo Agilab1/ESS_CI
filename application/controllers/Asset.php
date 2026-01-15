@@ -247,39 +247,41 @@ class Asset extends CI_Controller
     // }
 
     public function save_detail()
-    {
-        $asset_id = $this->input->post('asset_id');
+{
+    $asset_id = $this->input->post('asset_id');
 
-        $data = [
-            'asset_id'       => $asset_id,
-            'serial_no'      => $this->input->post('serial_no'),
-            'site_id'        => $this->input->post('site_id'),
-            'staff_id'       => $this->input->post('staff_id'),
-            'department_id'  => $this->input->post('department_id'),
-            'net_val'        => $this->input->post('net_val'),
-            'status'         => $this->input->post('status')
-        ];
+    $data = [
+        'asset_id'       => $asset_id,
+        'serial_no'      => $this->input->post('serial_no'),
+        'cat_id'         => 0, 
+        'model_no'       => $this->input->post('model_no'),
+        'descr'          => $this->input->post('descr'),
+        'site_id'        => $this->input->post('site_id'),
+        'staff_id'       => $this->input->post('staff_id'),
+        'department_id'  => $this->input->post('department_id'),
+        'net_val'        => $this->input->post('net_val'),
+        'status'         => $this->input->post('status')
+    ];
 
-        // 🔹 Get ownership type from asset
-        $asset = $this->Asset_model->getById($asset_id);
+    // 🔹 Get ownership type from asset
+    $asset = $this->Asset_model->getById($asset_id);
 
-        if ($asset->ownership_type === 'department') {
-            // Department owns it → wipe staff
-            $data['staff_id'] = null;
-        } else {
-            // Staff owns it → wipe department
-            $data['department_id'] = null;
-        }
-
-        if ($this->input->post('action') === 'add') {
-            $this->db->insert('assdet', $data);
-        } else {
-            $this->db->where('assdet_id', $this->input->post('assdet_id'))
-                ->update('assdet', $data);
-        }
-
-        redirect('asset/serials/' . $asset_id);
+    // 🧠 Correct ownership logic
+    if ($asset->ownership_type === 'department') {
+        // Department owns it → no staff allowed
+        $data['staff_id'] = null;
     }
+    // If ownership = staff → keep BOTH staff_id & department_id
+
+    if ($this->input->post('action') === 'add') {
+        $this->db->insert('assdet', $data);
+    } else {
+        $this->db->where('assdet_id', $this->input->post('assdet_id'))
+                 ->update('assdet', $data);
+    }
+
+    redirect('asset/serials/' . $asset_id);
+}
 
 
     //

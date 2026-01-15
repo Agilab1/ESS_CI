@@ -169,6 +169,8 @@ class Asset_model extends CI_Model
             ad.assdet_id,
             ad.asset_id,
             ad.serial_no,
+            ad.model_no,
+            ad.descr,
             ad.net_val,
             ad.status,
             ad.site_id,

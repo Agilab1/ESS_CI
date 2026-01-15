@@ -100,13 +100,13 @@ $query_builder = TRUE;
 
 //local code sql
 
-//
+
 // $db['default'] = array(
 // 	'dsn'	=> '',
 // 	'hostname' => 'localhost',
 // 	'username' => 'root',
 // 	'password' => '',
-// 	'database' => 'agiletwn_assets',
+// 	'database' => 'agiletwn_assets1',
 // 	'dbdriver' => 'mysqli',
 // 	'dbprefix' => '',
 // 	'pconnect' => FALSE,
