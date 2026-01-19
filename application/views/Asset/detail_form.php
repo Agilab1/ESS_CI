@@ -208,7 +208,6 @@ if ($isView && empty($detail->site_id) && !empty($loginUser->site_no)) {
 </div>
 
 <script>
-    << << << < HEAD
     document.getElementById('staffBtn')?.addEventListener('click', function() {
         const s = document.getElementById('staffSelect');
         s.disabled ? s.disabled = false : s.form.submit();
@@ -218,8 +217,7 @@ if ($isView && empty($detail->site_id) && !empty($loginUser->site_no)) {
         s.disabled ? s.disabled = false : s.form.submit();
     });
 </script>
-=======
-document.getElementById('staffBtn')?.addEventListener('click', function(){
+<!-- document.getElementById('staffBtn')?.addEventListener('click', function(){
 const s = document.getElementById('staffSelect');
 
 if (s.disabled) {
@@ -239,7 +237,5 @@ s.focus();
 } else {
 this.closest('form').submit();
 }
-});
-</script>
-
->>>>>>> ef67a6b6b6de4589bb9ad4b46b2df77b165fc60f
+}); -->
+<!-- </script> -->
