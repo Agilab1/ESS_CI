@@ -1,7 +1,18 @@
+<style>
+    .department-header {
+    display: flex;
+    align-items: center;
+}
+
+.department-header a {
+    margin-left: auto;
+}
+</style>
 <div class="card">
-    <div class="card-header d-flex justify-content-between">
-        <h4>Department List</h4>
-        <a href="<?= base_url('deprt/add') ?>" class="btn btn-primary">
+    <div class="card-header department-header">
+        <h4 class="mb-0">Department List</h4>
+
+        <a href="<?= base_url('deprt/add'); ?>" class="btn btn-primary">
             Add Department
         </a>
     </div>
