@@ -11,6 +11,7 @@ class Asset extends CI_Controller
         $this->load->model('Dashboard_model');
         $this->load->library('form_validation');
         $this->load->model('Location_model');
+        $this->load->model('AssetActivity_model');
         $this->load->model('User_model');
 
         if (!$this->session->userdata('logged_in')) {
@@ -141,24 +142,32 @@ class Asset extends CI_Controller
         redirect('Asset/list');
     }
 
-    public function serials($asset_id)
+    public function serials($asset_id = null)
     {
+        // 🔐 SAFETY GUARD
+        if (empty($asset_id)) {
+            redirect('Asset/list');
+            return;
+        }
+
         $data = new stdClass();
         $data->counts = $this->Dashboard_model->counts();
         $data->asset = $this->Asset_model->getById($asset_id);
-        if (!$data->asset) show_404();
+
+        if (!$data->asset) {
+            show_404();
+        }
 
         $data->departments = $this->db->get('department')->result();
         $this->attachLoginUser($data);
 
         $data->serials = $this->db
             ->select('
-        assdet.*,
-        sites.site_name,
-        staffs.emp_name,
-        department.department_name
-    ')
-
+            assdet.*,
+            sites.site_name,
+            staffs.emp_name,
+            department.department_name
+        ')
             ->from('assdet')
             ->join('sites', 'sites.site_id = assdet.site_id', 'left')
             ->join('staffs', 'staffs.staff_id = assdet.staff_id', 'left')
@@ -166,7 +175,6 @@ class Asset extends CI_Controller
             ->where('assdet.asset_id', $asset_id)
             ->get()
             ->result();
-
 
         $this->load->view('incld/header');
         $this->load->view('incld/top_menu');
@@ -177,7 +185,6 @@ class Asset extends CI_Controller
         $this->load->view('incld/footer');
         $this->load->view('incld/script');
     }
-
 
     public function update_serials()
     {
@@ -247,41 +254,41 @@ class Asset extends CI_Controller
     // }
 
     public function save_detail()
-{
-    $asset_id = $this->input->post('asset_id');
+    {
+        $asset_id = $this->input->post('asset_id');
 
-    $data = [
-        'asset_id'       => $asset_id,
-        'serial_no'      => $this->input->post('serial_no'),
-        'cat_id'         => 0, 
-        'model_no'       => $this->input->post('model_no'),
-        'descr'          => $this->input->post('descr'),
-        'site_id'        => $this->input->post('site_id'),
-        'staff_id'       => $this->input->post('staff_id'),
-        'department_id'  => $this->input->post('department_id'),
-        'net_val'        => $this->input->post('net_val'),
-        'status'         => $this->input->post('status')
-    ];
+        $data = [
+            'asset_id'       => $asset_id,
+            'serial_no'      => $this->input->post('serial_no'),
+            'cat_id'         => 0,
+            'model_no'       => $this->input->post('model_no'),
+            'descr'          => $this->input->post('descr'),
+            'site_id'        => $this->input->post('site_id'),
+            'staff_id'       => $this->input->post('staff_id'),
+            'department_id'  => $this->input->post('department_id'),
+            'net_val'        => $this->input->post('net_val'),
+            'status'         => $this->input->post('status')
+        ];
 
-    // 🔹 Get ownership type from asset
-    $asset = $this->Asset_model->getById($asset_id);
+        // 🔹 Get ownership type from asset
+        $asset = $this->Asset_model->getById($asset_id);
 
-    // 🧠 Correct ownership logic
-    if ($asset->ownership_type === 'department') {
-        // Department owns it → no staff allowed
-        $data['staff_id'] = null;
+        // 🧠 Correct ownership logic
+        if ($asset->ownership_type === 'department') {
+            // Department owns it → no staff allowed
+            $data['staff_id'] = null;
+        }
+        // If ownership = staff → keep BOTH staff_id & department_id
+
+        if ($this->input->post('action') === 'add') {
+            $this->db->insert('assdet', $data);
+        } else {
+            $this->db->where('assdet_id', $this->input->post('assdet_id'))
+                ->update('assdet', $data);
+        }
+
+        redirect('asset/serials/' . $asset_id);
     }
-    // If ownership = staff → keep BOTH staff_id & department_id
-
-    if ($this->input->post('action') === 'add') {
-        $this->db->insert('assdet', $data);
-    } else {
-        $this->db->where('assdet_id', $this->input->post('assdet_id'))
-                 ->update('assdet', $data);
-    }
-
-    redirect('asset/serials/' . $asset_id);
-}
 
 
     //
@@ -340,9 +347,8 @@ class Asset extends CI_Controller
                 // ================= NFC TAP DETECT =================
                 if ($this->input->get('nfc') == 1 && $id) {
 
-                    // Get assdet with asset name & verify status
                     $assdet = $this->db
-                        ->select('a.asset_name, d.serial_no, d.verified')
+                        ->select('d.assdet_id, d.asset_id, d.serial_no, d.verified, a.asset_name')
                         ->from('assdet d')
                         ->join('assets a', 'a.asset_id = d.asset_id', 'left')
                         ->where('d.assdet_id', $id)
@@ -351,7 +357,6 @@ class Asset extends CI_Controller
 
                     if ($assdet) {
 
-                        // Already verified
                         if ((int)$assdet->verified === 1) {
 
                             $this->session->set_flashdata(
@@ -360,30 +365,28 @@ class Asset extends CI_Controller
                             );
                         } else {
 
-                            // Mark verified
+                            // ✅ VERIFY
                             $this->Asset_model->update_assdet_verify($id, 1);
+
+                            $this->AssetActivity_model->log([
+                                'assdet_id' => $assdet->assdet_id,
+                                'asset_id'  => $assdet->asset_id,
+                                'action'    => 'Verified',
+                                'action_by' => $this->session->userdata('user_id'),
+                                'source'    => 'NFC'
+                            ]);
 
                             $this->session->set_flashdata(
                                 'success',
                                 'Asset "' . $assdet->asset_name . '" verified successfully via NFC ✅'
                             );
                         }
-
-                        // Assign serial to logged-in user
-                        $logged_user_id = $this->session->userdata('user_id');
-
-                        if (!empty($logged_user_id) && !empty($assdet->serial_no)) {
-                            $this->User_model->edit_user($logged_user_id, [
-                                'serial_no' => $assdet->serial_no,
-                                'user_st'   => 'Active'
-                            ]);
-                        }
                     }
 
-                    // Redirect to same page without nfc param
                     redirect('asset/detail/view/' . $id);
                     return;
                 }
+
 
                 // ================= MAIN DATA =================
                 $data->action = "view";
@@ -479,6 +482,13 @@ class Asset extends CI_Controller
             ]);
 
         echo json_encode(['status' => 'success']);
+        $this->AssetActivity_model->log([
+            'assdet_id' => $assdet_id,
+            'asset_id'  => null,
+            'action'    => 'Owner Changed',
+            'action_by' => $this->session->userdata('user_id'),
+            'source'    => 'MANUAL'
+        ]);
     }
 
 
@@ -495,4 +505,183 @@ class Asset extends CI_Controller
             'verified' => $row ? (int)$row->verified : 0
         ]);
     }
+
+    public function activity_dashboard()
+    {
+        $this->load->model('AssetActivity_model');
+
+        $data = new stdClass();
+        $data->counts = $this->Dashboard_model->counts();
+          $data->sites = $this->db->get('sites')->result();
+
+        $this->load->view('incld/header');
+        $this->load->view('incld/top_menu');
+        $this->load->view('incld/side_menu');
+        $this->load->view('user/dashboard', $data);
+        $this->load->view('Asset/activity_dashboard');
+        $this->load->view('incld/footer');
+    }
+
+    public function activity_live_ajax()
+    {
+        $this->load->model('AssetActivity_model');
+        echo json_encode($this->AssetActivity_model->get_live_activity());
+    }
+    public function activity_chart_ajax()
+    {
+        // Pie 1: Source wise
+        $source = $this->db
+            ->select('source, COUNT(*) as total')
+            ->group_by('source')
+            ->get('asset_activity_log')
+            ->result();
+
+        // Pie 2: Verified vs Unverified
+        $verify = $this->db
+            ->select('verified, COUNT(*) as total')
+            ->join('assdet', 'assdet.assdet_id = asset_activity_log.assdet_id', 'left')
+            ->group_by('verified')
+            ->get('asset_activity_log')
+            ->result();
+
+        // Line: Timeline (last 1 hour)
+        $timeline = $this->db
+            ->select("DATE_FORMAT(created_at,'%H:%i') as time, COUNT(*) as total")
+            ->where('created_at >=', date('Y-m-d H:i:s', strtotime('-1 hour')))
+            ->group_by("DATE_FORMAT(created_at,'%H:%i')")
+            ->order_by('created_at', 'ASC')
+            ->get('asset_activity_log')
+            ->result();
+
+        echo json_encode([
+            'source'   => $source,
+            'verify'   => $verify,
+            'timeline' => $timeline
+        ]);
+    }
+
+    public function asset_verify_summary_ajax()
+    {
+        // Total assets
+        $total = $this->db->count_all('assdet');
+
+        // Verified assets
+        $verified = $this->db
+            ->where('verified', 1)
+            ->count_all_results('assdet');
+
+        // Unverified assets
+        $unverified = $this->db
+            ->where('verified', 0)
+            ->count_all_results('assdet');
+
+        // Verified list
+        $verified_list = $this->db
+            ->select('a.asset_name, d.serial_no')
+            ->from('assdet d')
+            ->join('assets a', 'a.asset_id = d.asset_id', 'left')
+            ->where('d.verified', 1)
+            ->get()
+            ->result();
+
+        // Unverified list
+        $unverified_list = $this->db
+            ->select('a.asset_name, d.serial_no')
+            ->from('assdet d')
+            ->join('assets a', 'a.asset_id = d.asset_id', 'left')
+            ->where('d.verified', 0)
+            ->get()
+            ->result();
+
+        echo json_encode([
+            'total' => $total,
+            'verified' => $verified,
+            'unverified' => $unverified,
+            'verified_list' => $verified_list,
+            'unverified_list' => $unverified_list
+        ]);
+    }
+    public function asset_verify_chart_ajax()
+{
+    $site_id = $this->input->get('site_id');
+
+    // =========================
+    // PIE : VERIFIED COUNT
+    // =========================
+    if (!empty($site_id)) {
+        $this->db->where('site_id', $site_id);
+    }
+    $verified = $this->db
+        ->where('verified', 1)
+        ->count_all_results('assdet');
+
+    // =========================
+    // PIE : UNVERIFIED COUNT
+    // =========================
+    if (!empty($site_id)) {
+        $this->db->where('site_id', $site_id);
+    }
+    $unverified = $this->db
+        ->where('verified', 0)
+        ->count_all_results('assdet');
+
+    $total = $verified + $unverified;
+
+    // =========================
+    // LINE : VERIFIED ACTIVITY
+    // =========================
+    $this->db
+        ->select("
+            DATE_FORMAT(l.created_at,'%H:%i') as time,
+            COUNT(*) as verified
+        ")
+        ->from('asset_activity_log l')
+        ->join('assdet d', 'd.assdet_id = l.assdet_id', 'left')
+        ->where('l.action', 'Verified')
+        ->where('l.created_at >=', date('Y-m-d H:i:s', strtotime('-7 days')))
+        ->group_by("DATE_FORMAT(l.created_at,'%H:%i')")
+        ->order_by('l.created_at', 'ASC');
+
+    // 👉 Site filter only if selected
+    if (!empty($site_id)) {
+        $this->db->where('d.site_id', $site_id);
+    }
+
+    $timeline = $this->db->get()->result();
+
+    echo json_encode([
+        'total'      => $total,
+        'verified'   => $verified,
+        'unverified' => $unverified,
+        'timeline'   => $timeline
+    ]);
+}
+// ================================
+// PIE SLICE CLICK → ASSET LIST
+// ================================
+public function asset_list_by_verify_ajax()
+{
+    $verified = $this->input->get('verified'); // 1 or 0
+    $site_id  = $this->input->get('site_id');
+
+    $this->db
+        ->select('
+            a.asset_name,
+            d.serial_no,
+            s.site_name
+        ')
+        ->from('assdet d')
+        ->join('assets a', 'a.asset_id = d.asset_id', 'left')
+        ->join('sites s', 's.site_id = d.site_id', 'left')
+        ->where('d.verified', $verified);
+
+    if (!empty($site_id)) {
+        $this->db->where('d.site_id', $site_id);
+    }
+
+    $result = $this->db->get()->result();
+    echo json_encode($result);
+}
+
+
 }

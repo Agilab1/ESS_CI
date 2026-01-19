@@ -11,5 +11,11 @@
        &nbsp;&nbsp; <p>Deprt</p>
     </a>
 </li>
+<li class="nav-item">
+<a href="<?= base_url('Asset/activity_dashboard') ?>" class="nav-link">
+    <i class="fa fa-bolt"></i> Live Asset Activity
+</a>
+</li>
+
 
 
