@@ -136,7 +136,7 @@ if ($isView && empty($detail->site_id) && !empty($loginUser->site_no)) {
                                 </select>
                             </td>
                         </tr>
-                        <td id="staffBox">
+                        <!-- <td id="staffBox">
                             <label>Staff</label>
                             <select name="staff_id" class="form-control" <?= $disabledSelect ?>>
 
@@ -146,7 +146,7 @@ if ($isView && empty($detail->site_id) && !empty($loginUser->site_no)) {
                                     </option>
                                 <?php endforeach; ?>
                             </select>
-                        </td>
+                        </td> -->
                         </tr>
                         <tr>
                             <td>
