@@ -136,7 +136,18 @@ if ($isView && empty($detail->site_id) && !empty($loginUser->site_no)) {
                                 </select>
                             </td>
                         </tr>
+                        <td id="staffBox">
+                            <label>Staff</label>
+                            <select name="staff_id" class="form-control" <?= $disabledSelect ?>>
 
+                                <?php foreach ($staffs as $st): ?>
+                                    <option value="<?= $st->staff_id ?>" <?= $detail->staff_id == $st->staff_id ? 'selected' : '' ?>>
+                                        <?= $st->emp_name ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </td>
+                        </tr>
                         <tr>
                             <td>
                                 <label>Department</label>
@@ -197,6 +208,7 @@ if ($isView && empty($detail->site_id) && !empty($loginUser->site_no)) {
 </div>
 
 <script>
+    << << << < HEAD
     document.getElementById('staffBtn')?.addEventListener('click', function() {
         const s = document.getElementById('staffSelect');
         s.disabled ? s.disabled = false : s.form.submit();
@@ -206,3 +218,28 @@ if ($isView && empty($detail->site_id) && !empty($loginUser->site_no)) {
         s.disabled ? s.disabled = false : s.form.submit();
     });
 </script>
+=======
+document.getElementById('staffBtn')?.addEventListener('click', function(){
+const s = document.getElementById('staffSelect');
+
+if (s.disabled) {
+s.disabled = false; // enable first click
+s.focus();
+} else {
+this.closest('form').submit(); // second click submits
+}
+});
+
+document.getElementById('siteBtn')?.addEventListener('click', function(){
+const s = document.getElementById('siteSelect');
+
+if (s.disabled) {
+s.disabled = false;
+s.focus();
+} else {
+this.closest('form').submit();
+}
+});
+</script>
+
+>>>>>>> ef67a6b6b6de4589bb9ad4b46b2df77b165fc60f
