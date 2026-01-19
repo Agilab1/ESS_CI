@@ -1,13 +1,4 @@
 <?php
-$asset  = $asset  ?? (object)[
-    'asset_id'   => '',
-    'asset_name' => ''
-];
-
-$detail = $detail ?? (object)[];
-?>
-
-<?php
 
 $isView = ($action === 'view');
 $isEdit = ($action === 'edit');
@@ -34,6 +25,31 @@ if (!isset($loginUser)) {
         'site_no'  => null
     ];
 }
+// === NEW: Auto-fill logged-in user's staff & site in View mode ===
+if ($isView) {
+
+    // ===== Resolve logged-in user's STAFF =====
+    if (empty($detail->staff_id) && !empty($loginUser->staff_id)) {
+
+        foreach ($staffs as $st) {
+            if (strpos($loginUser->staff_id, $st->emp_name) !== false) {
+                $detail->staff_id = $st->staff_id;
+                break;
+            }
+        }
+    }
+
+    // ===== Resolve logged-in user's SITE =====
+    if (empty($detail->site_id) && !empty($loginUser->site_no)) {
+
+        foreach ($sites as $s) {
+            if ($s->site_no == $loginUser->site_no || $s->site_name == $loginUser->site_no) {
+                $detail->site_id = $s->site_id;
+                break;
+            }
+        }
+    }
+}
 
 if ($isView && empty($detail->site_id) && !empty($loginUser->site_no)) {
     foreach ($sites as $s) {
@@ -47,13 +63,11 @@ if ($isView && empty($detail->site_id) && !empty($loginUser->site_no)) {
 
 <div class="d-flex justify-content-center align-items-center" style="min-height:100vh;">
     <div class="container" style="max-width:900px;">
-
         <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
 
             <div class="card-header py-3 d-flex align-items-center justify-content-between">
                 <h4 class="m-0">
-                    <?= ucfirst($action) ?> Asset Detail — <?= $asset->asset_name ?? '-' ?>
-
+                    <?= ucfirst($action) ?> Asset Detail — <?= $asset->asset_name ?>
                 </h4>
 
                 <?php if ($isView): ?>
@@ -61,13 +75,15 @@ if ($isView && empty($detail->site_id) && !empty($loginUser->site_no)) {
 
                         <form method="post" action="<?= base_url('Asset/updateStaff'); ?>" class="d-flex align-items-center">
                             <input type="hidden" name="assdet_id" value="<?= $detail->assdet_id ?>">
+
                             <select name="staff_id" id="staffSelect" class="form-control form-control-sm" disabled>
                                 <?php foreach ($staffs as $s): ?>
-                                    <option value="<?= $s->staff_id ?>" <?= $detail->staff_id == $s->staff_id ? 'selected' : '' ?>>
+                                    <option value="<?= $s->staff_id ?>" <?= $loginUser->staff_id == $s->staff_id ? 'selected' : '' ?>>
                                         <?= $s->emp_name ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
+
                             <button type="button" id="staffBtn" class="btn btn-primary btn-sm ms-2">
                                 <i class="fas fa-user-edit"></i>
                             </button>
@@ -77,13 +93,16 @@ if ($isView && empty($detail->site_id) && !empty($loginUser->site_no)) {
 
                         <form method="post" action="<?= base_url('Asset/updateSite'); ?>" class="d-flex align-items-center">
                             <input type="hidden" name="assdet_id" value="<?= $detail->assdet_id ?>">
+
                             <select name="site_id" id="siteSelect" class="form-control form-control-sm" disabled>
                                 <?php foreach ($sites as $s): ?>
-                                    <option value="<?= $s->site_id ?>" <?= $detail->site_id == $s->site_id ? 'selected' : '' ?>>
+                                    <option value="<?= $s->site_id ?>"
+                                        <?= (!empty($loginUser->site_no) && $loginUser->site_no == $s->site_no) ? 'selected' : '' ?>>
                                         <?= $s->site_name ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
+
                             <button type="button" id="siteBtn" class="btn btn-primary btn-sm ms-2">
                                 <i class="fas fa-map-marker-alt"></i>
                             </button>
@@ -93,13 +112,14 @@ if ($isView && empty($detail->site_id) && !empty($loginUser->site_no)) {
                 <?php endif; ?>
             </div>
 
+
+
             <div class="card-body p-4">
 
                 <form method="post" action="<?= base_url('asset/save_detail') ?>">
 
                     <input type="hidden" name="action" value="<?= $action ?>">
-                    <input type="hidden" name="asset_id" value="<?= $asset->asset_id ?? '' ?>">
-
+                    <input type="hidden" name="asset_id" value="<?= $asset->asset_id ?>">
                     <input type="hidden" name="assdet_id" value="<?= $detail->assdet_id ?>">
 
                     <table class="table table-bordered">
@@ -136,18 +156,7 @@ if ($isView && empty($detail->site_id) && !empty($loginUser->site_no)) {
                                 </select>
                             </td>
                         </tr>
-                        <!-- <td id="staffBox">
-                            <label>Staff</label>
-                            <select name="staff_id" class="form-control" <?= $disabledSelect ?>>
 
-                                <?php foreach ($staffs as $st): ?>
-                                    <option value="<?= $st->staff_id ?>" <?= $detail->staff_id == $st->staff_id ? 'selected' : '' ?>>
-                                        <?= $st->emp_name ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </td> -->
-                        </tr>
                         <tr>
                             <td>
                                 <label>Department</label>
@@ -161,9 +170,12 @@ if ($isView && empty($detail->site_id) && !empty($loginUser->site_no)) {
                                 </select>
                             </td>
 
-                            <td>
+                            <td id="staffBox">
                                 <label>Staff</label>
-                                <select name="staff_id" class="form-control" <?= $disabledSelect ?>>
+                                <select name="staff_id" id="staffMain" class="form-control" <?= $disabledSelect ?>>
+
+
+
                                     <?php foreach ($staffs as $st): ?>
                                         <option value="<?= $st->staff_id ?>" <?= $detail->staff_id == $st->staff_id ? 'selected' : '' ?>>
                                             <?= $st->emp_name ?>
@@ -194,13 +206,12 @@ if ($isView && empty($detail->site_id) && !empty($loginUser->site_no)) {
                                 <?php if (!$isView): ?>
                                     <button class="btn btn-primary">Save</button>
                                 <?php endif; ?>
-                                <a href="<?= base_url('asset/serials/' . $asset->asset_id) ?>" class="btn btn-secondary text-white">
-                                    Back
-                                </a>
-
+                                <a href="<?= base_url('asset/serials/' . $asset->asset_id) ?>" class="btn btn-secondary">Back</a>
                             </td>
                         </tr>
+
                     </table>
+
                 </form>
             </div>
         </div>
@@ -210,32 +221,58 @@ if ($isView && empty($detail->site_id) && !empty($loginUser->site_no)) {
 <script>
     document.getElementById('staffBtn')?.addEventListener('click', function() {
         const s = document.getElementById('staffSelect');
-        s.disabled ? s.disabled = false : s.form.submit();
+        if (s.disabled) {
+            s.disabled = false;
+            s.focus();
+        } else {
+            this.closest('form').submit();
+        }
     });
+
     document.getElementById('siteBtn')?.addEventListener('click', function() {
         const s = document.getElementById('siteSelect');
-        s.disabled ? s.disabled = false : s.form.submit();
+        if (s.disabled) {
+            s.disabled = false;
+            s.focus();
+        } else {
+            this.closest('form').submit();
+        }
+    });
+
+    // ================== OWNERSHIP UI CONTROL ==================
+    document.addEventListener('DOMContentLoaded', function() {
+
+        const ownership = "<?= $asset->ownership_type ?>";
+
+        const headerStaff = document.getElementById('headerStaffBox');
+        const mainStaff = document.getElementById('staffBox');
+
+        if (ownership === 'department') {
+            if (headerStaff) headerStaff.style.display = 'none';
+            if (mainStaff) mainStaff.style.display = 'none';
+        }
+    });
+    document.getElementById('staffBtn')?.addEventListener('click', function() {
+        const select = document.querySelector('#staffSelect');
+        if (!select) return;
+
+        if (select.disabled) {
+            select.disabled = false;
+            select.focus();
+        } else {
+            select.form.submit();
+        }
+    });
+
+    document.getElementById('siteBtn')?.addEventListener('click', function() {
+        const select = document.querySelector('#siteSelect');
+        if (!select) return;
+
+        if (select.disabled) {
+            select.disabled = false;
+            select.focus();
+        } else {
+            select.form.submit();
+        }
     });
 </script>
-<!-- document.getElementById('staffBtn')?.addEventListener('click', function(){
-const s = document.getElementById('staffSelect');
-
-if (s.disabled) {
-s.disabled = false; // enable first click
-s.focus();
-} else {
-this.closest('form').submit(); // second click submits
-}
-});
-
-document.getElementById('siteBtn')?.addEventListener('click', function(){
-const s = document.getElementById('siteSelect');
-
-if (s.disabled) {
-s.disabled = false;
-s.focus();
-} else {
-this.closest('form').submit();
-}
-}); -->
-<!-- </script> -->
