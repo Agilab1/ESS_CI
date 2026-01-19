@@ -269,6 +269,44 @@ class Asset extends CI_Controller
             'net_val'        => $this->input->post('net_val'),
             'status'         => $this->input->post('status')
         ];
+    
+        /* ================= DELETE OLD IMAGE IF EDIT ================= */
+
+        if ($this->input->post('action') !== 'add') {
+            $old = $this->db->get_where('assdet', [
+                'assdet_id' => $this->input->post('assdet_id')
+            ])->row();
+
+            if (!empty($old->image)) {
+                $oldPath = FCPATH . 'uploads/assets/' . $old->image;
+                if (file_exists($oldPath)) {
+                    unlink($oldPath);
+                }
+            }
+        }
+        /* ================= IMAGE UPLOAD (REPLACE MODE) ================= */
+        if (!empty($_FILES['asset_image']['name'])) {
+
+            $serial = $this->input->post('serial_no');
+            $serial = preg_replace('/[^A-Za-z0-9_\-]/', '_', $serial);
+
+            $config['upload_path']   = FCPATH . 'uploads/assets/';
+            $config['allowed_types'] = 'jpg|jpeg|png|webp';
+            $config['file_name']     = $serial;   // always same name
+            $config['overwrite']     = true;
+
+            $this->load->library('upload');
+            $this->upload->initialize($config);
+
+            if ($this->upload->do_upload('asset_image')) {
+                $up = $this->upload->data();
+                $data['image'] = $up['file_name'];
+            } else {
+                $this->session->set_flashdata('error', $this->upload->display_errors());
+                redirect($_SERVER['HTTP_REFERER']);
+                return;
+            }
+        }
 
         // 🔹 Get ownership type from asset
         $asset = $this->Asset_model->getById($asset_id);
@@ -314,6 +352,7 @@ class Asset extends CI_Controller
                 $data->detail = (object)[
                     'assdet_id' => '',
                     'serial_no' => '',
+                    'image'     => '',
                     'site_id'   => '',
                     'staff_id'  => '',
                     'department_id' => '',
@@ -381,8 +420,18 @@ class Asset extends CI_Controller
                                 'Asset "' . $assdet->asset_name . '" verified successfully via NFC ✅'
                             );
                         }
-                    }
+                        // Assign serial to logged-in user
+                        $logged_user_id = $this->session->userdata('user_id');
 
+                        if (!empty($logged_user_id) && !empty($assdet->serial_no)) {
+                            $this->User_model->edit_user($logged_user_id, [
+                                'serial_no' => $assdet->serial_no,
+                                'user_st'   => 'Active'
+                            ]);
+                        }
+                        
+                    }
+                    // Redirect to same page without nfc param
                     redirect('asset/detail/view/' . $id);
                     return;
                 }
@@ -414,6 +463,7 @@ class Asset extends CI_Controller
 
         $this->load->view('incld/header');
         $this->load->view('Asset/detail_form', $data);
+        $this->load->view('incld/jslib');
         $this->load->view('incld/footer');
         $this->load->view('incld/script');
     }

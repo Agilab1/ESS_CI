@@ -175,6 +175,7 @@ class Asset_model extends CI_Model
             ad.status,
             ad.site_id,
             ad.staff_id,
+            ad.image,
             a.asset_name,
             s.site_no,
             s.site_name

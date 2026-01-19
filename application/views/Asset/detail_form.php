@@ -1,3 +1,27 @@
+<style>
+    .asset-image-box {
+        display: inline-block;
+        padding: 8px;
+        border-radius: 12px;
+        background: #f8f9fa;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    }
+
+    .asset-thumb {
+        width: 140px;
+        height: 110px;
+        object-fit: cover;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .asset-thumb:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+    }
+</style>
+
 <?php
 
 $isView = ($action === 'view');
@@ -16,7 +40,8 @@ $detail = $detail ?? (object)[
     'model_no'  => '',
     'descr'     => '',
     'net_val'   => '',
-    'status'    => 1
+    'status'    => 1,
+    'image'     => '',
 ];
 
 if (!isset($loginUser)) {
@@ -116,7 +141,7 @@ if ($isView && empty($detail->site_id) && !empty($loginUser->site_no)) {
 
             <div class="card-body p-4">
 
-                <form method="post" action="<?= base_url('asset/save_detail') ?>">
+                <form method="post" id="assetForm" action="<?= base_url('asset/save_detail') ?>" enctype="multipart/form-data">
 
                     <input type="hidden" name="action" value="<?= $action ?>">
                     <input type="hidden" name="asset_id" value="<?= $asset->asset_id ?>">
@@ -124,6 +149,42 @@ if ($isView && empty($detail->site_id) && !empty($loginUser->site_no)) {
 
                     <table class="table table-bordered">
 
+                        <tr>
+                            <!-- RIGHT TD : FILE INPUT -->
+                            <td class="align-middle">
+                                <label class="fw-bold d-block mb-2">Upload Image</label>
+
+                                <input type="file" name="asset_image"
+                                    class="form-control"
+                                    accept="image/*"
+                                    <?= $isView ? 'disabled' : '' ?>>
+                            </td>
+                            <!-- LEFT TD : IMAGE -->
+                            <td class="text-center align-middle">
+                                <label class="fw-bold d-block mb-2 text-start">Asset Image</label>
+
+                                <?php if (!empty($detail->image)): ?>
+                                    <div class="asset-image-box mx-auto">
+                                        <img src="<?= base_url('uploads/assets/' . $detail->image) ?>"
+                                            class="asset-thumb"
+                                            data-toggle="modal"
+                                            data-target="#imageModal">
+
+
+                                    </div>
+
+                                    <div class="fw-bold small mt-2" style="white-space:nowrap;">
+                                        <?= $asset->asset_name ?>
+                                        <?php if (!empty($detail->serial_no)): ?> - <?= $detail->serial_no ?> <?php endif; ?>
+                                        <?php if (!empty($detail->model_no)): ?> - <?= $detail->model_no ?> <?php endif; ?>
+                                    </div>
+                                <?php else: ?>
+                                    <div class="text-muted small mt-1">No Image</div>
+                                <?php endif; ?>
+                            </td>
+
+
+                        </tr>
                         <tr>
                             <td>
                                 <label>Serial No</label>
@@ -213,6 +274,18 @@ if ($isView && empty($detail->site_id) && !empty($loginUser->site_no)) {
                     </table>
 
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- IMAGE PREVIEW MODAL -->
+<div class="modal fade" id="imageModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <?php if (!empty($detail->image)): ?>
+                    <img src="<?= base_url('uploads/assets/' . $detail->image) ?>" class="img-fluid">
+                <?php endif; ?>
             </div>
         </div>
     </div>
