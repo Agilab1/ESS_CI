@@ -9,9 +9,13 @@ $disabled = $isView ? 'disabled' : '';
 
             <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
 
-                <div class="card-header py-3 d-flex justify-content-between align-items-center">
-                    <h4 class="m-0"><?= ucfirst($action) ?> Department</h4>
+                <div class="card-header bg-primary py-3 text-white d-flex justify-content-between align-items-center">
+                    <h4 class="m-0 fw-bold">
+                        <i class="fa fa-th-large me-2"></i>
+                        <?= ucfirst($action) ?> Department
+                    </h4>
                 </div>
+
 
                 <div class="card-body p-4">
 

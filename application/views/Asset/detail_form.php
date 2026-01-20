@@ -90,10 +90,16 @@ if ($isView && empty($detail->site_id) && !empty($loginUser->site_no)) {
     <div class="container" style="max-width:900px;">
         <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
 
-            <div class="card-header py-3 d-flex align-items-center justify-content-between">
-                <h4 class="m-0">
+            <div class="card-header py-3 d-flex align-items-center justify-content-between bg-primary text-white ">
+                <!-- <div class="card-header bg-primary text-white py-3"> -->
+                    <h4 class="m-0 fw-bold">
+                        <i class="fa fa-th-large me-2"></i>
+                        <?= ucfirst($action) ?> Asset Detail — <?= $asset->asset_name ?>
+                    </h4>
+                
+                <!-- <h4 class="m-0">
                     <?= ucfirst($action) ?> Asset Detail — <?= $asset->asset_name ?>
-                </h4>
+                </h4> -->
 
                 <?php if ($isView): ?>
                     <div class="d-flex align-items-center">
@@ -109,7 +115,7 @@ if ($isView && empty($detail->site_id) && !empty($loginUser->site_no)) {
                                 <?php endforeach; ?>
                             </select>
 
-                            <button type="button" id="staffBtn" class="btn btn-primary btn-sm ms-2">
+                            <button type="button" id="staffBtn" class="btn btn-primary border-white  btn-sm ms-2">
                                 <i class="fas fa-user-edit"></i>
                             </button>
                         </form>
@@ -128,7 +134,7 @@ if ($isView && empty($detail->site_id) && !empty($loginUser->site_no)) {
                                 <?php endforeach; ?>
                             </select>
 
-                            <button type="button" id="siteBtn" class="btn btn-primary btn-sm ms-2">
+                            <button type="button" id="siteBtn" class="btn btn-primary border-white btn-sm ms-2">
                                 <i class="fas fa-map-marker-alt"></i>
                             </button>
                         </form>

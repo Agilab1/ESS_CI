@@ -6,8 +6,15 @@
             <div class="card shadow-lg border-0 rounded-4 overflow-hidden"
                 style="box-shadow: 0 12px 50px rgba(0,0,0,0.22); min-height:350px;">
 
-                <div class="card-header border-5 py-3">
+                <!-- <div class="card-header border-5 py-3">
                     <h4 class="m-0"><?= ucfirst($action) ?> Holiday</h4>
+                </div> -->
+
+                <div class="card-header bg-primary text-white py-3">
+                    <h4 class="m-0 fw-bold">
+                        <i class="fa fa-th-large me-2"></i>
+                        <?= ucfirst($action) ?> Holiday
+                    </h4>
                 </div>
 
                 <div class="card-body p-4">
@@ -45,7 +52,7 @@
                                 </td>
                             </tr>
 
-                            <tr>    
+                            <tr>
                                 <td class="p-3 ">
                                     <label class="form-label">Description</label>
                                     <textarea class="form-control" rows="1" name="day_txt" required

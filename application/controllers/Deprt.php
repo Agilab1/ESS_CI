@@ -44,9 +44,9 @@ class Deprt extends CI_Controller
 
         $this->load->view('incld/verify');
         $this->load->view('incld/header');
-        $this->load->view('incld/top_menu');
-        $this->load->view('incld/side_menu');
-        $this->load->view('user/dashboard', $data);
+        // $this->load->view('incld/top_menu');
+        // $this->load->view('incld/side_menu');
+        // $this->load->view('user/dashboard', $data);
         $this->load->view('Dept/form', $data);
         $this->load->view('incld/footer');
     }
@@ -161,9 +161,9 @@ class Deprt extends CI_Controller
 
         $this->load->view('incld/verify');
         $this->load->view('incld/header');
-        $this->load->view('incld/top_menu');
-        $this->load->view('incld/side_menu');
-        $this->load->view('user/dashboard', $data);
+        // $this->load->view('incld/top_menu');
+        // $this->load->view('incld/side_menu');
+        // $this->load->view('user/dashboard', $data);
         $this->load->view('Dept/form', $data);
         $this->load->view('incld/footer');
     }

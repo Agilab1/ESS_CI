@@ -3,8 +3,11 @@
         <div class="row justify-content-center">
             <div class="col-md-7">
                 <div class="card shadow">
-                    <div class="card-header">
-                        <h5><?= isset($action) ? ucfirst($action) : 'Add' ?> User</h5>
+                    <div class="card-header bg-primary text-white py-3">
+                        <h4 class="m-0 fw-bold">
+                             <i class="fa fa-th-large me-2"></i>
+                             <?= isset($action) ? ucfirst($action) : 'Add' ?> User
+                        </h4>
                     </div>
 
                     <div class="card-body">
