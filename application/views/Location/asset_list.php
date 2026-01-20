@@ -95,18 +95,20 @@
                 </div>
 
                 <!-- ================= ASSET TABLE ================= -->
+                 
                 <div class="table-responsive">
-                    <table class="table table-bordered align-middle">
+                     <table id="dtbl" class="table table-bordered table-striped  ">
+                    <!-- <table class="table table-bordered align-middle"> -->
 
                         <thead style="background:#bcdcff;">
                             <tr class="text-center">
                                 <th style="width:60px;">#</th>
-                                <th style="width:100px;">Asset ID</th>
+                                 <th style="width:100px;">Assdet ID</th>
                                 <th>Serial No</th>
                                 <th>Asset Name</th>
 
                                 <th>Staff Name</th>
-                                <th style="width:100px;">Assdet ID</th>
+                               
 
                                 <!-- <th style="width:100px;">Staff ID</th> -->
 
@@ -121,12 +123,12 @@
                                 foreach ($assets as $asset): ?>
                                     <tr>
                                         <td class="text-center"><?= $i++; ?></td>
-                                        <td><?= $asset->asset_id ?? '-' ?></td>
+                                        <td><?= $asset->assdet_id ?? '-' ?></td>
                                         <td><?= $asset->serial_no ?? '-' ?></td>
                                         <td><?= $asset->asset_name ?? '-' ?></td>
 
                                         <td><?= $asset->emp_name ?? '-' ?></td>
-                                        <td><?= $asset->assdet_id ?? '-' ?></td>
+                                        
 
                                         <!-- <td><?= $asset->staff_id ?? '-' ?></td> -->
 

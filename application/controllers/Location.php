@@ -226,6 +226,7 @@ class Location extends CI_Controller
 
     public function asset_list($site_id)
     {
+        
         // SITE (fields unchanged)
         $site = $this->Location_model->getById($site_id);
         $assets = $this->Location_model->get_assets_by_site($site_id);
@@ -257,6 +258,8 @@ class Location extends CI_Controller
 
         $this->load->view('incld/header');
         $this->load->view('Location/asset_list', $data);
+        $this->load->view('incld/jslib');
+        $this->load->view('incld/script');
         $this->load->view('incld/footer');
     }
 
