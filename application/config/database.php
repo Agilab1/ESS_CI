@@ -97,7 +97,9 @@ $query_builder = TRUE;
 // 	'save_queries' => TRUE
 // );
 
+
 //local code sql
+
 
 // $db['default'] = array(
 // 	'dsn'	=> '',
@@ -120,6 +122,9 @@ $query_builder = TRUE;
 // 	'failover' => array(),
 // 	'save_queries' => TRUE
 // );
+
+
+
 
 //mysqli database local code
 

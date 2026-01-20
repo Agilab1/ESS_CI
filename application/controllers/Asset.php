@@ -144,7 +144,7 @@ class Asset extends CI_Controller
 
     public function serials($asset_id = null)
     {
-        // 🔐 SAFETY GUARD
+        // SAFETY GUARD
         if (empty($asset_id)) {
             redirect('Asset/list');
             return;
@@ -314,7 +314,7 @@ class Asset extends CI_Controller
         // 🔹 Get ownership type from asset
         $asset = $this->Asset_model->getById($asset_id);
 
-        // 🧠 Correct ownership logic
+        //  Correct ownership logic
         if ($asset->ownership_type === 'department') {
             // Department owns it → no staff allowed
             $data['staff_id'] = null;

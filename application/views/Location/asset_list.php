@@ -81,7 +81,7 @@
                 <div class="row mb-4">
                     <div class="col-md-6 text-center">
                         <span class="verify-status verify-ok">
-                            Verified Assets <i class="bi bi-check-square-fill text-primary"></i> :
+                            Verified Assets ✅ <i class="bi bi-check-square-fill text-primary"></i> :
                             <span id="verified_count"><?= $verify_count['verified'] ?? 0 ?></span>
                         </span>
                     </div>
