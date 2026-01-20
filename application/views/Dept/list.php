@@ -1,51 +1,52 @@
 <style>
     .department-header {
-    display: flex;
-    align-items: center;
-}
+        display: flex;
+        align-items: center;
+    }
 
-.department-header a {
-    margin-left: auto;
-}
-table {
-    table-layout: fixed;
-    width: 100%;
-}
+    .department-header a {
+        margin-left: auto;
+    }
 
-/* # column */
-table th:nth-child(1),
-table td:nth-child(1) {
-    width: 5%;
-    text-align: center;
-}
+    table {
+        table-layout: fixed;
+        width: 100%;
+    }
 
-/* Department ID */
-table th:nth-child(2),
-table td:nth-child(2) {
-    width: 10%;
-    text-align: center;
-}
+    /* # column */
+    table th:nth-child(1),
+    table td:nth-child(1) {
+        width: 5%;
+        text-align: center;
+    }
 
-/* Department Name */
-table th:nth-child(3),
-table td:nth-child(3) {
-    width: 15%;
-}
+    /* Department ID */
+    table th:nth-child(2),
+    table td:nth-child(2) {
+        width: 10%;
+        text-align: center;
+    }
 
-/* Site – zyada space */
-table th:nth-child(4),
-table td:nth-child(4) {
-    width: 45%;
-    word-break: break-word;
-}
+    /* Department Name */
+    table th:nth-child(3),
+    table td:nth-child(3) {
+        width: 15%;
+    }
 
-/* Action – chhota */
-table th:nth-child(5),
-table td:nth-child(5) {
-    width: 10%;
-    white-space: nowrap;
-    text-align: center;
-}
+    /* Site – zyada space */
+    table th:nth-child(4),
+    table td:nth-child(4) {
+        width: 45%;
+        word-break: break-word;
+    }
+
+    /* Action – chhota */
+    table th:nth-child(5),
+    table td:nth-child(5) {
+        width: 10%;
+        white-space: nowrap;
+        text-align: center;
+    }
 </style>
 <div class="card">
     <div class="card-header department-header">
@@ -63,7 +64,7 @@ table td:nth-child(5) {
             </div>
         <?php endif; ?>
 
-        <table class="table table-bordered table-striped">
+        <table id="dtbl" class="table table-bordered table-striped mb-0 table-hover">
             <thead class="btn-primary text-white">
                 <tr>
                     <th>#</th>
