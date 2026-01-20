@@ -70,6 +70,7 @@
             <!-- <table id="dtbl" class="table table-bordered table-striped mb-0 table-hover"> -->
             <table id="dtbl" class="table table-bordered table-striped mb-0 table-hover">
                 <thead class="btn-primary text-white">
+                <!-- <thead class="btn-primary sticky-top text-white"> -->
                     <tr>
                         <th>#</th>
                         <th>Serial No</th>

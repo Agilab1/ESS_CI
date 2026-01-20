@@ -7,9 +7,14 @@
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
     }
 
+    .file-input-fixed {
+        height: 40px !important;
+        /* normal bootstrap input height */
+    }
+
     .asset-thumb {
-        width: 140px;
-        height: 110px;
+        width: 350px;
+        height: 150px;
         object-fit: cover;
         border-radius: 10px;
         cursor: pointer;
@@ -92,11 +97,11 @@ if ($isView && empty($detail->site_id) && !empty($loginUser->site_no)) {
 
             <div class="card-header py-3 d-flex align-items-center justify-content-between bg-primary text-white ">
                 <!-- <div class="card-header bg-primary text-white py-3"> -->
-                    <h4 class="m-0 fw-bold">
-                        <i class="fa fa-th-large me-2"></i>
-                        <?= ucfirst($action) ?> Asset Detail — <?= $asset->asset_name ?>
-                    </h4>
-                
+                <h4 class="m-0 fw-bold">
+                    <i class="fa fa-th-large me-2"></i>
+                    <?= ucfirst($action) ?> Asset Detail — <?= $asset->asset_name ?>
+                </h4>
+
                 <!-- <h4 class="m-0">
                     <?= ucfirst($action) ?> Asset Detail — <?= $asset->asset_name ?>
                 </h4> -->
@@ -161,7 +166,7 @@ if ($isView && empty($detail->site_id) && !empty($loginUser->site_no)) {
                                 <label class="fw-bold d-block mb-2">Upload Image</label>
 
                                 <input type="file" name="asset_image"
-                                    class="form-control"
+                                    class="form-control file-input-fixed"
                                     accept="image/*"
                                     <?= $isView ? 'disabled' : '' ?>>
                             </td>
