@@ -17,7 +17,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-    /* ===== PIE SLICE TEXT (UNCHANGED) ===== */
+    /* ===== PIE SLICE TEXT ===== */
     Chart.register({
         id: 'sliceText',
         afterDraw(chart) {
@@ -137,6 +137,8 @@
 <script>
     let verifyPieChart, verifyLineChart, verifyPollBarChart;
 
+    let pieAnimatedOnce = false;
+
     const pieEl = document.getElementById('verifyPie');
     const lineEl = document.getElementById('verifyLine');
     const pollEl = document.getElementById('verifyPollBar');
@@ -154,7 +156,7 @@
                 verifiedAsset.innerText = d.verified;
                 unverifiedAsset.innerText = d.unverified;
 
-                /* ===== PIE (UNCHANGED) ===== */
+                /* ===== PIE ===== */
                 if (verifyPieChart) verifyPieChart.destroy();
                 verifyPieChart = new Chart(pieEl, {
                     type: 'pie',
@@ -165,8 +167,16 @@
                             backgroundColor: ['#198754', '#dc3545'],
                             radius: '60%'
                         }]
+                    },
+                    options: {
+                        animation: pieAnimatedOnce ? false : {
+                            animateRotate: true,
+                            duration: 900,
+                            easing: 'easeOutQuart'
+                        }
                     }
                 });
+                pieAnimatedOnce = true;
 
                 /* ===== LINE ===== */
                 if (verifyLineChart) verifyLineChart.destroy();
@@ -185,7 +195,7 @@
                     }
                 });
 
-                /* ===== POLL / PILLAR (UPWARD ONLY) ===== */
+                /* ===== POLL / PILLAR ===== */
                 if (verifyPollBarChart) verifyPollBarChart.destroy();
                 verifyPollBarChart = new Chart(pollEl, {
                     type: 'bar',
@@ -203,7 +213,7 @@
                         scales: {
                             y: {
                                 beginAtZero: true,
-                                max: d.total, // 🔒 same scale so red shrinks & green grows
+                                max: d.total,
                                 ticks: {
                                     precision: 0
                                 }
@@ -215,9 +225,7 @@
                             },
                             tooltip: {
                                 callbacks: {
-                                    label: function(ctx) {
-                                        return ctx.raw + ' Assets';
-                                    }
+                                    label: ctx => ctx.raw + ' Assets'
                                 }
                             }
                         }
