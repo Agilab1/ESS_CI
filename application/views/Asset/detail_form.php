@@ -13,7 +13,7 @@
     }
 
     .asset-thumb {
-        width: 350px;
+        width: 320px;
         height: 150px;
         object-fit: cover;
         border-radius: 10px;
