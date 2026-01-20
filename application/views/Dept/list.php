@@ -7,6 +7,45 @@
 .department-header a {
     margin-left: auto;
 }
+table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+/* # column */
+table th:nth-child(1),
+table td:nth-child(1) {
+    width: 5%;
+    text-align: center;
+}
+
+/* Department ID */
+table th:nth-child(2),
+table td:nth-child(2) {
+    width: 10%;
+    text-align: center;
+}
+
+/* Department Name */
+table th:nth-child(3),
+table td:nth-child(3) {
+    width: 15%;
+}
+
+/* Site – zyada space */
+table th:nth-child(4),
+table td:nth-child(4) {
+    width: 45%;
+    word-break: break-word;
+}
+
+/* Action – chhota */
+table th:nth-child(5),
+table td:nth-child(5) {
+    width: 10%;
+    white-space: nowrap;
+    text-align: center;
+}
 </style>
 <div class="card">
     <div class="card-header department-header">
