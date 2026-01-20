@@ -50,6 +50,8 @@ class Role extends CI_Controller
         ];
         $this->load->view('incld/header');
         $this->load->view('Role/role_form', $data);
+        $this->load->view('incld/jslib');
+
         $this->load->view('incld/footer');
     }
     public function edit($role_id)
@@ -60,6 +62,7 @@ class Role extends CI_Controller
 
         $this->load->view('incld/header');
         $this->load->view('Role/role_form', $data);
+          $this->load->view('incld/jslib');
         $this->load->view('incld/footer');
     }
 
@@ -71,6 +74,7 @@ class Role extends CI_Controller
 
         $this->load->view('incld/header');
         $this->load->view('Role/role_form', $data);
+          $this->load->view('incld/jslib');
         $this->load->view('incld/footer');
     }
 

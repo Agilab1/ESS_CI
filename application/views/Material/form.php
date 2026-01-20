@@ -11,15 +11,19 @@ $disabled = $is_view ? 'disabled' : '';
         <div class="row justify-content-center">
             <div class="col-md-7">
 
-                <!-- Header -->
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h4 class="mb-0">
-                        <?= $is_view ? 'View Material' : ($is_edit ? 'Edit Material' : 'Add Material') ?>
-                    </h4>
-                </div>
+
+
+
 
                 <!-- Card -->
                 <div class="card shadow">
+                    <!-- Header -->
+                    <div class="card-header d-flex justify-content-between align-items-center bg-primary text-white py-3">
+                        <h4 class="mb-0 fw-bold">
+                            <i class="fa fa-th-large me-2"></i>
+                            <?= $is_view ? 'View Material' : ($is_edit ? 'Edit Material' : 'Add Material') ?>
+                        </h4>
+                    </div>
                     <div class="card-body">
 
                         <form method="post"
@@ -78,7 +82,7 @@ $disabled = $is_view ? 'disabled' : '';
                                             name="assdet_id"
                                             value="<?= isset($material) ? $material->assdet_id : '' ?>"
                                             <?= $readonly ?>>
-                                              
+
 
                                     </td>
 

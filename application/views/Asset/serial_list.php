@@ -67,6 +67,7 @@
                 </div>
             <?php endif; ?>
 
+            <!-- <table id="dtbl" class="table table-bordered table-striped mb-0 table-hover"> -->
             <table id="dtbl" class="table table-bordered table-striped mb-0 table-hover">
                 <thead class="btn-primary text-white">
                     <tr>
