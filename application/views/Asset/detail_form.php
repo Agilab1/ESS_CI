@@ -7,6 +7,8 @@
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
     }
 
+
+
     .file-input-fixed {
         height: 40px !important;
         /* normal bootstrap input height */
@@ -24,6 +26,18 @@
     .asset-thumb:hover {
         transform: scale(1.05);
         box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+    }
+
+    @media (max-width: 576px) {
+        .asset-thumb {
+            width: 100%;
+            height: auto;
+            max-width: 220px;
+        }
+
+        .asset-image-box {
+            padding: 6px;
+        }
     }
 </style>
 
@@ -157,130 +171,131 @@ if ($isView && empty($detail->site_id) && !empty($loginUser->site_no)) {
                     <input type="hidden" name="action" value="<?= $action ?>">
                     <input type="hidden" name="asset_id" value="<?= $asset->asset_id ?>">
                     <input type="hidden" name="assdet_id" value="<?= $detail->assdet_id ?>">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
 
-                    <table class="table table-bordered">
+                            <tr>
+                                <!-- RIGHT TD : FILE INPUT -->
+                                <td class="align-middle">
+                                    <label class="fw-bold d-block mb-2">Upload Image</label>
 
-                        <tr>
-                            <!-- RIGHT TD : FILE INPUT -->
-                            <td class="align-middle">
-                                <label class="fw-bold d-block mb-2">Upload Image</label>
+                                    <input type="file" name="asset_image"
+                                        class="form-control file-input-fixed"
+                                        accept="image/*"
+                                        <?= $isView ? 'disabled' : '' ?>>
+                                </td>
+                                <!-- LEFT TD : IMAGE -->
+                                <td class="text-center align-middle">
+                                    <label class="fw-bold d-block mb-2 text-start">Asset Image</label>
 
-                                <input type="file" name="asset_image"
-                                    class="form-control file-input-fixed"
-                                    accept="image/*"
-                                    <?= $isView ? 'disabled' : '' ?>>
-                            </td>
-                            <!-- LEFT TD : IMAGE -->
-                            <td class="text-center align-middle">
-                                <label class="fw-bold d-block mb-2 text-start">Asset Image</label>
-
-                                <?php if (!empty($detail->image)): ?>
-                                    <div class="asset-image-box mx-auto">
-                                        <img src="<?= base_url('uploads/assets/' . $detail->image) ?>"
-                                            class="asset-thumb"
-                                            data-toggle="modal"
-                                            data-target="#imageModal">
-
-
-                                    </div>
-
-                                    <div class="fw-bold small mt-2" style="white-space:nowrap;">
-                                        <?= $asset->asset_name ?>
-                                        <?php if (!empty($detail->serial_no)): ?> - <?= $detail->serial_no ?> <?php endif; ?>
-                                        <?php if (!empty($detail->model_no)): ?> - <?= $detail->model_no ?> <?php endif; ?>
-                                    </div>
-                                <?php else: ?>
-                                    <div class="text-muted small mt-1">No Image</div>
-                                <?php endif; ?>
-                            </td>
+                                    <?php if (!empty($detail->image)): ?>
+                                        <div class="asset-image-box mx-auto">
+                                            <img src="<?= base_url('uploads/assets/' . $detail->image) ?>"
+                                                class="asset-thumb"
+                                                data-toggle="modal"
+                                                data-target="#imageModal">
 
 
-                        </tr>
-                        <tr>
-                            <td>
-                                <label>Serial No</label>
-                                <input type="text" name="serial_no" class="form-control"
-                                    value="<?= $detail->serial_no ?>" <?= $readonlySerial ?> required>
-                            </td>
+                                        </div>
 
-                            <td>
-                                <label>Model No</label>
-                                <input type="text" name="model_no" class="form-control"
-                                    value="<?= isset($detail->model_no) ? $detail->model_no : '' ?>" <?= $disabledView ?>>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>
-                                <label>Description</label>
-                                <input type="text" name="descr" class="form-control"
-                                    value="<?= isset($detail->descr) ? $detail->descr : '' ?>" <?= $disabledView ?>>
-                            </td>
-
-                            <td>
-                                <label>Site</label>
-                                <select name="site_id" class="form-control" <?= $disabledSelect ?>>
-                                    <?php foreach ($sites as $s): ?>
-                                        <option value="<?= $s->site_id ?>" <?= $detail->site_id == $s->site_id ? 'selected' : '' ?>>
-                                            <?= $s->site_name ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>
-                                <label>Department</label>
-                                <?php $currentDept = isset($detail->department_id) ? $detail->department_id : ''; ?>
-                                <select name="department_id" class="form-control" <?= $disabledSelect ?>>
-                                    <?php foreach ($departments as $d): ?>
-                                        <option value="<?= $d->department_id ?>" <?= $currentDept == $d->department_id ? 'selected' : '' ?>>
-                                            <?= $d->department_name ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </td>
-
-                            <td id="staffBox">
-                                <label>Staff</label>
-                                <select name="staff_id" id="staffMain" class="form-control" <?= $disabledSelect ?>>
+                                        <div class="fw-bold small mt-2" style="white-space:nowrap;">
+                                            <?= $asset->asset_name ?>
+                                            <?php if (!empty($detail->serial_no)): ?> - <?= $detail->serial_no ?> <?php endif; ?>
+                                            <?php if (!empty($detail->model_no)): ?> - <?= $detail->model_no ?> <?php endif; ?>
+                                        </div>
+                                    <?php else: ?>
+                                        <div class="text-muted small mt-1">No Image</div>
+                                    <?php endif; ?>
+                                </td>
 
 
+                            </tr>
+                    </div>
+                    <tr>
+                        <td>
+                            <label>Serial No</label>
+                            <input type="text" name="serial_no" class="form-control"
+                                value="<?= $detail->serial_no ?>" <?= $readonlySerial ?> required>
+                        </td>
 
-                                    <?php foreach ($staffs as $st): ?>
-                                        <option value="<?= $st->staff_id ?>" <?= $detail->staff_id == $st->staff_id ? 'selected' : '' ?>>
-                                            <?= $st->emp_name ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </td>
-                        </tr>
+                        <td>
+                            <label>Model No</label>
+                            <input type="text" name="model_no" class="form-control"
+                                value="<?= isset($detail->model_no) ? $detail->model_no : '' ?>" <?= $disabledView ?>>
+                        </td>
+                    </tr>
 
-                        <tr>
-                            <td>
-                                <label>Net Value</label>
-                                <input type="number" name="net_val" class="form-control"
-                                    value="<?= isset($detail->net_val) ? $detail->net_val : '' ?>" <?= $disabledView ?>>
-                            </td>
+                    <tr>
+                        <td>
+                            <label>Description</label>
+                            <input type="text" name="descr" class="form-control"
+                                value="<?= isset($detail->descr) ? $detail->descr : '' ?>" <?= $disabledView ?>>
+                        </td>
 
-                            <td>
-                                <label>Status</label>
-                                <select name="status" class="form-control" <?= $disabledSelect ?>>
-                                    <option value="1" <?= $detail->status == 1 ? 'selected' : '' ?>>Active</option>
-                                    <option value="0" <?= $detail->status == 0 ? 'selected' : '' ?>>Inactive</option>
-                                </select>
-                            </td>
-                        </tr>
+                        <td>
+                            <label>Site</label>
+                            <select name="site_id" class="form-control" <?= $disabledSelect ?>>
+                                <?php foreach ($sites as $s): ?>
+                                    <option value="<?= $s->site_id ?>" <?= $detail->site_id == $s->site_id ? 'selected' : '' ?>>
+                                        <?= $s->site_name ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </td>
+                    </tr>
 
-                        <tr>
-                            <td colspan="2" class="text-center pt-3">
-                                <?php if (!$isView): ?>
-                                    <button class="btn btn-primary">Save</button>
-                                <?php endif; ?>
-                                <a href="<?= base_url('asset/serials/' . $asset->asset_id) ?>" class="btn btn-secondary">Back</a>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td>
+                            <label>Department</label>
+                            <?php $currentDept = isset($detail->department_id) ? $detail->department_id : ''; ?>
+                            <select name="department_id" class="form-control" <?= $disabledSelect ?>>
+                                <?php foreach ($departments as $d): ?>
+                                    <option value="<?= $d->department_id ?>" <?= $currentDept == $d->department_id ? 'selected' : '' ?>>
+                                        <?= $d->department_name ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </td>
+
+                        <td id="staffBox">
+                            <label>Staff</label>
+                            <select name="staff_id" id="staffMain" class="form-control" <?= $disabledSelect ?>>
+
+
+
+                                <?php foreach ($staffs as $st): ?>
+                                    <option value="<?= $st->staff_id ?>" <?= $detail->staff_id == $st->staff_id ? 'selected' : '' ?>>
+                                        <?= $st->emp_name ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <label>Net Value</label>
+                            <input type="number" name="net_val" class="form-control"
+                                value="<?= isset($detail->net_val) ? $detail->net_val : '' ?>" <?= $disabledView ?>>
+                        </td>
+
+                        <td>
+                            <label>Status</label>
+                            <select name="status" class="form-control" <?= $disabledSelect ?>>
+                                <option value="1" <?= $detail->status == 1 ? 'selected' : '' ?>>Active</option>
+                                <option value="0" <?= $detail->status == 0 ? 'selected' : '' ?>>Inactive</option>
+                            </select>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="2" class="text-center pt-3">
+                            <?php if (!$isView): ?>
+                                <button class="btn btn-primary">Save</button>
+                            <?php endif; ?>
+                            <a href="<?= base_url('asset/serials/' . $asset->asset_id) ?>" class="btn btn-secondary">Back</a>
+                        </td>
+                    </tr>
 
                     </table>
 
