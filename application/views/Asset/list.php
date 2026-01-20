@@ -38,7 +38,6 @@
                         <th>Asset No</th>
                         <th>Name</th>
                         <th>Quantity</th>
-                        <th>Material</th>
                         <th>Category</th>
                         <th class="text-center">Action</th>
                     </tr>
@@ -56,20 +55,6 @@
                                         <?= (int)$a->quantity ?>
                                     </a>
                                 </td>
-                                <!-- <td></td> -->
-
-
-                                <td>
-<?php if (!empty($a->material_code)): ?>
-    <a href="<?= site_url('Bom/material/' . $a->material_id); ?>"
-       style="color:#0d6efd; text-decoration:underline;">
-        <?= $a->material_code ?>
-    </a>
-<?php else: ?>
-    <span class="text-muted">N/A</span>
-<?php endif; ?>
-</td>
-
 
                                 <td><?= $a->cat_no ?> – <?= $a->cat_name ?></td>
 

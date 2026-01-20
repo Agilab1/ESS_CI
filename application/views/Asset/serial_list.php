@@ -74,6 +74,7 @@
                         <th>Serial No</th>
                         <th>Model No</th>
                         <th>Description</th>
+                        <th>Material</th>
                         <th>Site</th>
                         <th>Department</th>
                         <th>Staff</th>
@@ -90,6 +91,16 @@
                             <td><?= $s->serial_no ?></td>
                             <td><?= $s->model_no ?? '-' ?></td>
                             <td><?= $s->descr ?? '-' ?></td>
+                            <td>
+                                <?php if (!empty($s->material_code)): ?>
+                                    <a href="<?= site_url('Bom/material/' . $s->material_id); ?>"
+                                        style="color:#0d6efd; text-decoration:underline;">
+                                        <?= $s->material_code ?>
+                                    </a>
+                                <?php else: ?>
+                                    <span class="text-muted">N/A</span>
+                                <?php endif; ?>
+                            </td>
 
                             <td><?= $s->site_name ?? '-' ?></td>
 

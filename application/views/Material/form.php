@@ -71,12 +71,12 @@ $disabled = $is_view ? 'disabled' : '';
                                 <!-- ROW 3 : ASSET NAME | QUANTITY -->
                                 <tr>
                                     <td>
-                                        <label>Asset ID</label>
+                                        <label>Assdet ID</label>
                                         <input class="form-control"
 
                                             type="text"
-                                            name="asset_id"
-                                            value="<?= isset($material) ? $material->asset_id : '' ?>"
+                                            name="assdet_id"
+                                            value="<?= isset($material) ? $material->assdet_id : '' ?>"
                                             <?= $readonly ?>>
                                               
 

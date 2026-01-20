@@ -27,8 +27,8 @@ class Material_model extends CI_Model
     public function insert($data)
     {
         // IMPORTANT FIX
-        if (empty($data['asset_id'])) {
-            unset($data['asset_id']); // ⬅️ THIS IS THE KEY FIX
+        if (empty($data['assdet_id'])) {
+            unset($data['assdet_id']); // ⬅️ THIS IS THE KEY FIX
         }
 
         return $this->db->insert($this->table, $data);
@@ -38,8 +38,8 @@ class Material_model extends CI_Model
     public function update($id, $data)
     {
         //  SAFETY: asset_id null handling
-        if (!isset($data['asset_id']) || $data['asset_id'] === '') {
-            $data['asset_id'] = null;
+        if (!isset($data['assdet_id']) || $data['assdet_id'] === '') {
+            $data['assdet_id'] = null;
         }
 
         return $this->db

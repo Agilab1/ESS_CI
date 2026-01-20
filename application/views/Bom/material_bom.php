@@ -71,8 +71,11 @@ input[readonly], input[disabled], select[disabled] {
 <select name="child_material_id" id="child_material_add" class="form-control" required>
 <option value="">Select</option>
 <?php foreach ($materials as $m): ?>
+<?php if ($m->material_id != $material->material_id): ?> 
 <option value="<?= $m->material_id ?>"><?= $m->material_code ?></option>
+<?php endif; ?>
 <?php endforeach; ?>
+
 </select>
 </div>
 
