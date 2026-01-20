@@ -24,6 +24,67 @@
             margin-top: 10px;
         }
     }
+
+    /* ===== TABLE COLUMN WIDTH FIX ===== */
+    #dtbl {
+        table-layout: fixed;
+        width: 100%;
+    }
+
+    /* UserID – kam width */
+    #dtbl th:nth-child(1),
+    #dtbl td:nth-child(1) {
+        width: 6%;
+        text-align: center;
+    }
+
+    /* Name – medium */
+    #dtbl th:nth-child(2),
+    #dtbl td:nth-child(2) {
+        width: 14%;
+    }
+
+    /* Email – zyada width, wrap allowed */
+    #dtbl th:nth-child(3),
+    #dtbl td:nth-child(3) {
+        width: 22%;
+        word-break: break-all;
+    }
+
+    /* Phone */
+    #dtbl th:nth-child(4),
+    #dtbl td:nth-child(4) {
+        width: 10%;
+    }
+
+    /* Role */
+    #dtbl th:nth-child(5),
+    #dtbl td:nth-child(5) {
+        width: 8%;
+        text-align: center;
+    }
+
+    /* Type */
+    #dtbl th:nth-child(6),
+    #dtbl td:nth-child(6) {
+        width: 8%;
+        text-align: center;
+    }
+
+    /* Status */
+    #dtbl th:nth-child(7),
+    #dtbl td:nth-child(7) {
+        width: 6%;
+        text-align: center;
+    }
+
+    /* Action */
+    #dtbl th:nth-child(8),
+    #dtbl td:nth-child(8) {
+        width: 10%;
+        text-align: center;
+        white-space: nowrap;
+    }
 </style>
 <div class="card">
     <div class="card-header d-flex flex-wrap justify-content-between align-items-center">
@@ -47,19 +108,13 @@
 
                 <thead class="btn-primary sticky-top text-white">
                     <tr>
-                        <th style="width: 6vh;" class="text-nowrap">UserID</th>
-                        <th style="width: 6vh;" class="text-nowrap">Name</th>
-                        <th style="width: 10vh;" class="text-nowrap">Email</th>
+                        <th class="text-nowrap">UserID</th>
+                        <th class="text-nowrap">Name</th>
+                        <th class="text-nowrap">Email</th>
                         <th class="text-nowrap">Phone</th>
                         <th class="text-nowrap">Role</th>
                         <th class="text-nowrap">Type</th>
-                        <th class="text-nowrap">Staff ID</th>
-                        <th class="text-nowrap">Site No</th>
-                       
-                        <!-- <th class="text-nowrap">Asset No</th> -->
-                        <th class="text-nowrap"> Serial No </th>
-                         <th class="text-nowrap">Deprt Name</th>
-                        <th style="width: 4vh;" class="text-nowrap">Status</th>
+                        <th class="text-nowrap">Status</th>
                         <th class="text-center text-nowrap">Action</th>
                     </tr>
                 </thead>
@@ -75,16 +130,8 @@
                                 <td>
                                     <?= ($user->role_id == 1 ? 'Admin' : ($user->role_id == 2 ? 'User' : '-')) ?>
                                 </td>
-
-
                                 <td><?= $user->user_ty ?? '' ?></td>
-                                <td><?= $user->staff_id ?> - <?= $user->emp_name ?? '' ?></td>
-                                <td><?= $user->site_no ?? '' ?></td>
-                                <!-- <td><?= $user->asset_no ?? '' ?></td> -->
-                                <td><?= $user->serial_no ?? '' ?></td>
-                                <td><?= !empty($user->department_name) ? $user->department_name : '-' ?></td>
 
-          
 
                                 <!-- Checkbox Status -->
                                 <td class="text-center">
