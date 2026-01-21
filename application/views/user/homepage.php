@@ -8,12 +8,12 @@
                 <div class="w-100 position-relative" style="z-index: 2;">
 
                     <h6 class="text-uppercase text-secondary font-weight-bold mb-4" style="letter-spacing: 3px; font-size: 0.85rem;">
-                        <i class="fas fa-id-badge mr-2 text-primary"></i> Assets Service Portal
+                        <i class="fas fa-id-badge mr-2 text-primary"></i> Assets Management System
                     </h6>
 
                     <h1 class="text-dark mb-3" style="font-size: 2.5rem; line-height: 1.2;">
                         <span class="font-weight-light">Welcome to</span>
-                        <span class="font-weight-bolder text-primary">ASSETS SELF SERVICE</span>
+                        <span class="font-weight-bolder text-primary">ASSETS MANAGEMENT SYSTEM</span>
                     </h1>
 
                     <p class="text-muted m-0" style="font-size: 1.3rem; font-weight: 300;">
