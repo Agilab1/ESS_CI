@@ -1,6 +1,6 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <div  style ="color:white; text-align:center";>Assets Management Service</div>
+    <div  style ="color:white; text-align:center";>Assets Management System</div>
     <div>
     <a href="../index.php" class="brand-link">
       <img  src="assets/dist/img/assets_logo.png" alt="WSS Logo" style="width:230px;height:60px;opacity: .8; border-radius: 10px; ">
