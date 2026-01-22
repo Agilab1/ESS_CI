@@ -323,9 +323,11 @@ class Asset extends CI_Controller
 
         if ($this->input->post('action') === 'add') {
             $this->db->insert('assdet', $data);
+            $this->session->set_flashdata('success', 'Asset detail added successfully!');
         } else {
             $this->db->where('assdet_id', $this->input->post('assdet_id'))
                 ->update('assdet', $data);
+            $this->session->set_flashdata('success', 'Asset detail updated successfully!');
         }
 
         redirect('asset/serials/' . $asset_id);
@@ -403,7 +405,7 @@ class Asset extends CI_Controller
 
                             $this->session->set_flashdata(
                                 'success',
-                                'Asset "' . $assdet->asset_name . '" already verified ✔️'
+                                'Asset "' . $assdet->asset_name . '"  verified '
                             );
                         } else {
 
@@ -420,7 +422,7 @@ class Asset extends CI_Controller
 
                             $this->session->set_flashdata(
                                 'success',
-                                'Asset "' . $assdet->asset_name . '" verified successfully via NFC ✅'
+                                'Asset "' . $assdet->asset_name . '" verified successfully via NFC '
                             );
                         }
                         // Assign serial to logged-in user

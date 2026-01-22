@@ -165,6 +165,19 @@ if ($isView && empty($detail->site_id) && !empty($loginUser->site_no)) {
 
 
             <div class="card-body p-4">
+                                <!-- FLASH MESSAGES -->
+                <?php if ($this->session->flashdata('success')): ?>
+                    <div class="alert alert-success auto-hide">
+                        <?= $this->session->flashdata('success'); ?>
+                    </div>
+                <?php endif; ?>
+
+                <?php if ($this->session->flashdata('error')): ?>
+                    <div class="alert alert-danger auto-hide">
+                        <?= $this->session->flashdata('error'); ?>
+                    </div>
+                <?php endif; ?>
+
 
                 <form method="post" id="assetForm" action="<?= base_url('asset/save_detail') ?>" enctype="multipart/form-data">
 
@@ -374,4 +387,14 @@ if ($isView && empty($detail->site_id) && !empty($loginUser->site_no)) {
             select.form.submit();
         }
     });
+    setTimeout(function() {
+    document.querySelectorAll('.auto-hide').forEach(function(el) {
+        el.style.transition = '0.5s';
+        el.style.opacity = '0';
+        setTimeout(() => el.remove(), 500);
+    });
+}, 2500);
 </script>
+<!-- <script>
+
+</script> -->
