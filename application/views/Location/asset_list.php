@@ -3,6 +3,35 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
 <style>
+    /* ===== TABLE COLUMN WIDTH EXTRA COMPACT ===== */
+    .col-num {
+        width: 55px !important;
+        padding-left: 4px !important;
+        padding-right: 4px !important;
+    }
+
+    .col-id {
+        width: 125px !important;
+        padding-left: 6px !important;
+        padding-right: 6px !important;
+    }
+
+    .col-verify {
+        width: 95px !important;
+        padding-left: 4px !important;
+        padding-right: 4px !important;
+    }
+
+    /* checkbox bilkul tight */
+    .col-verify input {
+        margin: 0;
+    }
+
+    #dtbl td:nth-child(2),
+    #dtbl th:nth-child(2) {
+        text-align: center !important;
+    }
+
     /* ===== CHECKBOX ===== */
     .big-checkbox {
         width: 22px;
@@ -97,6 +126,12 @@
     .verify-input.unverified .count {
         background: #dc3545;
     }
+
+    @media (max-width: 768px) {
+        .verify-input {
+            min-width: 100%;
+        }
+    }
 </style>
 
 <div class="d-flex justify-content-center align-items-center" style="min-height:100vh; background:#f4f6f9;">
@@ -113,7 +148,7 @@
                     </h4>
 
                     <!-- TOTAL / VERIFIED / UNVERIFIED -->
-                    <div class="verify-input-wrap">
+                    <div class="verify-input-wrap d-flex flex-wrap gap-2">
 
                         <!-- TOTAL -->
                         <div class="verify-input total">
@@ -180,14 +215,15 @@
                     <table id="dtbl" class="table table-bordered table-striped">
                         <thead style="background:#bcdcff;">
                             <tr class="text-center">
-                                <th style="width:60px;">#</th>
-                                <th style="width:100px;">Assdet ID</th>
+                                <th class="col-num">#</th>
+                                <th class="col-id">Assdet ID</th>
                                 <th>Serial No</th>
                                 <th>Asset Name</th>
                                 <th>Staff Name</th>
-                                <th style="width:100px;">Verify</th>
+                                <th class="col-verify">Verify</th>
                             </tr>
                         </thead>
+
                         <tbody>
                             <?php if (!empty($assets)): ?>
                                 <?php $i = 1;
