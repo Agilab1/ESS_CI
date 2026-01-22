@@ -43,7 +43,7 @@
         <div class="card-header bg-primary text-white py-3">
             <h4 class="m-0">
                 <i class="fa fa-th-large me-2"></i>
-                BOM – Bill of Material
+                 Serial No : <?= !empty($material->serial_no) ? $material->serial_no : 'N/A' ?>
             </h4>
         </div>
 

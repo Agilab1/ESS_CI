@@ -15,7 +15,15 @@ class Bom extends CI_Controller
         $data = new stdClass();
 
         $data->action   = 'add_child';
-        $data->material = $this->Material_model->get_by_id($material_id);
+       // $data->material = $this->Material_model->get_by_id($material_id);
+        $data->material = $this->db
+        ->select('m.*, a.serial_no')
+        ->from('material m')
+        ->join('assdet a', 'a.assdet_id = m.assdet_id', 'left')
+        ->where('m.material_id', $material_id)
+        ->get()
+        ->row();
+
         $data->counts = $this->Dashboard_model->counts();
         if (!$data->material) show_404();
 
@@ -36,7 +44,15 @@ class Bom extends CI_Controller
     {
         $data = new stdClass();
 
-        $data->material = $this->Material_model->get_by_id($material_id);
+        // $data->material = $this->Material_model->get_by_id($material_id);
+        $data->material = $this->db
+        ->select('m.*, a.serial_no')
+        ->from('material m')
+        ->join('assdet a', 'a.assdet_id = m.assdet_id', 'left')
+        ->where('m.material_id', $material_id)
+        ->get()
+        ->row();
+
         if (!$data->material) show_404();
 
         // 🔥 THIS LINE WAS MISSING
