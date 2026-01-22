@@ -63,9 +63,6 @@ class Bom extends CI_Controller
         $data->counts = $this->Dashboard_model->counts();
 
         $this->load->view('incld/header');
-        $this->load->view('incld/top_menu');
-        $this->load->view('incld/side_menu');
-        $this->load->view('user/dashboard', $data);
         $this->load->view('Bom/material_bom', $data);
         $this->load->view('incld/footer');
     }
