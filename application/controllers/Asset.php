@@ -501,6 +501,7 @@ class Asset extends CI_Controller
         $this->db->where('assdet_id', $assdet_id)
             ->limit(1)
             ->update('assdet', ['site_id' => $site_id]);
+           $this->session->set_flashdata('success', 'Location updated successfully!');
 
         redirect($_SERVER['HTTP_REFERER']);
     }
@@ -697,7 +698,7 @@ class Asset extends CI_Controller
         ->group_by("DATE_FORMAT(l.created_at,'%H:%i')")
         ->order_by('l.created_at', 'ASC');
 
-    // 👉 Site filter only if selected
+    // Site filter only if selected
     if (!empty($site_id)) {
         $this->db->where('d.site_id', $site_id);
     }
