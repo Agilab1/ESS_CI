@@ -20,7 +20,7 @@ $disabled = $is_view ? 'disabled' : '';
                     <!-- Header -->
                     <div class="card-header d-flex justify-content-between align-items-center bg-primary text-white py-3">
                         <h4 class="mb-0 fw-bold">
-                            <i class="fa fa-th-large me-2"></i>
+                            <i class="fa fa-cubes" aria-hidden="true"></i>
                             <?= $is_view ? 'View Material' : ($is_edit ? 'Edit Material' : 'Add Material') ?>
                         </h4>
                     </div>

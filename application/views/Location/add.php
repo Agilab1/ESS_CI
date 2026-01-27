@@ -1,15 +1,15 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 <div class="d-flex justify-content-md-start justify-content-center align-items-center"
-     style="min-height:100vh; background:#f4f6f9;">
+    style="min-height:100vh; background:#f4f6f9;">
 
     <div class="container" style="width:75%; max-width:900px;">
 
         <div class="card shadow-lg border-0 rounded-4 overflow-hidden"
-             style="box-shadow:0 12px 50px rgba(0,0,0,0.22); min-height:350px;">
+            style="box-shadow:0 12px 50px rgba(0,0,0,0.22); min-height:350px;">
 
             <!-- HEADER -->
-              <!-- <div class="card-header bg-primary text-white py-3">
+            <!-- <div class="card-header bg-primary text-white py-3">
                 <h4 class="m-0 fw-bold">
                     <i class="fa fa-th-large me-2"></i>
                     Site Asset Verification
@@ -17,7 +17,7 @@
             </div> -->
             <div class="card-header bg-primary text-white py-3">
                 <h4 class="m-0 fw-bold">
-                     <i class="fa fa-th-large me-2"></i>
+                    <i class="fa fa-map-marker" aria-hidden="true"></i>
                     <?= ucfirst($action) ?> Location
                 </h4>
             </div>
@@ -42,13 +42,13 @@
                         <div class="col-md-6 mb-3 mb-md-0">
                             <label class="form-label fw-semibold">Site ID</label>
                             <input type="text" name="site_id" class="form-control" required
-                                   value="<?= $location->site_id ?? '' ?>" <?= $readonly ?>>
+                                value="<?= $location->site_id ?? '' ?>" <?= $readonly ?>>
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Site Number</label>
                             <input type="text" name="site_no" class="form-control" required
-                                   value="<?= $location->site_no ?? '' ?>" <?= $readonly ?>>
+                                value="<?= $location->site_no ?? '' ?>" <?= $readonly ?>>
                         </div>
                     </div>
 
@@ -57,13 +57,13 @@
                         <div class="col-md-6 mb-3 mb-md-0">
                             <label class="form-label fw-semibold">Site Name</label>
                             <input type="text" name="site_name" class="form-control" required
-                                   value="<?= $location->site_name ?? '' ?>" <?= $readonly ?>>
+                                value="<?= $location->site_name ?? '' ?>" <?= $readonly ?>>
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Access By</label>
                             <input type="text" name="access_by" class="form-control"
-                                   value="<?= $location->access_by ?? '' ?>" <?= $readonly ?>>
+                                value="<?= $location->access_by ?? '' ?>" <?= $readonly ?>>
                         </div>
                     </div>
 
@@ -72,21 +72,21 @@
                         <div class="col-md-6 mb-3 mb-md-0">
                             <label class="form-label fw-semibold">Last Visit</label>
                             <input type="datetime-local" name="last_visit" class="form-control"
-                                   value="<?= isset($location->last_visit)
-                                       ? date('Y-m-d\TH:i', strtotime($location->last_visit))
-                                       : '' ?>" <?= $readonly ?>>
+                                value="<?= isset($location->last_visit)
+                                            ? date('Y-m-d\TH:i', strtotime($location->last_visit))
+                                            : '' ?>" <?= $readonly ?>>
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Verify Asset</label>
 
                             <input type="hidden" name="verify_asset"
-                                   value="<?= $location->verify_asset ?? 1 ?>">
+                                value="<?= $location->verify_asset ?? 1 ?>">
 
                             <input type="text" class="form-control" readonly
-                                   value="<?= (!empty($location->verify_asset) && $location->verify_asset == 1)
-                                       ? 'Verified'
-                                       : 'Not Verified' ?>">
+                                value="<?= (!empty($location->verify_asset) && $location->verify_asset == 1)
+                                            ? 'Verified'
+                                            : 'Not Verified' ?>">
                         </div>
                     </div>
 
@@ -108,7 +108,7 @@
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Access Flag</label>
                             <input type="text" name="access_flag" class="form-control"
-                                   value="<?= $location->access_flag ?? '' ?>" <?= $readonly ?>>
+                                value="<?= $location->access_flag ?? '' ?>" <?= $readonly ?>>
                         </div>
                     </div>
 
@@ -118,11 +118,11 @@
                             <label class="form-label fw-semibold">Inventory</label><br>
 
                             <input type="checkbox"
-                                   name="inventory_checked"
-                                   value="1"
-                                   <?= (!empty($location->inventory_checked) && $location->inventory_checked == 1)
-                                       ? 'checked' : '' ?>
-                                   <?= ($action == 'view') ? 'disabled' : '' ?>>
+                                name="inventory_checked"
+                                value="1"
+                                <?= (!empty($location->inventory_checked) && $location->inventory_checked == 1)
+                                    ? 'checked' : '' ?>
+                                <?= ($action == 'view') ? 'disabled' : '' ?>>
 
                             <small class="text-muted d-block mt-1">
                                 Checked = Assets will be marked as NOT verified
@@ -137,12 +137,12 @@
                                 Save
                             </button>
                             <a href="<?= base_url('Location/list'); ?>"
-                               class="btn btn-secondary px-4 py-2 ms-2">
+                                class="btn btn-secondary px-4 py-2 ms-2">
                                 Back
                             </a>
                         <?php else: ?>
                             <a href="<?= base_url('Location/list'); ?>"
-                               class="btn btn-primary px-4 py-2 fw-semibold">
+                                class="btn btn-primary px-4 py-2 fw-semibold">
                                 Back
                             </a>
                         <?php endif; ?>

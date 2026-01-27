@@ -6,11 +6,11 @@
 
                     <div class="card-header bg-primary text-white py-3">
                         <h5 class="m-0 fw-bold">
-                            <i class="fa fa-th-large me-2"></i>
+                            <i class="fa fa-users" aria-hidden="true"></i>
                             <?= ucfirst($action) ?> Staff
                         </h5>
                     </div>
-                    
+
 
                     <!-- Flash Error -->
                     <?php if ($this->session->flashdata('error')): ?>

@@ -104,12 +104,12 @@
         <!-- HEADER -->
         <div class="card-header bg-primary text-white text-center">
             <h5 class="mb-0 fw-bold float-sm-left">
-                <i class="fa fa-th-large me-2"></i>
+                <i class="fa fa-id-card" aria-hidden="true"></i>
                 Staff Asset Details
             </h5>
         </div>
 
-        
+
 
         <div class="card-body">
 

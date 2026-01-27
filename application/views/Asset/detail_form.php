@@ -112,7 +112,7 @@ if ($isView && empty($detail->site_id) && !empty($loginUser->site_no)) {
             <div class="card-header py-3 d-flex align-items-center justify-content-between bg-primary text-white ">
                 <!-- <div class="card-header bg-primary text-white py-3"> -->
                 <h4 class="m-0 fw-bold">
-                    <i class="fa fa-th-large me-2"></i>
+                    <i class="fa fa-th-list" aria-hidden="true"></i>
                     <?= ucfirst($action) ?> Asset Detail — <?= $asset->asset_name ?>
                 </h4>
 
@@ -165,7 +165,7 @@ if ($isView && empty($detail->site_id) && !empty($loginUser->site_no)) {
 
 
             <div class="card-body p-4">
-                                <!-- FLASH MESSAGES -->
+                <!-- FLASH MESSAGES -->
                 <?php if ($this->session->flashdata('success')): ?>
                     <div class="alert alert-success auto-hide">
                         <?= $this->session->flashdata('success'); ?>
@@ -388,12 +388,12 @@ if ($isView && empty($detail->site_id) && !empty($loginUser->site_no)) {
         }
     });
     setTimeout(function() {
-    document.querySelectorAll('.auto-hide').forEach(function(el) {
-        el.style.transition = '0.5s';
-        el.style.opacity = '0';
-        setTimeout(() => el.remove(), 500);
-    });
-}, 2500);
+        document.querySelectorAll('.auto-hide').forEach(function(el) {
+            el.style.transition = '0.5s';
+            el.style.opacity = '0';
+            setTimeout(() => el.remove(), 500);
+        });
+    }, 2500);
 </script>
 <!-- <script>
 
