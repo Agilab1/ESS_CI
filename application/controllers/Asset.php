@@ -272,7 +272,7 @@ class Asset extends CI_Controller
             'net_val'        => $this->input->post('net_val'),
             'status'         => $this->input->post('status')
         ];
-    
+
         /* ================= DELETE OLD IMAGE IF EDIT ================= */
 
         if ($this->input->post('action') !== 'add') {
@@ -434,7 +434,7 @@ class Asset extends CI_Controller
                                 'user_st'   => 'Active'
                             ]);
                         }
-                        
+
                     }
                     // Redirect to same page without nfc param
                     redirect('asset/detail/view/' . $id);

@@ -17,7 +17,6 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-    /* ===== PIE SLICE TEXT ===== */
     Chart.register({
         id: 'sliceText',
         afterDraw(chart) {
@@ -52,7 +51,7 @@
 
 <div class="container-fluid px-2">
 
-    <!-- ===== SUMMARY ===== -->
+    <!-- SUMMARY -->
     <div class="row mb-4 text-center">
         <div class="col-md-4 mb-2">
             <div class="card shadow">
@@ -62,25 +61,27 @@
                 </div>
             </div>
         </div>
+
         <div class="col-md-4 mb-2">
             <div class="card shadow">
                 <div class="card-body">
                     <h6 class="text-success">Verified Assets</h6>
-                    <h3 id="verifiedAsset">0</h3>
+                    <h3 id="verifiedAsset" style="cursor:pointer">0</h3>
                 </div>
             </div>
         </div>
+
         <div class="col-md-4 mb-2">
             <div class="card shadow">
                 <div class="card-body">
                     <h6 class="text-danger">Unverified Assets</h6>
-                    <h3 id="unverifiedAsset">0</h3>
+                    <h3 id="unverifiedAsset" style="cursor:pointer">0</h3>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ===== SITE FILTER ===== -->
+    <!-- SITE FILTER -->
     <div class="row mb-3">
         <div class="col-md-4">
             <select id="siteFilter" class="form-control">
@@ -92,52 +93,61 @@
         </div>
     </div>
 
-    <!-- ===== PIE | LINE + POLL ===== -->
+    <!-- CHARTS -->
     <div class="row mb-4">
-
-        <!-- LEFT : PIE -->
         <div class="col-md-6 mb-3">
             <div class="card shadow h-100">
-                <div class="card-header fw-bold text-primary">
-                    Verified vs Unverified (Pie)
-                </div>
+                <div class="card-header fw-bold text-primary">Verified vs Unverified (Pie)</div>
                 <div class="card-body text-center">
                     <canvas id="verifyPie"></canvas>
                 </div>
             </div>
         </div>
 
-        <!-- RIGHT : LINE (TOP) + POLL (BOTTOM) -->
         <div class="col-md-6 mb-3">
-
-            <!-- LINE -->
             <div class="card shadow mb-3">
-                <div class="card-header fw-bold text-primary">
-                    Verified Timeline
-                </div>
+                <div class="card-header fw-bold text-primary">Verified Timeline</div>
                 <div class="card-body">
                     <canvas id="verifyLine"></canvas>
                 </div>
             </div>
 
-            <!-- POLL / PILLAR -->
             <div class="card shadow">
-                <div class="card-header fw-bold text-primary">
-                    Verification Poll
-                </div>
+                <div class="card-header fw-bold text-primary">Verification Poll</div>
                 <div class="card-body">
                     <canvas id="verifyPollBar"></canvas>
                 </div>
             </div>
-
         </div>
     </div>
+
+    <!-- ASSET LIST -->
+    <div class="row mt-4 d-none" id="assetListSection">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header fw-bold text-primary" id="assetListTitle"></div>
+                <div class="card-body p-0">
+                    <table class="table table-bordered table-striped mb-0">
+                        <thead class="table-primary text-center">
+                            <tr>
+                                <th>#</th>
+                                <th>Asset Name</th>
+                                <th>Serial No</th>
+                                <th>Site</th>
+                            </tr>
+                        </thead>
+                        <tbody id="assetListBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <script>
     let verifyPieChart, verifyLineChart, verifyPollBarChart;
-
-    let pieAnimatedOnce = false;
+    let activeListFilter = null; // 1 = verified, 0 = unverified
 
     const pieEl = document.getElementById('verifyPie');
     const lineEl = document.getElementById('verifyLine');
@@ -145,19 +155,17 @@
 
     function loadVerifyCharts() {
 
-        const siteId = document.getElementById('siteFilter').value || '';
+        const siteId = siteFilter.value || '';
 
         fetch('<?= base_url("Asset/asset_verify_chart_ajax") ?>?site_id=' + siteId)
             .then(r => r.json())
             .then(d => {
 
-                // ===== COUNTS =====
                 totalAsset.innerText = d.total;
                 verifiedAsset.innerText = d.verified;
                 unverifiedAsset.innerText = d.unverified;
 
-                /* ===== PIE ===== */
-                if (verifyPieChart) verifyPieChart.destroy();
+                verifyPieChart?.destroy();
                 verifyPieChart = new Chart(pieEl, {
                     type: 'pie',
                     data: {
@@ -167,19 +175,10 @@
                             backgroundColor: ['#198754', '#dc3545'],
                             radius: '60%'
                         }]
-                    },
-                    options: {
-                        animation: pieAnimatedOnce ? false : {
-                            animateRotate: true,
-                            duration: 900,
-                            easing: 'easeOutQuart'
-                        }
                     }
                 });
-                pieAnimatedOnce = true;
 
-                /* ===== LINE ===== */
-                if (verifyLineChart) verifyLineChart.destroy();
+                verifyLineChart?.destroy();
                 verifyLineChart = new Chart(lineEl, {
                     type: 'line',
                     data: {
@@ -192,11 +191,11 @@
                             tension: 0.3,
                             fill: false
                         }]
+
                     }
                 });
 
-                /* ===== POLL / PILLAR ===== */
-                if (verifyPollBarChart) verifyPollBarChart.destroy();
+                verifyPollBarChart?.destroy();
                 verifyPollBarChart = new Chart(pollEl, {
                     type: 'bar',
                     data: {
@@ -204,37 +203,71 @@
                         datasets: [{
                             data: [d.verified, d.unverified],
                             backgroundColor: ['#198754', '#dc3545'],
-                            borderRadius: 8,
                             barThickness: 55
                         }]
                     },
                     options: {
-                        responsive: true,
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                max: d.total,
-                                ticks: {
-                                    precision: 0
-                                }
-                            }
-                        },
                         plugins: {
                             legend: {
                                 display: false
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: ctx => ctx.raw + ' Assets'
-                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: d.total
                             }
                         }
                     }
                 });
+                if (activeListFilter !== null) {
+                    loadAssetList(activeListFilter, true);
+                }
             });
     }
 
-    document.getElementById('siteFilter').addEventListener('change', loadVerifyCharts);
+    function loadAssetList(verified, silent = false) {
+
+        activeListFilter = verified;
+
+        const siteId = siteFilter.value || '';
+
+        fetch('<?= base_url("Asset/asset_list_by_verify_ajax") ?>?verified=' + verified + '&site_id=' + siteId)
+            .then(r => r.json())
+            .then(list => {
+
+                assetListTitle.innerText =
+                    verified == 1 ? 'Verified Assets' : 'Unverified Assets';
+
+                let html = '';
+                list.forEach((a, i) => {
+                    html += `<tr>
+                    <td class="text-center">${i+1}</td>
+                    <td>${a.asset_name}</td>
+                    <td>${a.serial_no}</td>
+                    <td>${a.site_name}</td>
+                </tr>`;
+                });
+
+                assetListBody.innerHTML =
+                    html || `<tr><td colspan="4" class="text-center">No assets</td></tr>`;
+
+                assetListSection.classList.remove('d-none');
+                if (!silent) assetListSection.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+    }
+
+    verifiedAsset.onclick = () => loadAssetList(1);
+    unverifiedAsset.onclick = () => loadAssetList(0);
+
+    siteFilter.onchange = () => {
+        activeListFilter = null;
+        assetListSection.classList.add('d-none');
+        loadVerifyCharts();
+    };
+
     loadVerifyCharts();
     setInterval(loadVerifyCharts, 2000);
 </script>
