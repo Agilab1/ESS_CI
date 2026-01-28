@@ -143,7 +143,7 @@
                 <div class="header-flex">
 
                     <h4 class="m-0">
-                        <i class="fa fa-th-large me-2"></i>
+                        <i class="fa fa-check-square" aria-hidden="true"></i>
                         Site Asset Verification
                     </h4>
 

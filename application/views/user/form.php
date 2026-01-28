@@ -22,7 +22,7 @@
                 <div class="card shadow">
                     <div class="card-header bg-primary text-white py-3">
                         <h4 class="m-0 fw-bold">
-                            <i class="fa fa-th-large me-2"></i>
+                            <i class="fa fa-user-plus" aria-hidden="true"></i>
                             <?= isset($action) ? ucfirst($action) : 'Add' ?> User
                         </h4>
                     </div>

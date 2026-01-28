@@ -584,6 +584,7 @@ class Asset extends CI_Controller
 
 
 
+
             case "delete":
 
                 $this->db->where('assdet_id', $id)->delete('assdet');

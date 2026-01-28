@@ -15,8 +15,8 @@ $readonly = ($action === 'view') ? 'disabled' : '';
                     <?= ucfirst($action) ?> BOM
                 </h4>
             </div>
-            
-            
+
+
 
             <!-- BODY -->
             <div class="card-body p-4">

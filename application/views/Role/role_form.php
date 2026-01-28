@@ -4,12 +4,12 @@
             <div class="col-md-7">
                 <div class="card shadow">
                     <div class="card-header bg-primary text-white py-3">
-                        <h4 class="m-0 fw-bold">    
-                            <i class="fa fa-th-large me-2"></i>
+                        <h4 class="m-0 fw-bold">
+                            <i class="fa fa-user" aria-hidden="true"></i>
                             <?= ucfirst($action) ?> Role
                         </h4>
                     </div>
-                    
+
                     <div class="card-body">
 
                         <form action="<?= base_url('Role/save'); ?>" method="post">

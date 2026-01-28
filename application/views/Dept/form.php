@@ -11,7 +11,7 @@ $disabled = $isView ? 'disabled' : '';
 
                 <div class="card-header bg-primary py-3 text-white d-flex justify-content-between align-items-center">
                     <h4 class="m-0 fw-bold">
-                        <i class="fa fa-th-large me-2"></i>
+                        <i class="fa fa-users" aria-hidden="true"></i>
                         <?= ucfirst($action) ?> Department
                     </h4>
                 </div>

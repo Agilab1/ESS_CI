@@ -14,7 +14,7 @@ $disabled = $isView ? 'disabled' : '';
     </div> -->
                 <div class="card-header bg-primary text-white py-3">
                     <h4 class="m-0 fw-bold">
-                        <i class="fa fa-th-large me-2"></i>
+                       <i class="fa fa-id-card" aria-hidden="true"></i>
                         <?= ucfirst($action) ?> Asset
                     </h4>
                 </div>
