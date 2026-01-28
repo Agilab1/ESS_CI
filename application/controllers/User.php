@@ -123,7 +123,7 @@ class User extends CI_Controller
     public function edit($user_id)
     {
         $data['action'] = 'edit';
-        $data['user']   = $this->User_model->get_user($user_id);
+        $data['user'] = $this->User_model->getUserWithDept($user_id);
 
         $this->load->view('incld/verify');
         $this->load->view('incld/header');
@@ -135,7 +135,7 @@ class User extends CI_Controller
      public function view($user_id)
     {
         $data['action'] = 'view';
-        $data['user'] = $this->User_model->get_user($user_id);
+        $data['user'] = $this->User_model->getUserWithDept($user_id);
         $this->load->view('incld/verify');
         $this->load->view("incld/header");
         $this->load->view("user/form", $data);       //change here admin to user
@@ -213,5 +213,5 @@ class User extends CI_Controller
             'user_ad' => $this->input->post('user_ad') ?? 0
         ];
     }
-    
+
 }

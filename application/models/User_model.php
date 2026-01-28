@@ -76,7 +76,7 @@ class User_model extends CI_Model
     users.user_ty,
     users.user_st,
     users.asset_no,
-    users.serial_no,   
+    users.serial_no,
     users.role_id,
     staffs.staff_id,
     staffs.emp_name,
@@ -92,4 +92,24 @@ class User_model extends CI_Model
         $this->db->order_by('users.user_id', 'ASC');
         return $this->db->get()->result();
     }
+
+    public function getUserWithDept($user_id)
+{
+    return $this->db
+        ->select('
+            users.*,
+            department.department_name,
+            sites.site_no,
+            staffs.staff_id,
+            staffs.emp_name
+        ')
+        ->from('users')
+        ->join('department', 'department.department_id = users.department_id', 'left')
+        ->join('sites', 'sites.site_no = users.site_no', 'left')
+        ->join('staffs', 'staffs.staff_id = users.staff_id', 'left')
+        ->where('users.user_id', $user_id)
+        ->get()
+        ->row();
+}
+
 }
