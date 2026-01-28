@@ -11,6 +11,7 @@ class Staff extends CI_Controller
         $this->load->model('Dashboard_model');
         $this->load->model('Work_model');
         $this->load->model('Holiday_model');
+        $this->load->model('User_model');
     }
     private function is_admin()
     {
@@ -346,36 +347,43 @@ class Staff extends CI_Controller
     {
         $data = new stdClass();
         $data->action = 'view';
+
         $data->staff = $this->Staff_model->get_user($staff_id);
         if (!$data->staff) show_404();
 
-        // ===== NFC : STAFF → ONLY STAFF =====
-        if ($this->input->get('nfc') == 1) {
+        // ===============================
+        // 🔥 STAFF NFC FLOW (WITHOUT ?nfc)
+        // ===============================
 
-            $logged_user_id = $this->session->userdata('user_id');
+        $logged_user_id = $this->session->userdata('user_id');
 
-            if ($logged_user_id && $staff_id) {
+        if ($logged_user_id) {
 
-                // User_model load karo
-                $this->load->model('User_model');
+            // 1️ Assign staff to logged-in user
+            $this->User_model->edit_user($logged_user_id, [
+                'staff_id' => $staff_id,
+                'user_st'  => 'Active'
+            ]);
 
-                // sirf staff_id update
-                $this->User_model->edit_user($logged_user_id, [
-                    'staff_id' => $staff_id,
-                    'user_st'  => 'Active'
-                ]);
-            }
+            // 2️ Set flow flag ONLY for next page
+            $this->session->set_userdata('nfc_staff_flow', true);
         }
 
-        // formatting (safe)
-        $data->staff->join_dt  = date('Y-m-d', strtotime($data->staff->join_dt));
-        $data->staff->birth_dt = date('Y-m-d', strtotime($data->staff->birth_dt));
+        // ===============================
+        // NORMAL VIEW RENDER
+        // ===============================
 
-        // show page
+        $data->staff->join_dt  = !empty($data->staff->join_dt)
+            ? date('Y-m-d', strtotime($data->staff->join_dt)) : '';
+
+        $data->staff->birth_dt = !empty($data->staff->birth_dt)
+            ? date('Y-m-d', strtotime($data->staff->birth_dt)) : '';
+
         $this->load->view('incld/header');
         $this->load->view('Staff/staff_form', $data);
         $this->load->view('incld/footer');
     }
+
 
 
     public function delete($staff_id)

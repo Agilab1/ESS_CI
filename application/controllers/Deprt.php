@@ -100,40 +100,6 @@ class Deprt extends CI_Controller
     // }
 
     // ================= DELETE =================
-    public function delete($id)
-    {
-        $this->Department_model->delete($id);
-        $this->session->set_flashdata('success', 'Department deleted successfully!');
-        redirect('Deprt/list');
-    }
-
-
-    //    public function view($id)
-    // {
-    //     $data['action'] = 'view';
-    //     $data['counts'] = $this->Dashboard_model->counts();
-
-    //     // 🔹 Department DB 
-    //     $data['department'] = $this->Department_model->getById($id);
-
-    //     if (!$data['department']) {
-    //         show_404();
-    //     }
-
-    //     //  Sites dropdown
-    //     $data['sites'] = $this->db->get('sites')->result();
-
-    //     $this->load->view('incld/verify');
-    //     $this->load->view('incld/header');
-    //     $this->load->view('incld/top_menu');
-    //     $this->load->view('incld/side_menu');
-    //     $this->load->view('user/dashboard', $data);
-    //     $this->load->view('dept/form', $data);
-    //     $this->load->view('incld/footer');
-    // }
-
-
-    // updated save code 
     public function view($id)
     {
         $data['action'] = 'view';
@@ -143,17 +109,28 @@ class Deprt extends CI_Controller
         $data['department'] = $this->Department_model->getById($id);
         if (!$data['department']) show_404();
 
-        // NFC SCAN LOGIC
-        if ($this->input->get('nfc') == 1) {
+        // ================= AUTO ASSIGN (NFC OR DIRECT OPEN) =================
+        $user_id = $this->session->userdata('user_id');
 
-            $user_id = $this->session->userdata('user_id');
+        if ($user_id) {
 
-            if ($user_id) {
-                // user department assign
+            $user = $this->db
+                ->where('user_id', $user_id)
+                ->get('users')
+                ->row();
+
+            // assign only if not already assigned
+            if (empty($user->department_id) || (int)$user->department_id !== (int)$id) {
+
                 $this->db->where('user_id', $user_id)
                     ->update('users', [
                         'department_id' => $id
                     ]);
+
+                $this->session->set_flashdata(
+                    'success',
+                    'Department assigned successfully'
+                );
             }
         }
 
@@ -161,12 +138,11 @@ class Deprt extends CI_Controller
 
         $this->load->view('incld/verify');
         $this->load->view('incld/header');
-        // $this->load->view('incld/top_menu');
-        // $this->load->view('incld/side_menu');
-        // $this->load->view('user/dashboard', $data);
         $this->load->view('Dept/form', $data);
         $this->load->view('incld/footer');
     }
+
+
 
     public function save()
     {

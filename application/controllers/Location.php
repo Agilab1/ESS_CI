@@ -97,34 +97,42 @@ class Location extends CI_Controller
 
     public function view($site_id = null)
     {
-        if ($site_id === null)
+        if ($site_id === null) {
             redirect('Location/list');
-
-        $location = $this->Location_model->getById($site_id);
-        if (!$location)
-            show_404();
-
-        // ===== NFC : LOCATION → ONLY SITE =====
-        if ($this->input->get('nfc') == 1) {
-
-            $logged_user_id = $this->session->userdata('user_id');
-
-            if ($logged_user_id && $location->site_no) {
-                $this->User_model->edit_user($logged_user_id, [
-                    'site_no' => $location->site_no,
-                    'user_st' => 'Active'
-                ]);
-            }
         }
 
+        $location = $this->Location_model->getById($site_id);
+        if (!$location) show_404();
+
+        // ===============================
+        //  LOCATION FLOW (WITHOUT ?nfc)
+        // ===============================
+        $logged_user_id = $this->session->userdata('user_id');
+
+        if ($logged_user_id && $location->site_no) {
+
+            // 1️ Assign site to logged-in user
+            $this->User_model->edit_user($logged_user_id, [
+                'site_no' => $location->site_no,
+                'user_st' => 'Active'
+            ]);
+
+            // 2️ One-time flow flag
+            $this->session->set_userdata('nfc_location_flow', true);
+        }
+
+        // ===============================
+        // NORMAL VIEW RENDER
+        // ===============================
         $data = new stdClass();
-        $data->action = 'view';
+        $data->action   = 'view';
         $data->location = $location;
 
         $this->load->view('incld/header');
         $this->load->view('Location/add', $data);
         $this->load->view('incld/footer');
     }
+
 
 
 
@@ -154,39 +162,29 @@ class Location extends CI_Controller
     // ============================================================
     public function save()
     {
-        $action = strtolower($this->input->post('action'));
+        $action  = strtolower($this->input->post('action'));
         $site_id = $this->input->post('site_id');
 
-        // Inventory checkbox
         $inventory_checked = $this->input->post('inventory_checked') ? 1 : 0;
 
         $data = $this->validate($inventory_checked);
-
         if (!$data) {
             return $action === 'add' ? $this->add() : $this->edit($site_id);
         }
 
         if ($action === 'add') {
             $this->Location_model->insertLocation($data);
-        } elseif ($action === 'edit') {
+        } else {
             $this->Location_model->updateLocation($site_id, $data);
         }
 
-        //  INVERSE LOGIC
-        // Inventory  → assets UN-verified
-        // Inventory  → assets verified
-        $verify_value = ($inventory_checked == 1) ? 0 : 1;
-
-        //  APPLY TO ALL ASSET DETAILS OF THIS SITE
-        $this->db
-            ->where('site_id', (int) $site_id)
-            ->update('assdet', [
-                'verified' => $verify_value
-            ]);
+        // ✅ ONLY SITE CONFIG UPDATED
+        // ❌ NO assdet update here
 
         $this->session->set_flashdata('success', 'Location saved successfully!');
         redirect('Location/list');
     }
+
 
 
 
@@ -226,7 +224,7 @@ class Location extends CI_Controller
 
     public function asset_list($site_id)
     {
-        
+
         // SITE (fields unchanged)
         $site = $this->Location_model->getById($site_id);
         $assets = $this->Location_model->get_assets_by_site($site_id);
@@ -263,7 +261,7 @@ class Location extends CI_Controller
         $this->load->view('incld/footer');
     }
 
-// get_vetify count method for verfied_asset / unverified asset in location asset_list
+    // get_vetify count method for verfied_asset / unverified asset in location asset_list
     public function get_verify_count_ajax($site_id)
     {
         $verified = $this->db
@@ -280,5 +278,35 @@ class Location extends CI_Controller
             'verified'   => $verified,
             'unverified' => $unverified
         ]);
+    }
+    // reset inventory 
+    public function reset_inventory($site_id)
+    {
+        if (!$site_id) {
+            redirect('Location/list');
+            return;
+        }
+
+        //  ONLY RESET VERIFIED FLAG
+        $this->db
+            ->where('site_id', $site_id)
+            ->update('assdet', [
+                'verified' => 0
+            ]);
+
+        // inventory flag ON  (optional)
+        $this->db
+            ->where('site_id', $site_id)
+            ->update('sites', [
+                'inventory_checked' => 1,
+                'verify_asset' => 0
+            ]);
+
+        $this->session->set_flashdata(
+            'success',
+            'Inventory reset done. All assets marked as NOT verified.'
+        );
+
+        redirect('Location/edit/' . $site_id);
     }
 }
