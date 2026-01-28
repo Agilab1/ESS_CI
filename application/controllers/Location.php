@@ -165,25 +165,60 @@ class Location extends CI_Controller
         $action  = strtolower($this->input->post('action'));
         $site_id = $this->input->post('site_id');
 
+        // checkbox state
         $inventory_checked = $this->input->post('inventory_checked') ? 1 : 0;
 
         $data = $this->validate($inventory_checked);
         if (!$data) {
-            return $action === 'add' ? $this->add() : $this->edit($site_id);
+            return $action === 'add'
+                ? $this->add()
+                : $this->edit($site_id);
         }
 
+        // =====================
+        // SAVE LOCATION
+        // =====================
         if ($action === 'add') {
             $this->Location_model->insertLocation($data);
         } else {
             $this->Location_model->updateLocation($site_id, $data);
         }
 
-        // ✅ ONLY SITE CONFIG UPDATED
-        // ❌ NO assdet update here
+        // =========================================
+        // 🔥 INVENTORY CHECKBOX = ASSET MASTER LOGIC
+        // =========================================
+        if ($action === 'edit') {
 
-        $this->session->set_flashdata('success', 'Location saved successfully!');
+            if ($inventory_checked == 1) {
+                // ✅ Checkbox CHECKED → ALL UNVERIFIED
+                $this->db
+                    ->where('site_id', $site_id)
+                    ->update('assdet', ['verified' => 0]);
+            } else {
+                // ✅ Checkbox UNCHECKED → ALL VERIFIED
+                $this->db
+                    ->where('site_id', $site_id)
+                    ->update('assdet', ['verified' => 1]);
+            }
+
+            // site-level flags sync
+            $this->db
+                ->where('site_id', $site_id)
+                ->update('sites', [
+                    'inventory_checked' => $inventory_checked,
+                    'verify_asset'      => ($inventory_checked == 1) ? 0 : 1
+                ]);
+        }
+
+        $this->session->set_flashdata(
+            'success',
+            'Location saved successfully. Inventory status applied to all assets.'
+        );
+
         redirect('Location/list');
     }
+
+
 
 
 
@@ -279,34 +314,6 @@ class Location extends CI_Controller
             'unverified' => $unverified
         ]);
     }
-    // reset inventory 
-    public function reset_inventory($site_id)
-    {
-        if (!$site_id) {
-            redirect('Location/list');
-            return;
-        }
+    // reset inventory
 
-        //  ONLY RESET VERIFIED FLAG
-        $this->db
-            ->where('site_id', $site_id)
-            ->update('assdet', [
-                'verified' => 0
-            ]);
-
-        // inventory flag ON  (optional)
-        $this->db
-            ->where('site_id', $site_id)
-            ->update('sites', [
-                'inventory_checked' => 1,
-                'verify_asset' => 0
-            ]);
-
-        $this->session->set_flashdata(
-            'success',
-            'Inventory reset done. All assets marked as NOT verified.'
-        );
-
-        redirect('Location/edit/' . $site_id);
-    }
 }

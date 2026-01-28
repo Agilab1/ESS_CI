@@ -135,14 +135,7 @@
                             </small>
 
                         </div>
-                        <?php if ($action === 'edit'): ?>
-                            <a href="<?= base_url('Location/reset_inventory/' . $location->site_id) ?>"
-                                class="btn btn-danger mb-3"
-                                onclick="return confirm('Are you sure? This will reset all asset verification!')">
-                                🔄 Reset Inventory
-                            </a>
-                        <?php endif; ?>
-
+                       
 
                     </div>
 
