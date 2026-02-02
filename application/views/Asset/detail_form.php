@@ -394,6 +394,45 @@ if ($isView && empty($detail->site_id) && !empty($loginUser->site_no)) {
             setTimeout(() => el.remove(), 500);
         });
     }, 2500);
+
+(function () {
+
+    const flashKey = "flash_once_route_" + window.location.pathname;
+
+    function handleFlash() {
+        const flashes = document.querySelectorAll('.alert');
+
+        if (flashes.length === 0) return;
+
+        // If already shown on this route → remove
+        if (sessionStorage.getItem(flashKey)) {
+            flashes.forEach(f => f.remove());
+        } else {
+            // First time on this route
+            sessionStorage.setItem(flashKey, "1");
+
+            // auto-hide animation
+            setTimeout(function() {
+                flashes.forEach(function(el) {
+                    el.style.transition = '0.5s';
+                    el.style.opacity = '0';
+                    setTimeout(() => el.remove(), 500);
+                });
+            }, 2500);
+        }
+    }
+
+    // Normal load
+    document.addEventListener('DOMContentLoaded', handleFlash);
+
+    // Back/Forward cache support
+    window.addEventListener('pageshow', function (e) {
+        if (e.persisted) {   // page restored from bfcache
+            handleFlash();
+        }
+    });
+
+})();
 </script>
 <!-- <script>
 

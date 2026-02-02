@@ -157,4 +157,35 @@
             setTimeout(() => el.remove(), 500);
         });
     }, 2500);
+
+(function () {
+
+    const flashKey = "flash_once_route_" + window.location.pathname;
+
+    function handleFlashOnce() {
+        const flashes = document.querySelectorAll('.auto-hide');
+
+        if (flashes.length === 0) return;
+
+        // If already shown on this route → remove immediately
+        if (sessionStorage.getItem(flashKey)) {
+            flashes.forEach(f => f.remove());
+        } 
+        else {
+            // First visit on this route
+            sessionStorage.setItem(flashKey, "1");
+        }
+    }
+
+    // Normal page load
+    document.addEventListener('DOMContentLoaded', handleFlashOnce);
+
+    // Back/Forward button (browser cache restore)
+    window.addEventListener('pageshow', function (e) {
+        if (e.persisted) {  // restored from bfcache
+            handleFlashOnce();
+        }
+    });
+
+})();
 </script>
