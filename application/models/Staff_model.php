@@ -44,6 +44,32 @@ class Staff_model extends CI_Model
             ->get_where('staffs', ['staff_id' => $staff_id])
             ->row();
     }
+     
 
+     public function insert_asset($data)
+    {
+        $this->db->insert('assdet',$data);
+        return $this->db->insert_id();
+    }
+
+
+
+    // 🔥 MAIN JOIN QUERY
+    public function get_staff_assets($staff_id)
+    {
+        $this->db->select('
+            ad.assdet_id,
+            ad.serial_no,
+            a.asset_id,
+            a.asset_name,
+            s.site_name
+        ');
+        $this->db->from('assdet ad');
+        $this->db->join('assets a','a.asset_id = ad.asset_id','left');
+        $this->db->join('sites s','s.site_id = ad.site_id','left');
+        $this->db->where('ad.staff_id', $staff_id);
+
+        return $this->db->get()->result();
+    }
     ///
 }

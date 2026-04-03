@@ -474,40 +474,196 @@ class Staff extends CI_Controller
         }
     }
     public function asset_form($staff_id)
+{
+    $this->load->model('Staff_model');
+    $this->load->model('Asset_model');
+
+    $data['staff'] = $this->Staff_model->get_by_id($staff_id);
+    $data['assets'] = $this->Asset_model->get_assets_with_site_by_staff($staff_id);
+
+    // ✅ ADD THIS LINE (IMPORTANT)
+    $data['serials'] = $this->db->get('assdet')->result();
+
+    // 🔥 ALL STAFF LIST
+    $data['all_staff'] = $this->Staff_model->get_user();
+
+    $this->load->view('incld/header');
+    $this->load->view('Staff/asset_form', $data);
+    $this->load->view('incld/footer');
+}
+    // public function change_asset_owner()
+    // {
+    //     $assdet_id = $this->input->post('assdet_id');
+    //     $staff_id  = $this->input->post('staff_id');
+
+    //     $this->load->model('Asset_model');
+
+    //     // update ownership
+    //     $this->Asset_model->update_asset_owner($assdet_id, $staff_id);
+
+    //     // 🔥 fetch updated asset row (new owner ke liye)
+    //     $asset = $this->Asset_model->get_asset_by_assdet($assdet_id);
+
+    //     echo json_encode([
+    //         'status' => 'success',
+    //         'asset'  => $asset
+    //     ]);
+    // }
+
+ public function change_asset_owner()
     {
-        $this->load->model('Staff_model');
-        $this->load->model('Asset_model');
+        if (!$this->is_admin()) {
+            echo json_encode(['status' => 'unauthorized']);
+            return;
+        }
 
-        $data['staff'] = $this->Staff_model->get_by_id($staff_id);
-        $data['assets'] = $this->Asset_model->get_assets_with_site_by_staff($staff_id);
-
-        // 🔥 ALL STAFF LIST (for dropdown)
-        $data['all_staff'] = $this->Staff_model->get_user();
-
-        $this->load->view('incld/header');
-        $this->load->view('Staff/asset_form', $data);
-        $this->load->view('incld/footer');
-    }
-    public function change_asset_owner()
-    {
         $assdet_id = $this->input->post('assdet_id');
         $staff_id  = $this->input->post('staff_id');
 
+        if (!$assdet_id || !$staff_id) {
+            echo json_encode(['status' => 'invalid']);
+            return;
+        }
+
         $this->load->model('Asset_model');
 
-        // update ownership
         $this->Asset_model->update_asset_owner($assdet_id, $staff_id);
 
-        // 🔥 fetch updated asset row (new owner ke liye)
-        $asset = $this->Asset_model->get_asset_by_assdet($assdet_id);
+        echo json_encode(['status' => 'success']);
 
-        echo json_encode([
-            'status' => 'success',
-            'asset'  => $asset
+    }
+     public function add_asset_ajax()
+    {
+        $this->load->model('Staff_model');
+
+        $data = [
+            'staff_id'   => $this->input->post('staff_id'),
+            'asset_id'   => $this->input->post('asset_id'),
+            'asset_name' => $this->input->post('asset_name'),
+            'serial_no'  => $this->input->post('serial_no'),
+            'site_id'  => $this->input->post('site_id')
+        ];
+
+        $assdet_id = $this->Staff_model->insert_asset($data);
+
+        if ($assdet_id) {
+            echo json_encode([
+                'status' => 'success',
+                'assdet_id' => $assdet_id
+            ]);
+        } else {
+            echo json_encode(['status' => 'error']);
+        }
+    }
+
+     public function get_asset_by_serial()
+    {
+        $serial_no = $this->input->post('serial_no');
+
+        $asset = $this->db
+            ->select('ad.asset_id, a.asset_name, ad.site_id')
+            ->from('assdet ad')
+            ->join('assets a', 'a.asset_id = ad.asset_id', 'left')
+            ->where('ad.serial_no', $serial_no)
+            ->get()
+            ->row();
+
+        if ($asset) {
+            echo json_encode([
+                'status' => 'success',
+                'data'   => $asset
+            ]);
+        } else {
+            echo json_encode([
+                'status' => 'error'
+            ]);
+        }
+    }
+     public function save_staff_asset()
+    {
+        // 🔥 Correct model
+        $this->load->model('Assdet_model');
+
+        $data = array(
+            'staff_id'  => $this->input->post('staff_id'),
+            'serial_no' => $this->input->post('serial_no'),
+            'asset_id'  => $this->input->post('asset_id'),
+            'site_id'   => $this->input->post('site_id')
+        );
+
+        // 🔥 Correct insert
+        $this->Assdet_model->insert($data);
+        redirect($_SERVER['HTTP_REFERER']);
+    }
+    public function save_single_asset()
+    {
+        $this->db->insert('staff_asset', [
+            'staff_id'   => $this->input->post('staff_id'),
+            'serial_no'  => $this->input->post('serial_no'),
+            'asset_id'   => $this->input->post('asset_id'),
+            'asset_name' => $this->input->post('asset_name'),
+            'site_id'  => $this->input->post('site_id')
         ]);
+
+        echo json_encode(['status' => 'success']);
     }
 
 
+    public function get_asset_name()
+    {
+        $asset = $this->db
+            ->where('asset_id', $this->input->post('asset_id'))
+            ->get('assets')
+            ->row();
+
+        if ($asset) {
+            echo json_encode([
+                'status' => 'success',
+                'asset_name' => $asset->asset_name
+            ]);
+        } else {
+            echo json_encode(['status' => 'error']);
+        }
+    }
+
+    // staff asset_form serial no dropdown ajax method 
+    public function get_asset_by_serial_ajax()
+    {
+        $serial_no = $this->input->post('serial_no');
+
+        $this->load->model('Asset_model');
+        $asset = $this->Asset_model->get_asset_by_serial($serial_no);
+
+        if ($asset) {
+            echo json_encode([
+                'status' => 'success',
+                'data'   => $asset
+            ]);
+        } else {
+            echo json_encode([
+                'status' => 'error'
+            ]);
+        }
+    }
+
+    // staff/asset_form serial_no row delete
+    public function delete_asset($assdet_id = null)
+    {
+        // 🔐 Admin protection (optional but recommended)
+        if (!$this->is_admin()) {
+            show_error('Unauthorized', 403);
+        }
+
+        if ($assdet_id === null) {
+            show_404();
+        }
+
+        $this->db->where('assdet_id', $assdet_id)->delete('assdet');
+
+        $this->session->set_flashdata('success', 'Asset deleted successfully');
+
+        redirect($_SERVER['HTTP_REFERER']);
+    }
 
 
 

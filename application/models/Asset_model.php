@@ -186,4 +186,45 @@ class Asset_model extends CI_Model
                 'staff_id' => $staff_id
             ]);
     }
+
+     public function get_available_serials()
+    {
+        return $this->db
+            ->select('assdet_id, serial_no')
+            ->from('assdet')
+            ->where('staff_id IS NULL') // only free serials
+            ->order_by('serial_no', 'ASC')
+            ->get()
+            ->result();
+    }
+
+    // 🔹 Get asset details by serial no (AJAX)
+    public function get_asset_by_serial($serial_no)
+    {
+        return $this->db
+            ->select('
+            ad.assdet_id,
+            ad.serial_no,
+            ad.asset_id,
+            a.asset_name,
+            ad.site_id,
+            s.site_name
+        ')
+            ->from('assdet ad')
+            ->join('assets a', 'a.asset_id = ad.asset_id', 'left')
+            ->join('sites s', 's.site_id = ad.site_id', 'left')
+            ->where('ad.serial_no', $serial_no)
+            ->get()
+            ->row();
+    }
+
+    public function get_all_serials()
+    {
+        return $this->db
+            ->select('serial_no')
+            ->from('assdet')
+            ->order_by('serial_no', 'ASC')
+            ->get()
+            ->result();
+    }
 }
