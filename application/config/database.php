@@ -130,7 +130,7 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'agiletwn_assets',
+	'hostname' => 'localhost',
 	'username' => 'agiletwn_assets',
 	'password' => 'agiletwn_assets',
 	'database' => 'agiletwn_assets',
