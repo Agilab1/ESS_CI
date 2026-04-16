@@ -161,68 +161,59 @@ class Location extends CI_Controller
     // SAVE (ADD / EDIT)
     // ============================================================
     public function save()
-    {
-        $action  = strtolower($this->input->post('action'));
-        $site_id = $this->input->post('site_id');
+{
+    $action  = strtolower($this->input->post('action'));
+    $site_id = $this->input->post('site_id');
 
-        // checkbox state
-        $inventory_checked = $this->input->post('inventory_checked') ? 1 : 0;
+    // checkbox state
+    $inventory_checked = $this->input->post('inventory_checked') ? 1 : 0;
 
-        $data = $this->validate($inventory_checked);
-        if (!$data) {
-            return $action === 'add'
-                ? $this->add()
-                : $this->edit($site_id);
-        }
-
-        // =====================
-        // SAVE LOCATION
-        // =====================
-        if ($action === 'add') {
-            $this->Location_model->insertLocation($data);
-        } else {
-            $this->Location_model->updateLocation($site_id, $data);
-        }
-
-        // =========================================
-        // 🔥 INVENTORY CHECKBOX = ASSET MASTER LOGIC
-        // =========================================
-        if ($action === 'edit') {
-
-            if ($inventory_checked == 1) {
-                // ✅ Checkbox CHECKED → ALL UNVERIFIED
-                $this->db
-                    ->where('site_id', $site_id)
-                    ->update('assdet', ['verified' => 0]);
-            } else {
-                // ✅ Checkbox UNCHECKED → ALL VERIFIED
-                $this->db
-                    ->where('site_id', $site_id)
-                    ->update('assdet', ['verified' => 1]);
-            }
-
-            // site-level flags sync
-            $this->db
-                ->where('site_id', $site_id)
-                ->update('sites', [
-                    'inventory_checked' => $inventory_checked,
-                    'verify_asset'      => ($inventory_checked == 1) ? 0 : 1
-                ]);
-        }
-
-        $this->session->set_flashdata(
-            'success',
-            'Location saved successfully. Inventory status applied to all assets.'
-        );
-
-        redirect('Location/list');
+    $data = $this->validate($inventory_checked);
+    if (!$data) {
+        return $action === 'add'
+            ? $this->add()
+            : $this->edit($site_id);
     }
 
+    // =====================
+    // SAVE LOCATION
+    // =====================
+    if ($action === 'add') {
+        $this->Location_model->insertLocation($data);
+    } else {
+        $this->Location_model->updateLocation($site_id, $data);
+    }
 
+    // =========================================
+    // 🔥 INVENTORY CHECKBOX FIXED LOGIC
+    // =========================================
+    if ($action === 'edit') {
 
+        if ($inventory_checked == 1) {
+            // ✅ CHECKED → ALL UNVERIFIED (same as before)
+            $this->db
+                ->where('site_id', $site_id)
+                ->update('assdet', ['verified' => 0]);
+        } 
+        // ❌ UNCHECKED → DO NOTHING (IMPORTANT FIX)
+        // else block completely removed
 
+        // site-level flags sync (unchanged)
+        $this->db
+            ->where('site_id', $site_id)
+            ->update('sites', [
+                'inventory_checked' => $inventory_checked,
+                'verify_asset'      => ($inventory_checked == 1) ? 0 : 1
+            ]);
+    }
 
+    $this->session->set_flashdata(
+        'success',
+        'Location saved successfully. Inventory status applied correctly.'
+    );
 
+    redirect('Location/list');
+}
     // ============================================================
     // VALIDATION RULES
     // ============================================================

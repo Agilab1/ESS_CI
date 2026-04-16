@@ -28,6 +28,19 @@
                     </div>
 
                     <div class="card-body">
+                        <div class="card-body">
+
+                            <!--  ADD THIS BLOCK HERE -->
+                            <?php if ($this->session->flashdata('error')): ?>
+                                <div class="alert alert-warning">
+                                    <?= $this->session->flashdata('error'); ?>
+                                </div>
+                            <?php endif; ?>
+
+                            <!-- YOUR FORM STARTS -->
+                            
+
+                        
                         <form method="post" action="<?= base_url('user/save') ?>" id="userform" autocomplete="off">
 
                             <table class="table table-bordered">
@@ -192,3 +205,17 @@
         </div>
     </div>
 </div>
+<script>
+document.getElementById("userform").addEventListener("submit", function(e) {
+
+    let pass = document.querySelector('[name="pass_wd"]');
+    let cpass = document.querySelector('[name="cpas_wd"]');
+
+    if (pass.value !== cpass.value) {
+        cpass.setCustomValidity("Passwords do not match");
+    } else {
+        cpass.setCustomValidity("");
+    }
+
+});
+</script>

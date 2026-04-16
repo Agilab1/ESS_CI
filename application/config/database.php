@@ -106,7 +106,7 @@ $query_builder = TRUE;
 // 	'hostname' => 'localhost',
 // 	'username' => 'root',
 // 	'password' => '',
-// 	'database' => 'agiletwn_assets3',
+// 	'database' => 'agiletwn_assets',
 // 	'dbdriver' => 'mysqli',
 // 	'dbprefix' => '',
 // 	'pconnect' => FALSE,
@@ -130,7 +130,7 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
+	'hostname' => 'agiletwn_assets',
 	'username' => 'agiletwn_assets',
 	'password' => 'agiletwn_assets',
 	'database' => 'agiletwn_assets',

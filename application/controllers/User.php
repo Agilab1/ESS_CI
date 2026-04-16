@@ -158,8 +158,19 @@ class User extends CI_Controller
         $action  = strtolower($this->input->post('action'));
         $user_id = $this->input->post('user_id');
 
+        // $data = $this->validate();
+        // if ($data === false) return;
         $data = $this->validate();
-        if ($data === false) return;
+
+        if ($data === false) {
+
+            if ($this->input->post('action') == 'edit') {
+                redirect('user/edit/' . $this->input->post('user_id'));
+            } else {
+                redirect('user/add');
+            }
+
+}
 
         switch ($action) {
             case 'add':

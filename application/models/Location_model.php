@@ -1,186 +1,257 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Location_model extends CI_Model
+class Location_model extends CI_Model{
+   public function __construct()
 {
-    public function getById($site_id)
+    parent::__construct();
+    $this->load->model('Location_model');
+    $this->load->model('Dashboard_model');
+    $this->load->library('form_validation');
+    $this->load->library('session'); // ✅ already correct
+    $this->load->model('User_model');
+    $this->load->model('Asset_model');
+}
+public function getAll()
+{
+    return $this->db->get('sites')->result();
+}
+public function getById($site_id)
+{
+    return $this->db
+        ->where('site_id', $site_id)
+        ->get('sites')
+        ->row();
+}
+public function get_assets_by_site($site_id)
+{
+    return $this->db
+        ->select('ad.*, a.asset_name, s.emp_name')
+        ->from('assdet ad')
+        ->join('assets a', 'a.asset_id = ad.asset_id', 'left')
+        ->join('staffs s', 's.staff_id = ad.staff_id', 'left')
+        ->where('ad.site_id', $site_id)
+        ->get()
+        ->result();
+}
+public function updateLocation($site_id, $data)
+{
+    return $this->db
+        ->where('site_id', $site_id)
+        ->update('sites', $data);
+}
+    public function list()
     {
-        return $this->db
+        $data = new stdClass();
+
+        $data->locations = $this->Location_model->getAll();
+        $data->counts = $this->Dashboard_model->counts();
+
+        $assetCounts = $this->Asset_model->get_asset_count_by_site();
+
+        $assetMap = [];
+        foreach ($assetCounts as $row) {
+            $assetMap[$row->site_id] = $row->total;
+        }
+
+        $data->assetMap = $assetMap;
+
+        $this->load->view('incld/verify');
+        $this->load->view('incld/header');
+        $this->load->view('incld/top_menu');
+        $this->load->view('incld/side_menu');
+        $this->load->view('user/dashboard', $data);
+        $this->load->view('Location/list', $data);
+        $this->load->view('incld/script');
+        $this->load->view('incld/jslib');
+        $this->load->view('incld/footer');
+    }
+
+    public function add()
+    {
+        $data = new stdClass();
+        $data->action = 'add';
+        $data->location = (object) [
+            'site_id' => '',
+            'site_no' => '',
+            'site_name' => '',
+            'last_visit' => '',
+            'verify_asset' => '',
+            'status' => '',
+            'access_flag' => '',
+            'access_by' => ''
+        ];
+
+        $this->load->view('incld/header');
+        $this->load->view('Location/add', $data);
+        $this->load->view('incld/footer');
+    }
+
+    public function edit($site_id = null)
+    {
+        if ($site_id === null) {
+            redirect('Location/list');
+            return;
+        }
+
+        $data = new stdClass();
+        $data->action = 'edit';
+        $data->location = $this->Location_model->getById($site_id);
+
+        if (!$data->location)
+            show_404();
+
+        $this->load->view('incld/header');
+        $this->load->view('Location/add', $data);
+        $this->load->view('incld/footer');
+    }
+
+    public function delete($site_id = null)
+    {
+        if ($site_id === null) {
+            redirect('Location/list');
+            return;
+        }
+
+        $location = $this->Location_model->getById($site_id);
+        if (!$location)
+            show_404();
+
+        $this->Location_model->deleteLocation($site_id);
+        $this->session->set_flashdata('success', "Location deleted successfully!");
+
+        redirect('Location/list');
+    }
+
+    // ============================
+    // ✅ YOUR REQUIRED FIX LOGIC
+    // ============================
+    public function save()
+    {
+        $action  = strtolower($this->input->post('action'));
+        $site_id = $this->input->post('site_id');
+
+        $inventory_checked = $this->input->post('inventory_checked') ? 1 : 0;
+
+        $data = $this->validate($inventory_checked);
+        if (!$data) {
+            return $action === 'add'
+                ? $this->add()
+                : $this->edit($site_id);
+        }
+
+        if ($action === 'add') {
+            $this->Location_model->insertLocation($data);
+        } else {
+            $this->Location_model->updateLocation($site_id, $data);
+        }
+
+        // 🔥 ONLY NEW LOGIC (NO OTHER CHANGE)
+        if ($action === 'edit') {
+
+            if ($inventory_checked == 1) {
+                // ✔ CHECKED → RESET ALL
+                $this->db
+                    ->where('site_id', $site_id)
+                    ->update('assdet', ['verified' => 0]);
+            }
+
+            // ❌ UNCHECKED → DO NOTHING (DATA SAFE)
+
+            // existing code (unchanged)
+            $this->db
+                ->where('site_id', $site_id)
+                ->update('sites', [
+                    'inventory_checked' => $inventory_checked,
+                    'verify_asset'      => ($inventory_checked == 1) ? 0 : 1
+                ]);
+        }
+
+        $this->session->set_flashdata(
+            'success',
+            'Location saved successfully.'
+        );
+
+        redirect('Location/list');
+    }
+
+    private function validate($inventory_checked)
+    {
+        $this->form_validation->set_rules('site_no', 'Site Number', 'required');
+        $this->form_validation->set_rules('site_name', 'Site Name', 'required');
+        $this->form_validation->set_rules('status', 'Status', 'required');
+
+        if (!$this->form_validation->run()) {
+            return false;
+        }
+
+        $verify_asset = ($inventory_checked == 1) ? 0 : 1;
+
+        return [
+            'site_id' => $this->input->post('site_id'),
+            'site_no' => $this->input->post('site_no'),
+            'site_name' => $this->input->post('site_name'),
+            'last_visit' => $this->input->post('last_visit'),
+            'inventory_checked' => $inventory_checked,
+            'verify_asset' => $verify_asset,
+            'status' => $this->input->post('status'),
+            'access_flag' => $this->input->post('access_flag'),
+            'access_by' => $this->input->post('access_by')
+        ];
+    }
+    
+
+    public function asset_list($site_id)
+    {
+        $site = $this->Location_model->getById($site_id);
+        $assets = $this->Location_model->get_assets_by_site($site_id);
+
+        if (!$site) {
+            show_404();
+        }
+
+        $verified = 0;
+        $unverified = 0;
+
+        foreach ($assets as $a) {
+            if (isset($a->verified) && (int)$a->verified === 1) {
+                $verified++;
+            } else {
+                $unverified++;
+            }
+        }
+
+        $data = [
+            'site' => $site,
+            'assets' => $assets,
+            'verify_count' => [
+                'verified'   => $verified,
+                'unverified' => $unverified
+            ]
+        ];
+
+        $this->load->view('incld/header');
+        $this->load->view('Location/asset_list', $data);
+        $this->load->view('incld/jslib');
+        $this->load->view('incld/script');
+        $this->load->view('incld/footer');
+    }
+
+    public function get_verify_count_ajax($site_id)
+    {
+        $verified = $this->db
             ->where('site_id', $site_id)
-            ->get('sites')
-            ->row();
-    }
+            ->where('verified', 1)
+            ->count_all_results('assdet');
 
-    public function exists($site_id)
-    {
-        return $this->db
+        $unverified = $this->db
             ->where('site_id', $site_id)
-            ->count_all_results('sites') > 0;
-    }
+            ->where('verified !=', 1)
+            ->count_all_results('assdet');
 
-    public function insertLocation($data)
-    {
-        return $this->db->insert('sites', $data);
-    }
-
-    public function updateLocation($site_id, $data)
-    {
-        return $this->db
-            ->where('site_id', $site_id)
-            ->update('sites', $data);
-    }
-
-    public function deleteLocation($site_id)
-    {
-        return $this->db
-            ->where('site_id', $site_id)
-            ->delete('sites');
-    }
-
-    public function getAll()
-    {
-        return $this->db
-            ->order_by('site_id', 'ASC')
-            ->get('sites')
-            ->result();
-    }
-
-
-    public function get_site_by_id($site_id)
-    {
-        return $this->db->get_where('sites', ['site_id' => $site_id])->row();
-    }
-
-    // Get asset list for site
-    // old code 
-    // public function get_assets_by_site($site_id)
-    // {
-    //     return $this->db->get_where('assets', ['site_id' => $site_id])->result();
-    // }
-
-    public function get_assets_by_site($site_id)
-    {
-        return $this->db
-            ->select('
-           ad.assdet_id,
-            ad.asset_id,
-            ad.site_id,
-            ad.staff_id,
-            ad.serial_no,
-            ad.verified,
-            a.asset_name,
-            s.emp_name 
-        ')
-            ->from('assdet ad')
-            ->join('assets a', 'a.asset_id = ad.asset_id', 'left')
-             ->join('staffs s', 's.staff_id = ad.staff_id', 'left')
-            ->where('ad.site_id', $site_id)
-            ->order_by('a.asset_name', 'ASC')
-            ->get()
-            ->result();
-    }
-
-
-    // Get staff with assets using mapping table asset_staff
-
-    //    old code 
-    // public function get_staff_with_assets_by_site($site_id)
-    // {
-    //     return $this->db
-    //         ->select('
-    //             s.staff_id,
-    //             s.emp_name,
-    //             a.asset_name
-    //         ')
-    //         ->from('assets a')
-    //         ->join('asset_staff ast', 'ast.asset_id = a.asset_id')
-    //         ->join('staff s', 's.staff_id = ast.staff_id')
-    //         ->where('a.site_id', $site_id)
-    //         ->order_by('s.emp_name')
-    //         ->get()
-    //         ->result();
-    // }
-    public function get_staff_with_assets_by_site($site_id)
-    {
-        return $this->db
-            ->select('
-            s.staff_id,
-            s.emp_name,
-            GROUP_CONCAT(a.asset_name, ", ") AS assets
-        ')
-            ->from('assdet ad')
-            ->join('assets a', 'a.asset_id = ad.asset_id', 'left')
-            ->join('staff s', 's.staff_id = ad.staff_id', 'left')
-            ->where('ad.site_id', $site_id)
-            ->group_by('s.staff_id, s.emp_name')
-            ->order_by('s.emp_name')
-            ->get()
-            ->result();
-    }
-
-    //  new code 
-    public function get_assets_by_site_detailed($site_id)
-    {
-        return $this->db
-            ->select('
-                ad.assdet_id,
-                ad.asset_id,
-                ad.site_id,
-                ad.staff_id,
-                a.asset_name
-            ')
-            ->from('assdet ad')
-            ->join('assets a', 'a.asset_id = ad.asset_id', 'left')
-            ->where('ad.site_id', $site_id)
-            ->order_by('a.asset_name')
-            ->get()
-            ->result();
-    }
-
-
-
-
-
-    // Get staff with assets using staff_id in assets table
-    public function get_staff_assets_by_site($site_id)
-    {
-        return $this->db
-            ->select('
-            s.staff_id,
-            s.emp_name,
-            GROUP_CONCAT(a.asset_name, ", ") AS assets
-        ')
-            ->from('assets a')
-            ->join('staffs s', 's.staff_id = a.staff_id', 'left') // FIX HERE
-            ->where('a.site_id', $site_id)
-            ->group_by('s.staff_id, s.emp_name')
-            ->order_by('s.emp_name')
-            ->get()
-            ->result();
-    }
-
-
-
-    //    INVENTORY ↔ VERIFY (INVERSE LOGIC)
-
-
-
-    //  * inventory_checked = 1 → verify_asset = 0
-    //  * inventory_checked = 0 → verify_asset = 1
-
-    public function update_inventory_verify($site_id, $inventory_checked)
-    {
-        $this->db->trans_start(); // TRANSACTION START
-
-        $this->db
-            ->where('site_id', $site_id)
-            ->update('sites', [
-                'inventory_checked' => $inventory_checked,
-                'verify_asset'      => ($inventory_checked == 1) ? 0 : 1
-            ]);
-
-        $this->db->trans_complete(); // TRANSACTION END
-
-        return $this->db->trans_status();
+        echo json_encode([
+            'verified'   => $verified,
+            'unverified' => $unverified
+        ]);
     }
 }

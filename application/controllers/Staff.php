@@ -509,8 +509,7 @@ class Staff extends CI_Controller
     //         'asset'  => $asset
     //     ]);
     // }
-
- public function change_asset_owner()
+    public function change_asset_owner()
     {
         if (!$this->is_admin()) {
             echo json_encode(['status' => 'unauthorized']);
@@ -525,35 +524,11 @@ class Staff extends CI_Controller
             return;
         }
 
-        $this->load->model('Asset_model');
-
-        $this->Asset_model->update_asset_owner($assdet_id, $staff_id);
+        // 🔥 UPDATE ONLY ONE RECORD
+        $this->db->where('assdet_id', $assdet_id)
+                ->update('assdet', ['staff_id' => $staff_id]);
 
         echo json_encode(['status' => 'success']);
-
-    }
-     public function add_asset_ajax()
-    {
-        $this->load->model('Staff_model');
-
-        $data = [
-            'staff_id'   => $this->input->post('staff_id'),
-            'asset_id'   => $this->input->post('asset_id'),
-            'asset_name' => $this->input->post('asset_name'),
-            'serial_no'  => $this->input->post('serial_no'),
-            'site_id'  => $this->input->post('site_id')
-        ];
-
-        $assdet_id = $this->Staff_model->insert_asset($data);
-
-        if ($assdet_id) {
-            echo json_encode([
-                'status' => 'success',
-                'assdet_id' => $assdet_id
-            ]);
-        } else {
-            echo json_encode(['status' => 'error']);
-        }
     }
 
      public function get_asset_by_serial()
@@ -580,21 +555,40 @@ class Staff extends CI_Controller
         }
     }
      public function save_staff_asset()
-    {
-        // 🔥 Correct model
-        $this->load->model('Assdet_model');
+        {
+            $this->load->model('Assdet_model');
 
-        $data = array(
-            'staff_id'  => $this->input->post('staff_id'),
-            'serial_no' => $this->input->post('serial_no'),
-            'asset_id'  => $this->input->post('asset_id'),
-            'site_id'   => $this->input->post('site_id')
-        );
+            $staff_id  = $this->input->post('staff_id');
+            $serial_no = $this->input->post('serial_no');
 
-        // 🔥 Correct insert
-        $this->Assdet_model->insert($data);
-        redirect($_SERVER['HTTP_REFERER']);
-    }
+            // ✅ CHECK DUPLICATE ONLY FOR SAME STAFF
+            $exists = $this->db->where('serial_no', $serial_no)
+                            ->where('staff_id', $staff_id)
+                            ->get('assdet')
+                            ->row();
+
+            if ($exists) {
+                $this->session->set_flashdata('error', 'This asset serial number already assigned!');
+                redirect($_SERVER['HTTP_REFERER']);
+                return;
+            }
+
+            // 🔥 NEW CODE (IMPORTANT) → REMOVE OLD OWNER
+            $this->db->where('serial_no', $serial_no)->delete('assdet');
+
+            // ✅ KEEP YOUR EXISTING INSERT (NO CHANGE)
+            $data = array(
+                'staff_id'  => $staff_id,
+                'serial_no' => $serial_no,
+                'asset_id'  => $this->input->post('asset_id'),
+                'site_id'   => $this->input->post('site_id')
+            );
+
+            $this->Assdet_model->insert($data); // keep as it is
+
+            $this->session->set_flashdata('success', 'Asset added successfully');
+            redirect($_SERVER['HTTP_REFERER']);
+        }
     public function save_single_asset()
     {
         $this->db->insert('staff_asset', [
@@ -649,7 +643,7 @@ class Staff extends CI_Controller
     // staff/asset_form serial_no row delete
     public function delete_asset($assdet_id = null)
     {
-        // 🔐 Admin protection (optional but recommended)
+        //  Admin protection (optional but recommended)
         if (!$this->is_admin()) {
             show_error('Unauthorized', 403);
         }
